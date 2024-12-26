@@ -1,0 +1,20 @@
+import {
+  Router,
+  Request,
+  Response,
+} from 'express';
+
+import Auth from '@/lib/auth';
+
+import helloRouter from './hello';
+
+const router = Router();
+
+router.use('/api/hello', helloRouter);
+
+router.all(':empty', (req: Request, res: Response) => {
+  res.status(404)
+    .send(`${ req.path } not found.`);
+});
+
+export default router;

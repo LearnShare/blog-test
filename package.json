@@ -1,0 +1,33 @@
+{
+  "name": "blog-monorepo",
+  "version": "0.0.1",
+  "description": "Monorepo for a blog app",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LearnShare/blog-test"
+  },
+  "keywords": [
+    "monorepo",
+    "blog",
+    "express",
+    "prisma",
+    "next.js"
+  ],
+  "author": "LearnShare",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LearnShare/blog-test/issues"
+  },
+  "homepage": "https://github.com/LearnShare/blog-test",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3"
+  },
+  "packageManager": "pnpm@9.13.2"
+}
