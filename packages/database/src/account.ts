@@ -1,7 +1,9 @@
 import {
   Prisma,
 } from '@prisma/client';
+
 import prisma from './prisma';
+import Hash from '@packages/lib/hash';
 
 import type {
   ListQuery,
@@ -15,8 +17,29 @@ import {
   searchInMultipleCol,
 } from './utils';
 
-// get account info
-async function getAccountInfo(email: string) {
+const PublicFields = {
+  id: true,
+  email: true,
+  name: true,
+  ctime: true,
+};
+
+// create account
+async function createAccount(email: string, password: string) {
+  const account = await prisma.account.create({
+    data: {
+      email,
+      name: email.replace('@', '#'),
+      password: await Hash.hashPassword(password),
+    },
+    select: PublicFields,
+  });
+
+  return account;
+}
+
+// get account info by email
+async function getAccountByEmail(email: string) {
   const account = await prisma.account.findUnique({
     where: {
       email,
@@ -26,6 +49,45 @@ async function getAccountInfo(email: string) {
   return account;
 }
 
+// get account info by id
+async function getAccountById(id: string) {
+  const account = await prisma.account.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return account;
+}
+
+// get accounts
+async function getAccounts(search?: string, page?: number, size?: number) {
+  const accounts = await prisma.account.findMany({
+    // where: {
+    //   OR: [
+    //     {
+    //       email: {
+    //         contains: search,
+    //       },
+    //     },
+    //     {
+    //       name: {
+    //         contains: search,
+    //       },
+    //     },
+    //   ],
+    // },
+    select: PublicFields,
+    skip: 0,
+    take: DB_SIZE,
+  });
+
+  return accounts;
+}
+
 export default {
-  getAccountInfo,
+  createAccount,
+  getAccountByEmail,
+  getAccountById,
+  getAccounts,
 };
