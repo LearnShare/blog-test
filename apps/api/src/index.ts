@@ -7,7 +7,7 @@ import express, {
 
 Dotenv.config();
 
-import log from '@/log';
+import log from '@/lib/log';
 import router from '@/router';
 
 const app: Express = express();

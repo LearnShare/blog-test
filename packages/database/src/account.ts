@@ -44,6 +44,7 @@ async function getAccountByEmail(email: string) {
     where: {
       email,
     },
+    select: PublicFields,
   });
 
   return account;
@@ -55,6 +56,7 @@ async function getAccountById(id: string) {
     where: {
       id,
     },
+    select: PublicFields,
   });
 
   return account;

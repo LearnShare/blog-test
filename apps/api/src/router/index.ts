@@ -4,8 +4,6 @@ import {
   Response,
 } from 'express';
 
-import Auth from '@/lib/auth';
-
 import helloRouter from './hello';
 import accountRouter from './account';
 
