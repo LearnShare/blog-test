@@ -3,7 +3,6 @@ import {
 } from '@prisma/client';
 
 import prisma from './prisma';
-import Hash from '@packages/lib/hash';
 
 import type {
   ListQuery,
@@ -30,7 +29,7 @@ async function createAccount(email: string, password: string) {
     data: {
       email,
       name: email.replace('@', '#'),
-      password: await Hash.hashPassword(password),
+      password,
     },
     select: PublicFields,
   });
@@ -44,7 +43,7 @@ async function getAccountByEmail(email: string) {
     where: {
       email,
     },
-    select: PublicFields,
+    // select: PublicFields,
   });
 
   return account;
@@ -56,35 +55,70 @@ async function getAccountById(id: string) {
     where: {
       id,
     },
-    select: PublicFields,
+    // select: PublicFields,
   });
 
   return account;
 }
 
 // get accounts
-async function getAccounts(search?: string, page?: number, size?: number) {
-  const accounts = await prisma.account.findMany({
-    // where: {
-    //   OR: [
-    //     {
-    //       email: {
-    //         contains: search,
-    //       },
-    //     },
-    //     {
-    //       name: {
-    //         contains: search,
-    //       },
-    //     },
-    //   ],
-    // },
-    select: PublicFields,
-    skip: 0,
-    take: DB_SIZE,
+async function getAccounts(search?: string, sort = '-ctime', page = DB_PAGE, size = DB_SIZE) {
+  // order by
+  const name = sort.startsWith('-')
+    ? sort.substring(1)
+    : sort;
+  const direction = sort.startsWith('-')
+    ? 'desc'
+    : 'asc';
+
+  const query = search
+      ? {
+        OR: [
+          {
+            email: {
+              contains: search,
+            },
+          },
+          {
+            name: {
+              contains: search,
+            },
+          },
+        ],
+      }
+      : {};
+
+  const count = await prisma.account.count({
+    where: query,
   });
 
-  return accounts;
+  const accounts = await prisma.account.findMany({
+    where: query,
+    orderBy: {
+      [name]: direction,
+    },
+    select: PublicFields,
+    skip: (page - 1) * size,
+    take: size,
+  });
+
+  return {
+    count,
+    list: accounts,
+  };
+}
+
+// update account
+async function updateAccount(id: string, data: Record<string, any>) {
+  const account = await prisma.account.update({
+    where: {
+      id,
+    },
+    data,
+    select: PublicFields,
+  });
+
+  return account;
 }
 
 export default {
@@ -92,4 +126,5 @@ export default {
   getAccountByEmail,
   getAccountById,
   getAccounts,
+  updateAccount,
 };
