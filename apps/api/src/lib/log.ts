@@ -9,7 +9,8 @@ export default function log(
   res: Response,
   next: NextFunction,
 ) {
-  console.log(req.method, req.path);
+  console.log(new Date().toTimeString().substring(0, 9));
+  console.log(req.method, req.path, '\n');
 
   next();
 }

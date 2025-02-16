@@ -25,40 +25,67 @@ const PublicFields = {
 
 // create account
 async function createAccount(email: string, password: string) {
-  const account = await prisma.account.create({
-    data: {
-      email,
-      name: email.replace('@', '#'),
-      password,
-    },
-    select: PublicFields,
-  });
+  try {
+    const account = await prisma.account.create({
+      data: {
+        email,
+        name: email.replace('@', '#'),
+        password,
+      },
+      select: PublicFields,
+    });
 
-  return account;
+    return {
+      data: account,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
 }
 
 // get account info by email
 async function getAccountByEmail(email: string) {
-  const account = await prisma.account.findUnique({
-    where: {
-      email,
-    },
-    // select: PublicFields,
-  });
+  try {
+    const account = await prisma.account.findUnique({
+      where: {
+        email,
+      },
+      // select: PublicFields,
+    });
 
-  return account;
+    return {
+      data: account,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
 }
 
 // get account info by id
 async function getAccountById(id: string) {
-  const account = await prisma.account.findUnique({
-    where: {
-      id,
-    },
-    // select: PublicFields,
-  });
+  try {
+    const account = await prisma.account.findUnique({
+      where: {
+        id,
+      },
+      // select: PublicFields,
+    });
 
-  return account;
+    return {
+      data: account,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
 }
 
 // get accounts
@@ -88,37 +115,55 @@ async function getAccounts(search?: string, sort = '-ctime', page = DB_PAGE, siz
       }
       : {};
 
-  const count = await prisma.account.count({
-    where: query,
-  });
+  try {
+    const count = await prisma.account.count({
+      where: query,
+    });
 
-  const accounts = await prisma.account.findMany({
-    where: query,
-    orderBy: {
-      [name]: direction,
-    },
-    select: PublicFields,
-    skip: (page - 1) * size,
-    take: size,
-  });
+    const list = await prisma.account.findMany({
+      where: query,
+      orderBy: {
+        [name]: direction,
+      },
+      select: PublicFields,
+      skip: (page - 1) * size,
+      take: size,
+    });
 
-  return {
-    count,
-    list: accounts,
-  };
+    return {
+      data: {
+        count,
+        list,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
 }
 
 // update account
 async function updateAccount(id: string, data: Record<string, any>) {
-  const account = await prisma.account.update({
-    where: {
-      id,
-    },
-    data,
-    select: PublicFields,
-  });
+  try {
+    const account = await prisma.account.update({
+      where: {
+        id,
+      },
+      data,
+      select: PublicFields,
+    });
 
-  return account;
+    return {
+      data: account,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
 }
 
 export default {

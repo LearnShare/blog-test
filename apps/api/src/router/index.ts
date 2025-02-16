@@ -12,9 +12,13 @@ const router = Router();
 router.use('/api/hello', helloRouter);
 router.use('/api/account', accountRouter);
 
-router.all(':empty', (req: Request, res: Response) => {
+// 404
+router.use((req: Request, res: Response) => {
   res.status(404)
-    .send(`${ req.path } not found.`);
+    .json({
+      code: 404,
+      message: `${ req.path } not found`,
+    });
 });
 
 export default router;
