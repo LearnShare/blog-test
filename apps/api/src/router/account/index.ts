@@ -105,7 +105,7 @@ accountRouter.post('/sign-up', async (req: Request, res: Response) => {
   const hash = await Hash.hashPassword(password);
 
   const {
-    account,
+    data: account,
     error: createError,
   } = await DB.account.createAccount(email, hash);
 
@@ -180,6 +180,7 @@ accountRouter.post('/sign-in', async (req: Request, res: Response) => {
     id,
     name,
     ctime,
+    utime,
   } = account;
 
   const token = await JWT.encrypt({
@@ -191,6 +192,7 @@ accountRouter.post('/sign-in', async (req: Request, res: Response) => {
     email,
     name,
     ctime,
+    utime,
     token,
   });
 });
@@ -234,6 +236,7 @@ async function getAccountInfo(id: string, res: Response) {
     email,
     name,
     ctime,
+    utime,
   } = account;
 
   res.json({
@@ -241,19 +244,9 @@ async function getAccountInfo(id: string, res: Response) {
     email,
     name,
     ctime,
+    utime,
   });
 }
-
-/**
- * get current account info
- */
-accountRouter.get('/info', Auth.check, async (req: Request, res: Response) => {
-  const {
-    id,
-  } = req.user;
-
-  getAccountInfo(id, res);
-});
 
 async function updateAccount(id: string, data: Record<string, any>, res: Response) {
   const {
@@ -272,49 +265,6 @@ async function updateAccount(id: string, data: Record<string, any>, res: Respons
 
   res.json(account);
 }
-
-/**
- * update account info
- */
-accountRouter.put('/info', Auth.check, async (req: Request, res: Response) => {
-  const {
-    id,
-  } = req.user;
-  const {
-    name,
-  } = req.body;
-
-  updateAccount(id, {
-    name,
-  }, res);
-});
-
-/**
- * get account info by id
- */
-accountRouter.get('/:id', Auth.check, async (req: Request, res: Response) => {
-  const {
-    id,
-  } = req.params;
-
-  getAccountInfo(id, res);
-});
-
-/**
- * update account info by id
- */
-accountRouter.put('/:id', Auth.check, async (req: Request, res: Response) => {
-  const {
-    id,
-  } = req.params;
-  const {
-    name,
-  } = req.body;
-
-  updateAccount(id, {
-    name,
-  }, res);
-});
 
 async function updatePassword(id: string, oldPassword: string, password: string, res: Response) {
   // 1. check account and old password
@@ -372,6 +322,33 @@ async function updatePassword(id: string, oldPassword: string, password: string,
 }
 
 /**
+ * get current account info
+ */
+accountRouter.get('/info', Auth.check, async (req: Request, res: Response) => {
+  const {
+    id,
+  } = req.user;
+
+  getAccountInfo(id, res);
+});
+
+/**
+ * update account info
+ */
+accountRouter.put('/info', Auth.check, async (req: Request, res: Response) => {
+  const {
+    id,
+  } = req.user;
+  const {
+    name,
+  } = req.body;
+
+  updateAccount(id, {
+    name,
+  }, res);
+});
+
+/**
  * update password
  */
 accountRouter.put('/password', Auth.check, async (req: Request, res: Response) => {
@@ -387,7 +364,34 @@ accountRouter.put('/password', Auth.check, async (req: Request, res: Response) =
 });
 
 /**
- * update password
+ * get account info by id
+ */
+accountRouter.get('/:id', Auth.check, async (req: Request, res: Response) => {
+  const {
+    id,
+  } = req.params;
+
+  getAccountInfo(id, res);
+});
+
+/**
+ * update account info by id
+ */
+accountRouter.put('/:id', Auth.check, async (req: Request, res: Response) => {
+  const {
+    id,
+  } = req.params;
+  const {
+    name,
+  } = req.body;
+
+  updateAccount(id, {
+    name,
+  }, res);
+});
+
+/**
+ * update password by id
  */
 accountRouter.put('/:id/password', Auth.check, async (req: Request, res: Response) => {
   const {

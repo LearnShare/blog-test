@@ -4,23 +4,18 @@ import {
 
 import prisma from './prisma';
 
-import type {
-  ListQuery,
-} from './types';
 import {
   DB_PAGE,
   DB_SIZE,
   DB_ORDER_BY,
 } from './config';
-import {
-  searchInMultipleCol,
-} from './utils';
 
-const PublicFields = {
+export const AccountPublicFields = {
   id: true,
   email: true,
   name: true,
   ctime: true,
+  utime: true,
 };
 
 // create account
@@ -32,7 +27,7 @@ async function createAccount(email: string, password: string) {
         name: email.replace('@', '#'),
         password,
       },
-      select: PublicFields,
+      select: AccountPublicFields,
     });
 
     return {
@@ -53,7 +48,7 @@ async function getAccountByEmail(email: string) {
       where: {
         email,
       },
-      // select: PublicFields,
+      // select: AccountPublicFields,
     });
 
     return {
@@ -72,9 +67,9 @@ async function getAccountById(id: string) {
   try {
     const account = await prisma.account.findUnique({
       where: {
-        id,
+        id: Number(id),
       },
-      // select: PublicFields,
+      // select: AccountPublicFields,
     });
 
     return {
@@ -125,7 +120,7 @@ async function getAccounts(search?: string, sort = '-ctime', page = DB_PAGE, siz
       orderBy: {
         [name]: direction,
       },
-      select: PublicFields,
+      select: AccountPublicFields,
       skip: (page - 1) * size,
       take: size,
     });
@@ -133,6 +128,8 @@ async function getAccounts(search?: string, sort = '-ctime', page = DB_PAGE, siz
     return {
       data: {
         count,
+        page,
+        size,
         list,
       },
     };
@@ -149,10 +146,13 @@ async function updateAccount(id: string, data: Record<string, any>) {
   try {
     const account = await prisma.account.update({
       where: {
-        id,
+        id: Number(id),
       },
-      data,
-      select: PublicFields,
+      data: {
+        ...data,
+        utime: new Date(),
+      },
+      select: AccountPublicFields,
     });
 
     return {

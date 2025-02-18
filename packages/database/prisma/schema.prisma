@@ -8,9 +8,24 @@ datasource db {
 }
 
 model Account {
-  id       String   @id @default(uuid()) @db.Uuid
+  id       Int   @id @default(autoincrement())
   email    String   @unique
   name     String?
   password String
   ctime    DateTime @default(now())
+  utime    DateTime @default(now())
+
+  posts Post[]
+}
+
+model Post {
+  id        Int   @id @default(autoincrement())
+  title     String
+  content   String
+  published Boolean  @default(false)
+  ctime     DateTime @default(now())
+  utime     DateTime @default(now())
+
+  author   Account @relation(fields: [authorId], references: [id])
+  authorId Int
 }
