@@ -7,12 +7,6 @@ import {
   AccountPublicFields,
 } from './account';
 
-import {
-  DB_PAGE,
-  DB_SIZE,
-  DB_ORDER_BY,
-} from './config';
-
 export interface PostData {
   title: string;
   content: string;
@@ -31,12 +25,6 @@ async function createPost(accountId: string, postData: PostData) {
           },
         },
       },
-      // return author info
-      // include: {
-      //   author: {
-      //     select: AccountPublicFields,
-      //   },
-      // },
     });
 
     return {
@@ -52,6 +40,7 @@ async function createPost(accountId: string, postData: PostData) {
 
 export interface PostsQuery {
   search?: string;
+  published?: boolean;
   author?: number;
   sort?: string;
   page?: number;
@@ -63,9 +52,10 @@ async function getPosts(postQuery: PostsQuery) {
   const {
     search,
     author,
-    sort = '-ctime',
-    page = DB_PAGE,
-    size = DB_SIZE,
+    published,
+    sort,
+    page,
+    size,
   } = postQuery;
 
   // order by
@@ -78,7 +68,12 @@ async function getPosts(postQuery: PostsQuery) {
 
   const authorQuery = author
       ? {
-        id: Number(author),
+        id: author,
+      }
+      : {};
+  const publishedQuery = published !== null
+      ? {
+        published,
       }
       : {};
   const searchQuery = search
@@ -100,6 +95,7 @@ async function getPosts(postQuery: PostsQuery) {
 
   const query = {
     author: authorQuery,
+    ...publishedQuery,
     ...searchQuery,
   };
 
@@ -117,6 +113,13 @@ async function getPosts(postQuery: PostsQuery) {
       take: size,
     });
 
+    const ids = {};
+    for (const item of list) {
+      if (!ids[item.authorId]) {
+        ids[item.authorId] = true;
+      }
+    }
+    console.log(Object.keys(ids));
     // TODO return author data
 
     return {
@@ -135,7 +138,58 @@ async function getPosts(postQuery: PostsQuery) {
   }
 }
 
+// get post by id
+async function getPostById(id: number) {
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        author: {
+          select: AccountPublicFields,
+        },
+      },
+    });
+
+    return {
+      data: post,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
+// update post
+async function updatePost(id: number, postData: PostData) {
+  try {
+    const post = await prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        ...postData,
+        utime: new Date(),
+      },
+    });
+
+    return {
+      data: post,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
 export default {
   createPost,
   getPosts,
+  getPostById,
+  updatePost,
 };
