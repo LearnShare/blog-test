@@ -18,6 +18,7 @@ const postRouter = Router();
  * query:
  * - search: title/content
  * - author: account.id
+ * - account: 1|0
  * - published: 1|0
  * - sort: [-]ctime
  * - page
@@ -28,6 +29,7 @@ postRouter.get('/', async (req: Request, res: Response) => {
     search,
     published,
     author,
+    account,
     sort,
     page,
     size,
@@ -41,6 +43,9 @@ postRouter.get('/', async (req: Request, res: Response) => {
     author: author
         ? Number(author)
         : null,
+    account: account
+        ? Boolean(Number(account))
+        : false,
     published: published
         ? Boolean(Number(published))
         : null,
@@ -127,7 +132,7 @@ postRouter.get('/:id', async (req: Request, res: Response) => {
   const {
     data: post,
     error,
-  } = await DB.post.getPostById(id);
+  } = await DB.post.getPostById(Number(id));
 
   if (error) {
     res.status(500)

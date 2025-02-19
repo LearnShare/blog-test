@@ -5,12 +5,14 @@ import {
 } from 'express';
 
 import helloRouter from './hello';
+import authRouter from './auth';
 import accountRouter from './account';
 import postRouter from './post';
 
 const router = Router();
 
 router.use('/api/hello', helloRouter);
+router.use('/api/auth', authRouter);
 router.use('/api/account', accountRouter);
 router.use('/api/post', postRouter);
 

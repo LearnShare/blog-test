@@ -4,12 +4,6 @@ import {
 
 import prisma from './prisma';
 
-import {
-  DB_PAGE,
-  DB_SIZE,
-  DB_ORDER_BY,
-} from './config';
-
 export const AccountPublicFields = {
   id: true,
   email: true,
@@ -63,11 +57,11 @@ async function getAccountByEmail(email: string) {
 }
 
 // get account info by id
-async function getAccountById(id: string) {
+async function getAccountById(id: number) {
   try {
     const account = await prisma.account.findUnique({
       where: {
-        id: Number(id),
+        id,
       },
       // select: AccountPublicFields,
     });
@@ -83,17 +77,55 @@ async function getAccountById(id: string) {
   }
 }
 
+// get accounts by ids
+async function getAccountsByIds(ids: number[]) {
+  try {
+    const accounts = await prisma.account.findMany({
+      where: {
+        OR: ids.map((id) => ({
+          id,
+        })),
+      },
+      select: AccountPublicFields,
+    });
+
+    return {
+      data: accounts,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
+export interface AccountsQuery {
+  search?: string;
+  posts?: boolean;
+  sort?: string;
+  page?: number;
+  size?: number;
+}
+
 // get accounts
-async function getAccounts(search?: string, sort = '-ctime', page = DB_PAGE, size = DB_SIZE) {
+async function getAccounts(accountQuery: AccountsQuery) {
+  const {
+    search,
+    posts,
+    sort,
+    page,
+    size,
+  } = accountQuery;
   // order by
   const name = sort.startsWith('-')
-    ? sort.substring(1)
-    : sort;
+      ? sort.substring(1)
+      : sort;
   const direction = sort.startsWith('-')
-    ? 'desc'
-    : 'asc';
+      ? 'desc'
+      : 'asc';
 
-  const query = search
+  const searchQuery = search
       ? {
         OR: [
           {
@@ -109,18 +141,28 @@ async function getAccounts(search?: string, sort = '-ctime', page = DB_PAGE, siz
         ],
       }
       : {};
+  const selectQuery = posts
+        ? {
+          ...AccountPublicFields,
+          _count: {
+            select: {
+              posts: true,
+            },
+          },
+        }
+        : AccountPublicFields;
 
   try {
     const count = await prisma.account.count({
-      where: query,
+      where: searchQuery,
     });
 
     const list = await prisma.account.findMany({
-      where: query,
+      where: searchQuery,
       orderBy: {
         [name]: direction,
       },
-      select: AccountPublicFields,
+      select: selectQuery,
       skip: (page - 1) * size,
       take: size,
     });
@@ -142,11 +184,11 @@ async function getAccounts(search?: string, sort = '-ctime', page = DB_PAGE, siz
 }
 
 // update account
-async function updateAccount(id: string, data: Record<string, any>) {
+async function updateAccount(id: number, data: Record<string, any>) {
   try {
     const account = await prisma.account.update({
       where: {
-        id: Number(id),
+        id,
       },
       data: {
         ...data,
@@ -171,5 +213,6 @@ export default {
   getAccountByEmail,
   getAccountById,
   getAccounts,
+  getAccountsByIds,
   updateAccount,
 };

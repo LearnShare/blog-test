@@ -3,7 +3,7 @@ import {
 } from '@prisma/client';
 
 import prisma from './prisma';
-import {
+import Account, {
   AccountPublicFields,
 } from './account';
 
@@ -40,8 +40,9 @@ async function createPost(accountId: string, postData: PostData) {
 
 export interface PostsQuery {
   search?: string;
-  published?: boolean;
   author?: number;
+  account?: boolean;
+  published?: boolean;
   sort?: string;
   page?: number;
   size?: number;
@@ -52,6 +53,7 @@ async function getPosts(postQuery: PostsQuery) {
   const {
     search,
     author,
+    account,
     published,
     sort,
     page,
@@ -113,22 +115,38 @@ async function getPosts(postQuery: PostsQuery) {
       take: size,
     });
 
-    const ids = {};
-    for (const item of list) {
-      if (!ids[item.authorId]) {
-        ids[item.authorId] = true;
+    const data = {
+      count,
+      page,
+      size,
+      list,
+    };
+
+    // include accounts info
+    if (account) {
+      const ids = {};
+      for (const item of list) {
+        if (!ids[item.authorId]) {
+          ids[item.authorId] = true;
+        }
       }
+
+      const accountsData = await Account.getAccountsByIds(
+        Object.keys(ids)
+            .map((id) => Number(id))
+      );
+      const accounts = {};
+      for (const account of accountsData.data) {
+        if (!accounts[account.id]) {
+          accounts[account.id] = account;
+        }
+      }
+
+      data.accounts = accounts;
     }
-    console.log(Object.keys(ids));
-    // TODO return author data
 
     return {
-      data: {
-        count,
-        page,
-        size,
-        list,
-      },
+      data,
     };
   } catch (error) {
     console.log(error);
