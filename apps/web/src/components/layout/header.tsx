@@ -26,7 +26,7 @@ export default function Header() {
             </li>
             <li>
               <Link
-                  href="/statistics"
+                  href="/data"
                   className={ linkCns }>数据</Link>
             </li>
             <li>

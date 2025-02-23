@@ -1,7 +1,7 @@
 import HomeLayout from '@/components/page/home';
 import PostCard from '@/components/post/card';
 
-export default function Home() {
+export default function PageHome() {
   return (
     <HomeLayout>
       <section className="mt-4">
@@ -14,7 +14,7 @@ export default function Home() {
       </section>
       <section>
         <h2 className="text-2xl font-semibold my-4">最近更新</h2>
-        <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px]">
+        <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px] *:max-w-[calc(50%-12px)]">
           <PostCard
               id={ 2 }
               cover="/images/2.png"
