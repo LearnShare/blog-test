@@ -18,7 +18,7 @@ async function check(
   if (!authHeader
       || !token) {
     res.status(403)
-        .JSON({
+        .json({
           code: 403,
           message: 'You should login first',
         });
@@ -34,7 +34,7 @@ async function check(
   } catch (error) {
     console.log(error);
     res.status(403)
-        .JSON({
+        .json({
           code: 403,
           message: 'Invalid token',
         });

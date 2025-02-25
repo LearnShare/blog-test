@@ -4,10 +4,10 @@
   "main": "src/index.ts",
   "type": "module",
   "devDependencies": {
-    "prisma": "6.1.0"
+    "prisma": "6.4.1"
   },
   "dependencies": {
     "@packages/lib": "workspace:*",
-    "@prisma/client": "6.1.0"
+    "@prisma/client": "6.4.1"
   }
 }
