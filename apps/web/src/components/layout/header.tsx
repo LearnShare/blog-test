@@ -37,18 +37,18 @@ export default function Header() {
           </ul>
         </nav>
         <div className="flex gap-2">
-          <a
+          <Link
               href="/sign-up"
               className={ buttonVariants({
                 variant: 'outline',
                 size: 'sm',
-              }) }>注册</a>
-          <a
+              }) }>注册</Link>
+          <Link
               href="/sign-in"
               className={ buttonVariants({
                 variant: 'default',
                 size: 'sm',
-              }) }>登录</a>
+              }) }>登录</Link>
         </div>
       </div>
     </header>
