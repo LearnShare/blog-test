@@ -1,13 +1,10 @@
-import {
-  Prisma,
-} from '@prisma/client';
-
-import prisma from './prisma';
+import prisma from '../prisma';
 
 export const AccountPublicFields = {
   id: true,
   email: true,
   name: true,
+  avatar: true,
   ctime: true,
   utime: true,
 };

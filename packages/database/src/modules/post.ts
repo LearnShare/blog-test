@@ -1,8 +1,4 @@
-import {
-  Prisma,
-} from '@prisma/client';
-
-import prisma from './prisma';
+import prisma from '../prisma';
 import Account, {
   AccountPublicFields,
 } from './account';
@@ -14,14 +10,14 @@ export interface PostData {
 }
 
 // create post
-async function createPost(accountId: string, postData: PostData) {
+async function createPost(accountId: number, postData: PostData) {
   try {
     const post = await prisma.post.create({
       data: {
         ...postData,
         author: {
           connect: {
-            id: Number(accountId),
+            id: accountId,
           },
         },
       },

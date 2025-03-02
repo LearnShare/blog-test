@@ -7,25 +7,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  AUTHOR
+  USER
+}
+
 model Account {
-  id       Int   @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   email    String   @unique
   name     String?
   password String
+  avatar   Int?
+  role     Role     @default(USER)
+  posts    Post[]
   ctime    DateTime @default(now())
-  utime    DateTime @default(now())
+  utime    DateTime @updatedAt
+}
 
-  posts Post[]
+enum ContentFormat {
+  TEXT
+  MARKDOWN
+  HTML
 }
 
 model Post {
-  id        Int   @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
+  author    Account       @relation(fields: [authorId], references: [id])
+  authorId  Int
+  cover     Int?
   title     String
   content   String
-  published Boolean  @default(false)
-  ctime     DateTime @default(now())
-  utime     DateTime @default(now())
+  format    ContentFormat @default(TEXT)
+  images    Int[]
+  published Boolean       @default(false)
+  ctime     DateTime      @default(now())
+  utime     DateTime      @updatedAt
+}
 
-  author   Account @relation(fields: [authorId], references: [id])
-  authorId Int
+enum FileType {
+  UNKNOWN
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+model File {
+  id      Int      @id @default(autoincrement())
+  creator Int
+  hash    String   @unique
+  type    FileType @default(UNKNOWN)
+  mime    String
+  name    String
+  ext     String
+  size    Int
+  ctime   DateTime @default(now())
 }
