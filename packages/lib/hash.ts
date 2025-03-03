@@ -1,4 +1,11 @@
+import Crypto from 'node:crypto';
 import Bcrypt from 'bcrypt';
+
+function generateRandomNumber(length: number): string {
+  const num = Crypto.webcrypto.getRandomValues(new Uint32Array(1));
+
+  return String(num).substring(0, length);
+}
 
 function hashPassword(password: string): string {
   const saltRounds = 12;
@@ -11,6 +18,7 @@ function checkPassword(password: string, hash: string): boolean {
 }
 
 export default {
+  generateRandomNumber,
   hashPassword,
   checkPassword,
 };

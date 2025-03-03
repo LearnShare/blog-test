@@ -1,21 +1,282 @@
+import fs from 'node:fs';
+import process from 'node:process';
+import crypto from 'node:crypto';
+
 import {
   Router,
   Request,
   Response,
 } from 'express';
-import fs from 'node:fs';
-import process from 'node:process';
+import multer from 'multer';
 
+import DB, {
+  DB_PAGE,
+  DB_SIZE,
+  DB_SORT,
+} from '@packages/database';
+import Auth from '@/lib/auth';
+import {
+  updateAccount,
+} from '@/lib/account';
 
-import DB from '@packages/database';
+const upload = multer({
+  dest: 'uploads/',
+  limits: {
+    fileSize: 1024 * 1024,
+  },
+  storage: multer.memoryStorage(),
+});
+
 const fileRouter = Router();
+
+/**
+ * get files
+ * query:
+ * - creator: account.id
+ * - sort: [-]ctime
+ * - page
+ * - size
+ */
+fileRouter.get('/', async (req: Request, res: Response) => {
+  const {
+    creator,
+    sort,
+    page,
+    size,
+  } = req.query;
+
+  const {
+    data,
+    error,
+  } = await DB.file.getFiles({
+    creator: creator
+        ? Number(creator)
+        : null,
+    sort: sort
+        || DB_SORT,
+    page: page
+        ? Number(page)
+        : DB_PAGE,
+    size: size
+        ? Number(size)
+        : DB_SIZE,
+  });
+
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  res.json(data);
+});
+
+const acceptMimeTypes = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+];
+const acceptUploadTypes = [
+  'account-avatar',
+  'post-cover',
+] as const;
+
+async function continueUpload(
+  accountId: number,
+  fileId: number,
+  type: typeof acceptUploadTypes,
+  res: Response,
+) {
+  switch (type) {
+    case 'account-avatar':
+      updateAccount(accountId, {
+        avatar: fileId,
+      }, res);
+      break;
+    case 'post-cover':
+      res.json({
+        id: fileId,
+      });
+      break;
+    default:
+      res.status(400)
+        .json({
+          status: 400,
+          message: 'Invalid data',
+        });
+  }
+}
+
+/**
+ * upload file
+ */
+fileRouter.post(
+  '/',
+  Auth.check,
+  upload.single('file'),
+  async (req: Request, res: Response) => {
+    const {
+      id,
+    } = req.user;
+    const {
+      type,
+    } = req.body;
+    const {
+      originalname,
+      mimetype,
+      size,
+      buffer,
+    } = req.file;
+
+    // 1. check mime and type
+    if (!acceptMimeTypes.includes(mimetype)
+        || !acceptUploadTypes.includes(type)) {
+      res.status(400)
+        .json({
+          status: 400,
+          message: 'Invalid data',
+        });
+      return;
+    }
+
+    // 2. hash data
+    const hash = crypto.hash('sha256', buffer);
+
+    // 3. check exists
+    const {
+      data: existingFile,
+      error,
+    } = await DB.file.getFileByHash(hash);
+    if (error) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: error,
+        });
+      return;
+    }
+
+    if (!existingFile) {
+      // 4. write data to file
+      const dotIndex = originalname.lastIndexOf('.');
+      const ext = originalname.substring(dotIndex + 1);
+      const destPath = `uploads/${hash.substring(0, 2)}/`;
+
+      try {
+        fs.mkdirSync(destPath, {
+          recursive: true,
+        });
+        fs.writeFileSync(`${destPath}${hash}.${ext}`, buffer, {
+          flag: 'a',
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500)
+          .json({
+            status: 500,
+            message: error,
+          });
+        return;
+      }
+
+      // 5. create file
+      const {
+        data: file,
+        error: createError,
+      } = await DB.file.createFile(id, {
+        hash,
+        type: 'IMAGE',
+        mime: mimetype,
+        name: originalname.substring(0, dotIndex),
+        ext,
+        size,
+      });
+      if (createError) {
+        res.status(500)
+          .json({
+            status: 500,
+            message: createError,
+          });
+        return;
+      }
+
+      continueUpload(id, file.id, type, res);
+    } else {
+      continueUpload(id, existingFile.id, type, res);
+    }
+  },
+);
+
+interface FileData {
+  hash: string;
+  mime: string;
+  ext: string;
+}
+
+async function returnFile(file: FileData, res: Response) {
+  const {
+    hash,
+    mime,
+    ext,
+  } = file;
+
+  const fullPath = `uploads/${hash.substring(0, 2)}/${hash}.${ext}`;
+
+  const exist = fs.existsSync(fullPath);
+  if (!exist) {
+    res.status(404)
+        .json({
+          status: 404,
+          message: 'File not found',
+        });
+    return;
+  }
+
+  res.set('Content-Type', mime)
+      .sendFile(`${process.cwd()}/${fullPath}`);
+}
+
+/**
+ * get file by hash
+ */
+fileRouter.get('/hash/:hash', async (req: Request, res: Response) => {
+  const {
+    hash,
+  } = req.params;
+
+  const {
+    data: file,
+    error,
+  } = await DB.file.getFileByHash(hash);
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  if (!file) {
+    res.status(404)
+        .json({
+          status: 404,
+          message: 'File not found',
+        });
+    return;
+  }
+
+  returnFile(file, res);
+});
 
 /**
  * get file by id
  */
-fileRouter.get('/:type/:id', async (req: Request, res: Response) => {
+fileRouter.get('/:id', async (req: Request, res: Response) => {
   const {
-    type,
     id,
   } = req.params;
 
@@ -41,25 +302,7 @@ fileRouter.get('/:type/:id', async (req: Request, res: Response) => {
     return;
   }
 
-  const {
-    hash,
-    mime,
-    ext,
-  } = file;
-
-  const fullPath = `uploads/${type}/${hash}.${ext}`;
-  const exist = fs.existsSync(fullPath);
-  if (!exist) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'File not found',
-        });
-    return;
-  }
-
-  res.set('Content-Type', mime)
-      .sendFile(`${process.cwd()}/${fullPath}`);
+  returnFile(file, res);
 });
 
 export default fileRouter;

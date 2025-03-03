@@ -3,9 +3,6 @@ import {
   Request,
   Response,
 } from 'express';
-import multer from 'multer';
-import crypto from 'node:crypto';
-import fs from 'node:fs';
 
 import Validator from '@packages/lib/validator';
 import Hash from '@packages/lib/hash';
@@ -21,14 +18,6 @@ import {
   updateAccount,
   updatePassword,
 } from '@/lib/account';
-
-const upload = multer({
-  dest: 'uploads/',
-  limits: {
-    fileSize: 1024 * 1024,
-  },
-  storage: multer.memoryStorage(),
-});
 
 const authRouter = Router();
 
@@ -214,114 +203,6 @@ authRouter.put('/info', Auth.check, async (req: Request, res: Response) => {
     name,
   }, res);
 });
-
-const avatarAcceptTypes = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-];
-
-/**
- * upload avatar
- */
-authRouter.post(
-  '/avatar',
-  Auth.check,
-  upload.single('avatar'),
-  async (req: Request, res: Response) => {
-    const {
-      id,
-    } = req.user;
-
-    const {
-      originalname,
-      mimetype,
-      size,
-      buffer,
-    } = req.file;
-
-    // 1. check mime
-    if (!avatarAcceptTypes.includes(mimetype)) {
-      res.status(400)
-        .json({
-          status: 400,
-          message: `Invalid file type [${mimetype}]`,
-        });
-      return;
-    }
-
-    // 2. hash data
-    const hash = crypto.hash('sha256', buffer);
-    console.log(hash);
-
-    // 3. check exists
-    const {
-      data: existingFile,
-      error,
-    } = await DB.file.getFileByHash(hash);
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
-
-    if (existingFile) {
-      updateAccount(id, {
-        avatar: existingFile.id,
-      }, res);
-    } else {
-      // 4. write data to file
-      const dotIndex = originalname.lastIndexOf('.');
-      const ext = originalname.substring(dotIndex + 1);
-      const destPath = 'uploads/avatar/';
-      console.log(destPath);
-      try {
-        fs.mkdirSync(destPath, {
-          recursive: true,
-        });
-        fs.writeFileSync(`${destPath}${hash}.${ext}`, buffer, {
-          flag: 'a',
-        });
-      } catch (error) {
-        console.log(error);
-        res.status(500)
-          .json({
-            status: 500,
-            message: error,
-          });
-        return;
-      }
-
-      // 5. create file
-      const {
-        data: file,
-        error: createError,
-      } = await DB.file.createFile(id, {
-        hash,
-        type: 'IMAGE',
-        mime: mimetype,
-        name: originalname.substring(0, dotIndex),
-        ext,
-        size,
-      });
-      if (createError) {
-        res.status(500)
-          .json({
-            status: 500,
-            message: createError,
-          });
-        return;
-      }
-
-      updateAccount(id, {
-        avatar: file.id,
-      }, res);
-    }
-  },
-);
 
 /**
  * update password

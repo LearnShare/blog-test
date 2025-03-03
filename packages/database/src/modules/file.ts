@@ -2,6 +2,68 @@ import prisma from '../prisma';
 
 type FileType = 'UNKNOWN' | 'IMAGE' | 'VIDEO' | 'AUDIO';
 
+export interface FilesQuery {
+  creator?: number;
+  sort?: string;
+  page?: number;
+  size?: number;
+}
+
+// get files
+async function getFiles(fileQuery: FilesQuery) {
+  const {
+    creator,
+    sort,
+    page,
+    size,
+  } = fileQuery;
+
+  // order by
+  const name = sort.startsWith('-')
+    ? sort.substring(1)
+    : sort;
+  const direction = sort.startsWith('-')
+    ? 'desc'
+    : 'asc';
+
+  const query = creator
+      ? {
+        creator,
+      }
+      : {};
+
+  try {
+    const count = await prisma.file.count({
+      where: query,
+    });
+
+    const list = await prisma.file.findMany({
+      where: query,
+      orderBy: {
+        [name]: direction,
+      },
+      skip: (page - 1) * size,
+      take: size,
+    });
+
+    const data = {
+      count,
+      page,
+      size,
+      list,
+    };
+
+    return {
+      data,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
 interface FileData {
   hash: string;
   type: FileType;
@@ -73,6 +135,7 @@ async function getFileByHash(hash: string) {
 }
 
 export default {
+  getFiles,
   createFile,
   getFileById,
   getFileByHash,
