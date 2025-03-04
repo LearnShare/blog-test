@@ -20,6 +20,8 @@ model Account {
   password String
   avatar   Int?
   role     Role     @default(USER)
+  verified Boolean  @default(false)
+  disabled Boolean  @default(false)
   posts    Post[]
   ctime    DateTime @default(now())
   utime    DateTime @updatedAt
@@ -62,4 +64,19 @@ model File {
   ext     String
   size    Int
   ctime   DateTime @default(now())
+}
+
+enum CodeType {
+  ACCOUNT_VERIFICATION
+  RESET_PASSWORD
+}
+
+model Code {
+  id      Int      @id @default(autoincrement())
+  code    String
+  type    CodeType
+  account Int
+  used    Boolean  @default(false)
+  ctime   DateTime @default(now())
+  etime   DateTime
 }

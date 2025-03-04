@@ -6,6 +6,10 @@ import express, {
 } from 'express';
 
 Dotenv.config();
+Dotenv.config({
+  path: '.env.local',
+  override: true,
+});
 
 import log from '@/lib/log';
 import router from '@/router';

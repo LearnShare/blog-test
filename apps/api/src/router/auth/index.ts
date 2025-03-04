@@ -18,8 +18,39 @@ import {
   updateAccount,
   updatePassword,
 } from '@/lib/account';
+import Mail from '@/lib/mail';
 
 const authRouter = Router();
+
+async function generateCodeAndSendEmail(accountId: number, email: string, res: Response) {
+  const code = Hash.generateRandomNumber(6);
+  const {
+    data: activationCode,
+    error: codeError,
+  } = await DB.code.createCode(accountId, {
+    type: 'ACCOUNT_VERIFICATION',
+    code,
+    etime: new Date(
+      Date.now()
+      + Number(process.env.ACCOUNT_VERIFICATION_CODE_EXPIRES)
+    ),
+  });
+  if (codeError) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: codeError,
+      });
+    return;
+  }
+
+  // 6. send email
+  /* await  */Mail.send(
+    email,
+    'Welcome to Blog, please verify your account',
+    `Account verification code: ${code}`,
+  );
+}
 
 /**
  * sign-up (create account)
@@ -96,7 +127,111 @@ authRouter.post('/sign-up', async (req: Request, res: Response) => {
     return;
   }
 
+  // 5. generate and save verification code
+  await generateCodeAndSendEmail(account.id, email, res);
+
   res.json(account);
+});
+
+/**
+ * verify account - send verification code
+ */
+authRouter.get('/verify', Auth.check, async (req: Request, res: Response) => {
+  const {
+    id,
+  } = req.user;
+
+  const {
+    data,
+    error,
+  } = await DB.account.getAccountById(id);
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  // 1. check verified
+  const {
+    email,
+    verified,
+  } = data;
+  if (verified) {
+    res.status(200)
+        .json({
+          status: 200,
+          message: 'Account verified',
+        });
+    return;
+  }
+
+  // 2. generate and save verification code
+  await generateCodeAndSendEmail(Number(id), email, res);
+
+  res.status(200)
+      .json({
+        status: 200,
+        message: 'Email sent',
+      });
+});
+
+/**
+ * verify account - check verification code
+ */
+authRouter.post('/verify', Auth.check, async (req: Request, res: Response) => {
+  const {
+    id,
+  } = req.user;
+  const {
+    code,
+  } = req.body;
+
+  // 1. search code data
+  const {
+    data,
+    error,
+  } = await DB.code.searchCode(id, code);
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  if (!data) {
+    res.status(400)
+        .json({
+          status: 400,
+          message: 'Invalid verification code',
+        });
+    return;
+  }
+
+  // 2. check code data
+  const {
+    used,
+    etime,
+  } = data;
+
+  if (used
+      || etime < new Date()) {
+    res.status(400)
+        .json({
+          status: 400,
+          message: 'Invalid verification code',
+        });
+    return;
+  }
+
+  // 3. update account.verified
+  updateAccount(id, {
+    verified: true,
+  }, res);
 });
 
 /**
@@ -157,6 +292,7 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
   const {
     id,
     name,
+    verified,
     ctime,
     utime,
   } = account;
@@ -171,6 +307,7 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
       id,
       email,
       name,
+      verified,
       ctime,
       utime,
     },
@@ -203,6 +340,10 @@ authRouter.put('/info', Auth.check, async (req: Request, res: Response) => {
     name,
   }, res);
 });
+
+/**
+ * forgot password
+ */
 
 /**
  * update password

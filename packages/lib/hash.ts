@@ -7,6 +7,14 @@ function generateRandomNumber(length: number): string {
   return String(num).substring(0, length);
 }
 
+function hashData(data: Crypto.BinaryLike): string {
+  return Crypto.hash('sha256', data);
+}
+
+function uuid(): string {
+  return Crypto.randomUUID();
+}
+
 function hashPassword(password: string): string {
   const saltRounds = 12;
 
@@ -19,6 +27,8 @@ function checkPassword(password: string, hash: string): boolean {
 
 export default {
   generateRandomNumber,
+  hashData,
+  uuid,
   hashPassword,
   checkPassword,
 };

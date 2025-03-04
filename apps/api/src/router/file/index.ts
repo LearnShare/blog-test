@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import process from 'node:process';
-import crypto from 'node:crypto';
 
 import {
   Router,
@@ -14,6 +13,7 @@ import DB, {
   DB_SIZE,
   DB_SORT,
 } from '@packages/database';
+import Hash from '@packages/lib/hash';
 import Auth from '@/lib/auth';
 import {
   updateAccount,
@@ -143,7 +143,7 @@ fileRouter.post(
     }
 
     // 2. hash data
-    const hash = crypto.hash('sha256', buffer);
+    const hash = Hash.hashData(buffer);
 
     // 3. check exists
     const {

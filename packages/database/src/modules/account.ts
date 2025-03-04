@@ -5,6 +5,7 @@ export const AccountPublicFields = {
   email: true,
   name: true,
   avatar: true,
+  verified: true,
   ctime: true,
   utime: true,
 };

@@ -44,6 +44,7 @@ export async function getAccountInfo(id: number, res: Response) {
   const {
     email,
     name,
+    verified,
     ctime,
     utime,
   } = account;
@@ -52,6 +53,7 @@ export async function getAccountInfo(id: number, res: Response) {
     id,
     email,
     name,
+    verified,
     ctime,
     utime,
   });
