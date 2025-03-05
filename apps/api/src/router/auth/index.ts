@@ -45,7 +45,7 @@ async function generateCodeAndSendEmail(accountId: number, email: string, res: R
   }
 
   // 6. send email
-  /* await  */Mail.send(
+  await Mail.send(
     email,
     'Welcome to Blog, please verify your account',
     `Account verification code: ${code}`,
@@ -193,7 +193,10 @@ authRouter.post('/verify', Auth.check, async (req: Request, res: Response) => {
   const {
     data,
     error,
-  } = await DB.code.searchCode(id, code);
+  } = await DB.code.searchCode({
+    account: id,
+    code,
+  });
   if (error) {
     res.status(500)
       .json({
@@ -342,8 +345,144 @@ authRouter.put('/info', Auth.check, async (req: Request, res: Response) => {
 });
 
 /**
- * forgot password
+ * forgot password - send reset token (url)
  */
+authRouter.post('/forgot', async (req: Request, res: Response) => {
+  const {
+    email,
+  } = req.body;
+
+  // 1. check account
+  const {
+    data: account,
+    error,
+  } = await DB.account.getAccountByEmail(email);
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+  if (!account) {
+    res.status(404)
+      .json({
+        status: 404,
+        message: 'Account not found',
+      });
+    return;
+  }
+
+  // 2. generate token and send email
+  const code = Hash.uuid();
+  const {
+    data: activationCode,
+    error: codeError,
+  } = await DB.code.createCode(account.id, {
+    type: 'RESET_PASSWORD',
+    code,
+    etime: new Date(
+      Date.now()
+      + Number(process.env.ACCOUNT_VERIFICATION_CODE_EXPIRES)
+    ),
+  });
+  if (codeError) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: codeError,
+      });
+    return;
+  }
+
+  // 6. send email
+  await Mail.send(
+    email,
+    'Reset password for your Blog account',
+    `Reset password: http://blog.dev/reset/${code}`,
+  );
+
+  res.status(200)
+      .json({
+        status: 200,
+        message: 'Link sent',
+      });
+});
+
+/**
+ * forgot password - check reset token, and set new password
+ */
+authRouter.post('/reset', async (req: Request, res: Response) => {
+  const {
+    token,
+    password,
+  } = req.body;
+
+  // 1. search code data
+  const {
+    data,
+    error,
+  } = await DB.code.searchCode({
+    code: token,
+  });
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+  if (!data) {
+    res.status(400)
+        .json({
+          status: 400,
+          message: 'Invalid reset token',
+        });
+    return;
+  }
+
+  // 2. check account
+  const {
+    data: account,
+    error: accountError,
+  } = await DB.account.getAccountById(data.account);
+  if (accountError) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: accountError,
+      });
+    return;
+  }
+  if (!account) {
+    res.status(404)
+      .json({
+        status: 404,
+        message: 'Account not found',
+      });
+    return;
+  }
+
+  // 3. validate password
+  const passwordResult = Validator.validatePassword(password);
+  if (!passwordResult.success) {
+    res.status(400)
+        .json({
+          status: 400,
+          message: 'Invalid new password',
+        });
+    return;
+  }
+
+  // 4. update password
+  const hash = await Hash.hashPassword(password);
+
+  updateAccount(data.account, {
+    password: hash,
+  }, res);
+});
 
 /**
  * update password

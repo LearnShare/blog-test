@@ -1,6 +1,6 @@
 import prisma from '../prisma';
 
-type CodeType = 'UNKNOWN' | 'IMAGE' | 'VIDEO' | 'AUDIO';
+type CodeType = 'ACCOUNT_VERIFICATION' | 'RESET_PASSWORD';
 
 interface CodeData {
   code: string;
@@ -30,13 +30,10 @@ async function createCode(accountId: number, codeData: CodeData) {
 }
 
 // search with account and code
-async function searchCode(accountId: number, code: string) {
+async function searchCode(data: Record<string, any>) {
   try {
     const codeData = await prisma.code.findFirst({
-      where: {
-        account: accountId,
-        code,
-      },
+      where: data,
     });
 
     return {
