@@ -231,7 +231,22 @@ authRouter.post('/verify', Auth.check, async (req: Request, res: Response) => {
     return;
   }
 
-  // 3. update account.verified
+  // 3. set code used
+  const {
+    error: updateError,
+  } = await DB.code.updateCode(data.id, {
+    used: true,
+  });
+  if (updateError) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: updateError,
+      });
+    return;
+  }
+
+  // 4. update account.verified
   updateAccount(id, {
     verified: true,
   }, res);
@@ -443,7 +458,38 @@ authRouter.post('/reset', async (req: Request, res: Response) => {
     return;
   }
 
-  // 2. check account
+  // 2. check code data
+  const {
+    used,
+    etime,
+  } = data;
+
+  if (used
+      || etime < new Date()) {
+    res.status(400)
+        .json({
+          status: 400,
+          message: 'Invalid reset token',
+        });
+    return;
+  }
+
+  // 3. set code used
+  const {
+    error: updateError,
+  } = await DB.code.updateCode(data.id, {
+    used: true,
+  });
+  if (updateError) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: updateError,
+      });
+    return;
+  }
+
+  // 4. check account
   const {
     data: account,
     error: accountError,
@@ -465,7 +511,7 @@ authRouter.post('/reset', async (req: Request, res: Response) => {
     return;
   }
 
-  // 3. validate password
+  // 5. validate password
   const passwordResult = Validator.validatePassword(password);
   if (!passwordResult.success) {
     res.status(400)
@@ -476,7 +522,7 @@ authRouter.post('/reset', async (req: Request, res: Response) => {
     return;
   }
 
-  // 4. update password
+  // 6. update password
   const hash = await Hash.hashPassword(password);
 
   updateAccount(data.account, {

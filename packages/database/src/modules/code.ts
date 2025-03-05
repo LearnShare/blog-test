@@ -47,7 +47,33 @@ async function searchCode(data: Record<string, any>) {
   }
 }
 
+interface UpdateData {
+  used: boolean;
+}
+
+// update code
+async function updateCode(id: number, data: UpdateData) {
+  try {
+    const codeData = await prisma.code.update({
+      where: {
+        id,
+      },
+      data,
+    });
+
+    return {
+      data: codeData,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
 export default {
   createCode,
   searchCode,
+  updateCode,
 };
