@@ -37,42 +37,47 @@ const fileRouter = Router();
  * - page
  * - size
  */
-fileRouter.get('/', async (req: Request, res: Response) => {
-  const {
-    creator,
-    sort,
-    page,
-    size,
-  } = req.query;
+fileRouter.get(
+  '/',
+  Auth.check,
+  Auth.checkVerified,
+  async (req: Request, res: Response) => {
+    const {
+      creator,
+      sort,
+      page,
+      size,
+    } = req.query;
 
-  const {
-    data,
-    error,
-  } = await DB.file.getFiles({
-    creator: creator
-        ? Number(creator)
-        : null,
-    sort: sort
-        || DB_SORT,
-    page: page
-        ? Number(page)
-        : DB_PAGE,
-    size: size
-        ? Number(size)
-        : DB_SIZE,
-  });
+    const {
+      data,
+      error,
+    } = await DB.file.getFiles({
+      creator: creator
+          ? Number(creator)
+          : null,
+      sort: sort
+          || DB_SORT,
+      page: page
+          ? Number(page)
+          : DB_PAGE,
+      size: size
+          ? Number(size)
+          : DB_SIZE,
+    });
 
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
+    if (error) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: error,
+        });
+      return;
+    }
 
-  res.json(data);
-});
+    res.json(data);
+  },
+);
 
 const acceptMimeTypes = [
   'image/jpeg',
@@ -116,6 +121,7 @@ async function continueUpload(
 fileRouter.post(
   '/',
   Auth.check,
+  Auth.checkVerified,
   upload.single('file'),
   async (req: Request, res: Response) => {
     const {

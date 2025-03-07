@@ -5,6 +5,7 @@ import {
 import Validator from '@packages/lib/validator';
 import Hash from '@packages/lib/hash';
 import DB from '@packages/database';
+import Redis from '@/lib/redis';
 
 export async function getAccountInfo(id: number, res: Response) {
   // 1. check id
@@ -49,14 +50,18 @@ export async function getAccountInfo(id: number, res: Response) {
     utime,
   } = account;
 
-  res.json({
+  const accountData = {
     id,
     email,
     name,
     verified,
     ctime,
     utime,
-  });
+  };
+
+  await Redis.setAccountInfo(id, accountData);
+
+  res.json(accountData);
 }
 
 export async function updateAccount(id: number, data: Record<string, any>, res: Response) {
@@ -73,6 +78,8 @@ export async function updateAccount(id: number, data: Record<string, any>, res: 
       });
     return;
   }
+
+  await Redis.setAccountInfo(id, account);
 
   res.json(account);
 }

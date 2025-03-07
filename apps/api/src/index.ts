@@ -14,6 +14,7 @@ Dotenv.config({
 import log from '@/lib/log';
 import router from '@/router';
 import error from '@/lib/error';
+import Redis from '@/lib/redis';
 
 const app: Express = express();
 const port: number = 3000;
@@ -28,5 +29,5 @@ app.use(router);
 app.use(error);
 
 app.listen(port, () => {
-  console.log(`Blog server running, port: ${ port }`, '\n');
+  console.log(`[API]: ready, port: ${ port }`, '\n');
 });

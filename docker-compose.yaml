@@ -9,3 +9,8 @@ services:
       POSTGRES_DB: blog
       POSTGRES_USER: blog
       POSTGRES_PASSWORD: blog1234
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379

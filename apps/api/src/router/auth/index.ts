@@ -19,6 +19,7 @@ import {
   updatePassword,
 } from '@/lib/account';
 import Mail from '@/lib/mail';
+import Redis from '@/lib/redis';
 
 const authRouter = Router();
 
@@ -169,7 +170,7 @@ authRouter.get('/verify', Auth.check, async (req: Request, res: Response) => {
   }
 
   // 2. generate and save verification code
-  await generateCodeAndSendEmail(Number(id), email, res);
+  await generateCodeAndSendEmail(id, email, res);
 
   res.status(200)
       .json({
@@ -315,20 +316,24 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
     utime,
   } = account;
 
+  const accountData = {
+    id,
+    email,
+    name,
+    verified,
+    ctime,
+    utime,
+  };
+
+  await Redis.setAccountInfo(id, accountData);
+
   const token = await JWT.encrypt({
     id,
   });
 
   res.json({
     token,
-    data: {
-      id,
-      email,
-      name,
-      verified,
-      ctime,
-      utime,
-    },
+    data: accountData,
   });
 });
 
@@ -346,18 +351,23 @@ authRouter.get('/info', Auth.check, async (req: Request, res: Response) => {
 /**
  * update account info
  */
-authRouter.put('/info', Auth.check, async (req: Request, res: Response) => {
-  const {
-    id,
-  } = req.user;
-  const {
-    name,
-  } = req.body;
+authRouter.put(
+  '/info',
+  Auth.check,
+  Auth.checkVerified,
+  async (req: Request, res: Response) => {
+    const {
+      id,
+    } = req.user;
+    const {
+      name,
+    } = req.body;
 
-  updateAccount(id, {
-    name,
-  }, res);
-});
+    updateAccount(id, {
+      name,
+    }, res);
+  },
+);
 
 /**
  * forgot password - send reset token (url)
@@ -527,22 +537,28 @@ authRouter.post('/reset', async (req: Request, res: Response) => {
 
   updateAccount(data.account, {
     password: hash,
+    verified: true,
   }, res);
 });
 
 /**
  * update password
  */
-authRouter.put('/password', Auth.check, async (req: Request, res: Response) => {
-  const {
-    id,
-  } = req.user;
-  const {
-    oldPassword,
-    password,
-  } = req.body;
+authRouter.put(
+  '/password',
+  Auth.check,
+  Auth.checkVerified,
+  async (req: Request, res: Response) => {
+    const {
+      id,
+    } = req.user;
+    const {
+      oldPassword,
+      password,
+    } = req.body;
 
-  updatePassword(id, oldPassword, password, res);
-});
+    updatePassword(id, oldPassword, password, res);
+  },
+);
 
 export default authRouter;
