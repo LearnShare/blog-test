@@ -122,6 +122,7 @@ fileRouter.post(
   '/',
   Auth.check,
   Auth.checkVerified,
+  Auth.checkFileLimits,
   upload.single('file'),
   async (req: Request, res: Response) => {
     const {
@@ -130,6 +131,7 @@ fileRouter.post(
     const {
       type,
     } = req.body;
+    console.log(req.file);
     const {
       originalname,
       mimetype,

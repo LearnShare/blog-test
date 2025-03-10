@@ -201,9 +201,54 @@ async function updatePost(id: number, postData: PostData) {
   }
 }
 
+// get post stats
+async function getStats(id?: number) {
+  const authorQuery = id
+      ? {
+        author: {
+          id,
+        },
+      }
+      : {};
+
+  try {
+    const total = await prisma.post.count({
+      where: {
+        ...authorQuery,
+      },
+    });
+    const published = await prisma.post.count({
+      where: {
+        ...authorQuery,
+        published: true,
+      },
+    });
+    const unpublished = await prisma.post.count({
+      where: {
+        ...authorQuery,
+        published: false,
+      },
+    });
+    console.log(total, published, unpublished);
+
+    return {
+      data: {
+        total,
+        published,
+        unpublished,
+      },
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
 export default {
   createPost,
   getPosts,
   getPostById,
   updatePost,
+  getStats,
 };

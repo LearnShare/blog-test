@@ -4,11 +4,19 @@ import express, {
   Request,
   Response,
 } from 'express';
+import {
+  rateLimit,
+} from 'express-rate-limit';
 
 Dotenv.config();
 Dotenv.config({
   path: '.env.local',
   override: true,
+});
+
+const rateLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 100,
 });
 
 import log from '@/lib/log';
@@ -19,6 +27,8 @@ import Redis from '@/lib/redis';
 const app: Express = express();
 const port: number = 3000;
 
+// rate-limit: 100 req in 5min
+app.use(rateLimiter);
 // JSON body parser
 app.use(express.json());
 // log request

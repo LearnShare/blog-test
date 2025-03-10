@@ -79,7 +79,43 @@ async function checkVerified(
   next();
 }
 
+async function checkFileLimits(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const {
+    id,
+  } = req.user;
+
+  const {
+    data,
+    error,
+  } = await DB.file.getStats(id);
+
+  const {
+    total,
+    totalSize,
+  } = data;
+
+  const totalLimit = Number(process.env.UPLOAD_TOTAL);
+  const totalSizeLimit = Number(process.env.UPLOAD_TOTAL_SIZE);
+
+  if (total >= totalLimit
+      || totalSize >= totalSizeLimit) {
+    res.status(403)
+        .json({
+          code: 403,
+          message: 'Upload limit exceeded',
+        });
+    return;
+  }
+
+  next();
+}
+
 export default {
   check,
   checkVerified,
+  checkFileLimits,
 };

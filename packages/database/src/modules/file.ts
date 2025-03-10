@@ -134,9 +134,49 @@ async function getFileByHash(hash: string) {
   }
 }
 
+// get file stats
+async function getStats(creator?: number) {
+  const creatorQuery = creator
+      ? {
+        creator,
+      }
+      : {};
+
+  try {
+    const total = await prisma.file.count({
+      where: {
+        ...creatorQuery,
+      },
+    });
+    const sizeSum = await prisma.file.aggregate({
+      where: {
+        ...creatorQuery,
+      },
+      _sum: {
+        size: true,
+      },
+    });
+
+    const totalSize = sizeSum._sum.size
+        || 0;
+
+    return {
+      data: {
+        total,
+        totalSize,
+      },
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
 export default {
   getFiles,
   createFile,
   getFileById,
   getFileByHash,
+  getStats,
 };

@@ -561,4 +561,51 @@ authRouter.put(
   },
 );
 
+/**
+ * get account stats
+ */
+authRouter.get(
+  '/stats',
+  Auth.check,
+  Auth.checkVerified,
+  async (req: Request, res: Response) => {
+    const {
+      id,
+    } = req.user;
+
+    // 1. post stats
+    const {
+      data: postStats,
+      error: postError,
+    } = await DB.post.getStats(id);
+    if (postError) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: postError,
+        });
+      return;
+    }
+
+    // 2. file stats
+    const {
+      data: fileStats,
+      error: fileError,
+    } = await DB.file.getStats(id);
+    if (fileError) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: fileError,
+        });
+      return;
+    }
+
+    res.json({
+      post: postStats,
+      file: fileStats,
+    });
+  },
+);
+
 export default authRouter;
