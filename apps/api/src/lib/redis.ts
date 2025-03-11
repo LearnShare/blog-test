@@ -2,6 +2,8 @@ import {
   createClient,
 } from 'redis';
 
+import DB from '@packages/database';
+
 const redis = createClient({
   host: 'localhost',
   port: 6379,
@@ -16,10 +18,6 @@ redis.on('ready', () => {
 });
 
 await redis.connect();
-
-// TODO
-// - account permission
-// - request limit: [req-limit:id:path]
 
 function setAccountInfo(id: number, data: any): void {
   const key = [
@@ -40,7 +38,22 @@ async function getAccountInfo(id): any {
 
   const value = await redis.get(key);
   if (!value) {
-    return null;
+    const {
+      data: account,
+      error,
+    } = await DB.account.getAccountById(id);
+    if (error) {
+      return null;
+    }
+
+    const {
+      password,
+      ...rest
+    } = account;
+
+    await setAccountInfo(id, rest);
+
+    return rest;
   }
 
   return JSON.parse(value);

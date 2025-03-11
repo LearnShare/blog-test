@@ -39,7 +39,6 @@ async function check(
 
     next();
   } catch (error) {
-    console.log(error);
     res.status(401)
         .json({
           code: 401,
@@ -58,14 +57,7 @@ async function checkVerified(
     id,
   } = req.user;
 
-  let account = await Redis.getAccountInfo(id);
-  if (!account) {
-    const data = await DB.account.getAccountById(id);
-
-    account = data.data;
-
-    await Redis.setAccountInfo(id, account);
-  }
+  const account = await Redis.getAccountInfo(id);
 
   if (!account.verified) {
     res.status(403)
@@ -77,6 +69,31 @@ async function checkVerified(
   }
 
   next();
+}
+
+function checkRole(roles: string[]) {
+  return async function (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const {
+      id,
+    } = req.user;
+
+    const account = await Redis.getAccountInfo(id);
+
+    if (!roles.includes(account.role)) {
+      res.status(403)
+          .json({
+            code: 403,
+            message: 'Action not allowed',
+          });
+      return;
+    }
+
+    next();
+  };
 }
 
 async function checkFileLimits(
@@ -117,5 +134,6 @@ async function checkFileLimits(
 export default {
   check,
   checkVerified,
+  checkRole,
   checkFileLimits,
 };

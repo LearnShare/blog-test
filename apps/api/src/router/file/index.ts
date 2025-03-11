@@ -131,7 +131,6 @@ fileRouter.post(
     const {
       type,
     } = req.body;
-    console.log(req.file);
     const {
       originalname,
       mimetype,
@@ -181,7 +180,6 @@ fileRouter.post(
           flag: 'a',
         });
       } catch (error) {
-        console.log(error);
         res.status(500)
           .json({
             status: 500,

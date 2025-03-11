@@ -43,25 +43,13 @@ export async function getAccountInfo(id: number, res: Response) {
   }
 
   const {
-    email,
-    name,
-    verified,
-    ctime,
-    utime,
+    password,
+    ...rest
   } = account;
 
-  const accountData = {
-    id,
-    email,
-    name,
-    verified,
-    ctime,
-    utime,
-  };
+  await Redis.setAccountInfo(id, rest);
 
-  await Redis.setAccountInfo(id, accountData);
-
-  res.json(accountData);
+  res.json(rest);
 }
 
 export async function updateAccount(id: number, data: Record<string, any>, res: Response) {

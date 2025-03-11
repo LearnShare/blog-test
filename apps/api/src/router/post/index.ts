@@ -82,6 +82,7 @@ postRouter.post(
   '/',
   Auth.check,
   Auth.checkVerified,
+  Auth.checkRole(['ADMIN', 'AUTHOR']),
   async (req: Request, res: Response) => {
     const {
       id,
@@ -123,42 +124,42 @@ postRouter.post(
     }
 
     res.json(post);
-  });
-
-  /**
-   * get post by id
-   */
-  postRouter.get('/:id', async (req: Request, res: Response) => {
-    const {
-      id,
-    } = req.params;
-
-    const {
-      data: post,
-      error,
-    } = await DB.post.getPostById(Number(id));
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
-
-    if (!post) {
-      res.status(404)
-          .json({
-            status: 404,
-            message: 'Post not found',
-          });
-      return;
-    }
-
-    res.json(post);
   },
 );
+
+/**
+ * get post by id
+ */
+postRouter.get('/:id', async (req: Request, res: Response) => {
+  const {
+    id,
+  } = req.params;
+
+  const {
+    data: post,
+    error,
+  } = await DB.post.getPostById(Number(id));
+
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  if (!post) {
+    res.status(404)
+        .json({
+          status: 404,
+          message: 'Post not found',
+        });
+    return;
+  }
+
+  res.json(post);
+});
 
 /**
  * update post by id
@@ -167,6 +168,7 @@ postRouter.put(
   '/:id',
   Auth.check,
   Auth.checkVerified,
+  Auth.checkRole(['ADMIN', 'AUTHOR']),
   async (req: Request, res: Response) => {
     const {
       id: userId,

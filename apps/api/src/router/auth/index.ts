@@ -310,22 +310,14 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
   // 4. JWT token
   const {
     id,
-    name,
-    verified,
-    ctime,
-    utime,
   } = account;
 
-  const accountData = {
-    id,
-    email,
-    name,
-    verified,
-    ctime,
-    utime,
-  };
+  const {
+    password: accountPassword,
+    ...rest
+  } = account;
 
-  await Redis.setAccountInfo(id, accountData);
+  await Redis.setAccountInfo(id, rest);
 
   const token = await JWT.encrypt({
     id,
@@ -333,7 +325,7 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
 
   res.json({
     token,
-    data: accountData,
+    data: rest,
   });
 });
 
