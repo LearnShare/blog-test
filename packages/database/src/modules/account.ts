@@ -12,13 +12,15 @@ export const AccountPublicFields = {
 };
 
 // create account
-async function createAccount(email: string, password: string) {
+async function createAccount(email: string, password: string, role = 'USER', verified = false) {
   try {
     const account = await prisma.account.create({
       data: {
         email,
         name: email.replace('@', '#'),
         password,
+        role,
+        verified,
       },
       select: AccountPublicFields,
     });
