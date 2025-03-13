@@ -16,8 +16,9 @@ enum Role {
 model Account {
   id       Int      @id @default(autoincrement())
   email    String   @unique
-  name     String?
   password String
+  name     String?
+  uid      String   @unique
   avatar   Int?
   role     Role     @default(USER)
   verified Boolean  @default(false)
@@ -37,6 +38,7 @@ model Post {
   id        Int           @id @default(autoincrement())
   author    Account       @relation(fields: [authorId], references: [id])
   authorId  Int
+  uid       String        @unique
   cover     Int?
   title     String
   content   String

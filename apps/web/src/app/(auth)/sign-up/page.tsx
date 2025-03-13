@@ -2,12 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  Button,
   buttonVariants,
 } from '@/components/ui/button';
-import {
-  Input,
-} from '@/components/ui/input';
+import Divider from '@/components/divider';
+import SignUpForm from './form';
 
 import AuthLayout from '@/components/page/auth';
 
@@ -45,38 +43,8 @@ export default function PageSignUp() {
             <span className="w-[146px]">使用 Apple 账号登录</span>
           </Link>
         </div>
-        <div className="
-            my-4 flex gap-3 items-center text-sm text-slate-400
-            before:content-['']
-            before:border-b
-            before:border-gray-300
-            before:flex-1
-            after:content-['']
-            after:border-b
-            after:border-gray-300
-            after:flex-1">OR</div>
-        <form className="flex flex-col gap-3">
-          <div>
-            <label
-                htmlFor="email"
-                className="block mb-1 text-sm">邮箱</label>
-            <Input
-                name="email"
-                id="email" />
-          </div>
-          <div>
-            <label
-                htmlFor="password"
-                className="block mb-1 text-sm">密码</label>
-            <Input
-                name="password"
-                id="password"
-                type="password" />
-          </div>
-          <Button
-              className="mt-3"
-              size="lg">注册</Button>
-        </form>
+        <Divider className="my-4">OR</Divider>
+        <SignUpForm />
         <div className="mt-4 text-right text-sm text-slate-500">
           <span>已拥有账号，</span>
           <Link
