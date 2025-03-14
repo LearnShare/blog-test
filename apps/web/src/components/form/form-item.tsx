@@ -27,6 +27,7 @@ function FormItem({
     value,
     errors,
     itemOnChange,
+    itemOnInput,
   } = useContext(FormContext);
 
   const childrenClone = React.cloneElement(children, {
@@ -34,6 +35,7 @@ function FormItem({
     id: name,
     value: value[name],
     onChange: (event) => itemOnChange(name, event.currentTarget.value),
+    onInput: () => itemOnInput(name),
   });
 
   return (
@@ -42,6 +44,9 @@ function FormItem({
           className={ cn(
             'flex gap-2 items-center',
             'group-data-[layout=vertical]:flex-col',
+            {
+              '[&>input]:border-red-500': errors?.[name],
+            },
             className
           ) }>
         <label
@@ -54,8 +59,8 @@ function FormItem({
         { childrenClone }
       </div>
       {
-        errors[name] && (
-          <FormError>{ errors[name] }</FormError>
+        errors?.[name] && (
+          <FormError>{ errors?.[name] }</FormError>
         )
       }
     </div>

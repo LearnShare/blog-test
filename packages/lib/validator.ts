@@ -12,8 +12,12 @@ function validateEmail(email: string) {
   return ZodEmail.safeParse(email);
 }
 
+const passwordReg = /^[A-Za-z0-9~!@#$%^&*+-_=]{8,20}$/;
+
 const ZodPassword = z.string()
-    .min(6);
+    .min(8)
+    .max(20)
+    .regex(passwordReg);
 /**
  * validate password string
  * @param password string

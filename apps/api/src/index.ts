@@ -7,6 +7,7 @@ import express, {
 import {
   rateLimit,
 } from 'express-rate-limit';
+import cors from 'cors';
 
 Dotenv.config();
 Dotenv.config({
@@ -27,6 +28,7 @@ import Redis from '@/lib/redis';
 const app: Express = express();
 const port: number = 3000;
 
+app.use(cors());
 // rate-limit: 100 req in 5min
 app.use(rateLimiter);
 // JSON body parser
