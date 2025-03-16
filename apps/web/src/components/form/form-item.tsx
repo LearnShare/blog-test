@@ -14,6 +14,7 @@ interface FormItemProps {
   className: string;
   label: string;
   name: string;
+  hint?: React.ReactNode;
   children: React.ReactElement;
 }
 
@@ -21,6 +22,7 @@ function FormItem({
   className,
   label,
   name,
+  hint,
   children,
 }: FormItemProps) {
   const {
@@ -45,7 +47,7 @@ function FormItem({
             'flex gap-2 items-center',
             'group-data-[layout=vertical]:flex-col',
             {
-              '[&>input]:border-red-500': errors?.[name],
+              '[&_input]:border-red-500': errors?.[name],
             },
             className
           ) }>
@@ -62,6 +64,9 @@ function FormItem({
         errors?.[name] && (
           <FormError>{ errors?.[name] }</FormError>
         )
+      }
+      {
+        hint
       }
     </div>
   );

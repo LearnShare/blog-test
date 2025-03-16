@@ -5,6 +5,10 @@ import React, {
   useState,
   useCallback,
 } from 'react';
+import Link from 'next/link';
+import {
+  useRouter,
+} from 'next/navigation';
 
 import {
   Button,
@@ -27,18 +31,11 @@ import {
 import {
   useRequest,
 } from '@/hooks'
+import Store from '@/lib/store';
 
-const KnownErrors = {
-  'Account already exists': '账号已存在',
-};
+function SignInForm() {
+  const router = useRouter();
 
-interface SignUpFormProps {
-  onSuccess?: () => void;
-}
-
-function SignUpForm({
-  onSuccess,
-}: SignUpFormProps) {
   const [
     formData,
     setFormData,
@@ -112,7 +109,7 @@ function SignUpForm({
       password,
     } = formData;
 
-    return auth.signUp(email, password);
+    return auth.signIn(email, password);
   };
 
   const {
@@ -121,9 +118,28 @@ function SignUpForm({
     error,
   } = useRequest(validateAndSubmit, {
     auto: false,
-    onSuccess: () => {
-      onSuccess?.();
+    onSuccess: (res) => {
+      const {
+        token,
+        data,
+      } = res;
+
+      const {
+        uid,
+        verified,
+      } = data;
+
+      Store.setToken(token);
+
+      if (!verified) {
+        router.push('/welcome');
+      } else {
+        router.push(`/@${uid}`);
+      }
     },
+    // onError: (e: any) => {
+    //   console.log(e);
+    // },
   });
 
   return (
@@ -146,21 +162,29 @@ function SignUpForm({
       </FormItem>
       <FormItem
           label="密码"
-          name="password">
+          name="password"
+          hint={ (
+            <div className="mt-2 text-right text-sm text-slate-500">
+              <span>忘记密码，</span>
+              <Link
+                  href="/forgot"
+                  className="underline text-slate-600">找回</Link>
+            </div>
+          ) }>
         <InputPassword />
       </FormItem>
       <Button
           className="mt-3"
           size="lg"
           disabled={ loading }
-          onClick={ () => signUp() }>注册</Button>
+          onClick={ () => signUp() }>登录</Button>
       {
         error && (
-          <FormError>{ KnownErrors[error.message] || error.message }</FormError>
+          <FormError>{ error.message }</FormError>
         )
       }
     </Form>
   );
 }
 
-export default SignUpForm;
+export default SignInForm;

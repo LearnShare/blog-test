@@ -19,6 +19,7 @@ async function createAccount(email: string, password: string, role = 'USER', ver
         email,
         name: email.replace('@', '#'),
         password,
+        uid: email.replace('@', '#'),
         role,
         verified,
       },

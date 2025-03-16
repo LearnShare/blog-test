@@ -4,17 +4,17 @@ import DB from '@packages/database';
 const accounts = [
   {
     email: 'admin@test.com',
-    password: '123456',
+    password: '11223344',
     role: 'ADMIN',
   },
   {
     email: 'author@test.com',
-    password: '123456',
+    password: '11223344',
     role: 'AUTHOR',
   },
   {
     email: 'user@test.com',
-    password: '123456',
+    password: '11223344',
     role: 'USER',
   },
 ];

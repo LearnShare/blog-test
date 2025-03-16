@@ -3,14 +3,18 @@ import axios from 'axios';
 // get token from localStorage
 const TOKEN_KEY = 'BLOG_TOKEN';
 
-const token = typeof window !== 'undefined'
-    ? window.localStorage.getItem(TOKEN_KEY)
-    : '';
+function getToken() {
+  const token = typeof window !== 'undefined'
+      ? window.localStorage.getItem(TOKEN_KEY)
+      : '';
+
+  return token;
+}
 
 const HTTP = axios.create({
   baseURL: 'http://localhost:3000/api',
   headers: {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${getToken()}`,
   },
   timeout: 10 * 1000, // 10s
 });

@@ -42,7 +42,7 @@ async function check(
     res.status(401)
         .json({
           code: 401,
-          message: 'Invalid token',
+          message: 'Invalid authorization token',
         });
     return;
   }

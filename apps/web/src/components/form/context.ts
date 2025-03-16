@@ -7,15 +7,15 @@ import {
 export interface FormContextType {
   value: Record<string, any>;
   errors: Record<string, string>;
-  onChange: (name: string, data: any) => void;
-  onInput: (name: string) => void;
+  itemOnChange: (name: string, data: any) => void;
+  itemOnInput: (name: string) => void;
 }
 
 const FormContext = createContext<FormContextType>({
   value: {},
   errors: {},
-  onChange: () => {},
-  onInput: () => {},
+  itemOnChange: () => {},
+  itemOnInput: () => {},
 });
 
 export default FormContext;

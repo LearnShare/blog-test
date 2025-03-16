@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "main": "src/index.ts",
   "type": "module",
+  "scripts": {
+    "reset": "prisma db push --force-reset && prisma db seed"
+  },
   "prisma": {
     "seed": "tsx ../../seed/index.ts"
   },
