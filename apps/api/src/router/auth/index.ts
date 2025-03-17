@@ -412,7 +412,7 @@ authRouter.post('/forgot', async (req: Request, res: Response) => {
   await Mail.send(
     email,
     'Reset password for your Blog account',
-    `Reset password: http://blog.dev/reset/${code}`,
+    `Reset password: http://blog.dev/reset?token=${code}`,
   );
 
   res.status(200)

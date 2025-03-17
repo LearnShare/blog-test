@@ -4,11 +4,8 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useContext,
 } from 'react';
-import {
-  useRouter,
-} from 'next/navigation';
+import Link from 'next/link';
 
 import {
   Button,
@@ -20,9 +17,8 @@ import {
   Form,
   FormItem,
   FormError,
-  validateUid,
+  validateEmail,
 } from '@/components/form';
-import AccountContext from '@/components/provider/account-context';
 
 import {
   auth,
@@ -31,14 +27,16 @@ import {
   useRequest,
 } from '@/hooks'
 
-function UpdateForm() {
-  const router = useRouter();
+const KnownErrors = {
+};
 
-  const {
-    info,
-    setInfo,
-  } = useContext(AccountContext);
+interface ForgotFormProps {
+  onSuccess?: () => void;
+}
 
+function ForgotForm({
+  onSuccess,
+}: ForgotFormProps) {
   const [
     formData,
     setFormData,
@@ -57,24 +55,13 @@ function UpdateForm() {
     setFormDirty(dirty);
   };
 
-  const validateName = (value: string) => {
-    if (!value) {
-      return '名字不能为空';
-    }
-
-    return null;
-  };
-
   // TODO validate in form-item props
-  const validate = useCallback((name: string, value: any) => {
+  const validate = (name: string, value: any) => {
     let result = '';
 
     switch (name) {
-      case 'name':
-        result = validateName(value);
-        break;
-      case 'uid':
-        result = validateUid(value);
+      case 'email':
+        result = validateEmail(value);
         break;
       default:
     }
@@ -83,7 +70,7 @@ function UpdateForm() {
       ...oldValue,
       [name]: result,
     }));
-  }, []);
+  };
 
   const validateForm = useCallback((
     data: Record<string, any>,
@@ -94,9 +81,7 @@ function UpdateForm() {
         validate(name, data[name]);
       }
     }
-  }, [
-    validate,
-  ]);
+  }, []);
 
   useEffect(() => {
     validateForm(formData, formDirty);
@@ -117,38 +102,29 @@ function UpdateForm() {
       }
     }
 
-    return auth.updateInfo(formData);
+    const {
+      email,
+    } = formData;
+
+    return auth.forgotPassword(email);
   };
 
   const {
-    run: updateInfo,
+    run: send,
     loading,
     error,
   } = useRequest(validateAndSubmit, {
     auto: false,
-    onSuccess: (res) => {
-      setInfo(res);
-
-      const {
-        uid,
-      } = res;
-
-      router.push(`/@${uid}`);
+    onSuccess: () => {
+      onSuccess?.();
     },
   });
-
-  if (!info) {
-    return null;
-  }
-
-  // TODO: upload avatar
 
   return (
     <Form
         layout="vertical"
         initialValue={ {
-          name: info.name,
-          uid: info.uid,
+          email: '',
         } }
         errors={ errors }
         disabled={ loading }
@@ -157,33 +133,28 @@ function UpdateForm() {
           dirty: Record<string, boolean>
         ) => formOnChange(data, dirty) }>
       <FormItem
-          label="名字"
-          name="name">
-        <Input />
-      </FormItem>
-      <FormItem
-          label="ID"
-          name="uid">
+          label="邮箱"
+          name="email">
         <Input />
       </FormItem>
       <Button
           className="mt-3"
           size="lg"
           disabled={ loading }
-          onClick={ () => updateInfo() }>修改并继续</Button>
+          onClick={ () => send() }>继续</Button>
       {
         error && (
-          <FormError>{ error.message }</FormError>
+          <FormError>{ KnownErrors[error.message] || error.message }</FormError>
         )
       }
-      <Button
-          className="mt-6"
-          variant="outline"
-          size="lg"
-          disabled={ loading }>跳过</Button>
-      <div className="text-right text-xs text-slate-500">稍后可以在个人中修改</div>
+      <div className="mt-4 text-right text-sm text-slate-500">
+        <span>忘记账号，</span>
+        <Link
+            href="/hi"
+            className="underline text-slate-600">联系管理员</Link>
+      </div>
     </Form>
   );
 }
 
-export default UpdateForm;
+export default ForgotForm;

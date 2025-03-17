@@ -1,9 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-import {
-  buttonVariants,
-} from '@/components/ui/button';
+import HeaderActions from './actions';
 
 export default function Header() {
   const linkCns = 'block py-1 text-md text-slate-700 hover:underline hover:text-slate-500';
@@ -36,20 +34,7 @@ export default function Header() {
             </li>
           </ul>
         </nav>
-        <div className="flex gap-2">
-          <Link
-              href="/sign-up"
-              className={ buttonVariants({
-                variant: 'outline',
-                size: 'sm',
-              }) }>注册</Link>
-          <Link
-              href="/sign-in"
-              className={ buttonVariants({
-                variant: 'default',
-                size: 'sm',
-              }) }>登录</Link>
-        </div>
+        <HeaderActions />
       </div>
     </header>
   );
