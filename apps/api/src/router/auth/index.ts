@@ -351,13 +351,8 @@ authRouter.put(
     const {
       id,
     } = req.user;
-    const {
-      name,
-    } = req.body;
 
-    updateAccount(id, {
-      name,
-    }, res);
+    updateAccount(id, req.body, res);
   },
 );
 

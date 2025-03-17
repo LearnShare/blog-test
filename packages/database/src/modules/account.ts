@@ -4,6 +4,7 @@ export const AccountPublicFields = {
   id: true,
   email: true,
   name: true,
+  uid: true,
   avatar: true,
   verified: true,
   role: true,
@@ -66,6 +67,27 @@ async function getAccountById(id: number) {
         id,
       },
       // select: AccountPublicFields,
+    });
+
+    return {
+      data: account,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
+// get account info by uid
+async function getAccountByUid(uid: string) {
+  try {
+    const account = await prisma.account.findUnique({
+      where: {
+        uid,
+      },
+      select: AccountPublicFields,
     });
 
     return {
@@ -214,6 +236,7 @@ export default {
   createAccount,
   getAccountByEmail,
   getAccountById,
+  getAccountByUid,
   getAccounts,
   getAccountsByIds,
   updateAccount,

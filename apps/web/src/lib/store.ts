@@ -1,6 +1,8 @@
 // window.localStorage
 
-const store = window.localStorage;
+const store = typeof window !== 'undefined'
+    ? window.localStorage
+    : '';
 const TOKEN_KEY = 'BLOG_TOKEN';
 
 function set(key: string, value: string) {

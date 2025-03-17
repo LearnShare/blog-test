@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import Link from 'next/link';
 import {
   useRouter,
 } from 'next/navigation';
@@ -21,10 +20,8 @@ import {
   Form,
   FormItem,
   FormError,
-  validateEmail,
-  validatePassword,
+  validateUid,
 } from '@/components/form';
-import InputPassword from '@/components/form/controls/input-password';
 import AccountContext from '@/components/provider/account-context';
 
 import {
@@ -33,14 +30,41 @@ import {
 import {
   useRequest,
 } from '@/hooks'
-import Store from '@/lib/store';
 
-function SignInForm() {
+function UpdateForm() {
   const router = useRouter();
 
   const {
+    info,
     setInfo,
   } = useContext(AccountContext);
+
+  const {
+    run: getInfo,
+    loading: loadingInfo,
+    data: loaded,
+    error: loadInfoError,
+  } = useRequest(auth.accountInfo, {
+    auto: false,
+    onSuccess: (res) => {
+      setInfo(res);
+    },
+  });
+  // TODO switch to SWR
+  useEffect(() => {
+    if (!info
+        && !loaded
+        && !loadingInfo
+        && !loadInfoError) {
+      getInfo();
+    }
+  }, [
+    info,
+    loaded,
+    loadingInfo,
+    loadInfoError,
+    getInfo,
+  ]);
 
   const [
     formData,
@@ -60,16 +84,24 @@ function SignInForm() {
     setFormDirty(dirty);
   };
 
+  const validateName = (value: string) => {
+    if (!value) {
+      return '名字不能为空';
+    }
+
+    return null;
+  };
+
   // TODO validate in form-item props
-  const validate = (name: string, value: any) => {
+  const validate = useCallback((name: string, value: any) => {
     let result = '';
 
     switch (name) {
-      case 'email':
-        result = validateEmail(value);
+      case 'name':
+        result = validateName(value);
         break;
-      case 'password':
-        result = validatePassword(value);
+      case 'uid':
+        result = validateUid(value);
         break;
       default:
     }
@@ -78,7 +110,7 @@ function SignInForm() {
       ...oldValue,
       [name]: result,
     }));
-  };
+  }, []);
 
   const validateForm = useCallback((
     data: Record<string, any>,
@@ -89,7 +121,9 @@ function SignInForm() {
         validate(name, data[name]);
       }
     }
-  }, []);
+  }, [
+    validate,
+  ]);
 
   useEffect(() => {
     validateForm(formData, formDirty);
@@ -110,48 +144,36 @@ function SignInForm() {
       }
     }
 
-    const {
-      email,
-      password,
-    } = formData;
-
-    return auth.signIn(email, password);
+    return auth.updateInfo(formData);
   };
 
   const {
-    run: signIn,
+    run: updateInfo,
     loading,
     error,
   } = useRequest(validateAndSubmit, {
     auto: false,
     onSuccess: (res) => {
       const {
-        token,
-        data,
+        uid,
       } = res;
 
-      const {
-        uid,
-        verified,
-      } = data;
-
-      Store.setToken(token);
-      setInfo(data);
-
-      if (!verified) {
-        router.push('/welcome');
-      } else {
-        router.push(`/@${uid}`);
-      }
+      router.push(`/@${uid}`);
     },
   });
+
+  if (!info) {
+    return null;
+  }
+
+  // TODO: upload avatar
 
   return (
     <Form
         layout="vertical"
         initialValue={ {
-          email: '',
-          password: '',
+          name: info.name,
+          uid: info.uid,
         } }
         errors={ errors }
         disabled={ loading }
@@ -160,35 +182,33 @@ function SignInForm() {
           dirty: Record<string, boolean>
         ) => formOnChange(data, dirty) }>
       <FormItem
-          label="邮箱"
-          name="email">
+          label="名字"
+          name="name">
         <Input />
       </FormItem>
       <FormItem
-          label="密码"
-          name="password"
-          hint={ (
-            <div className="mt-2 text-right text-sm text-slate-500">
-              <span>忘记密码，</span>
-              <Link
-                  href="/forgot"
-                  className="underline text-slate-600">找回</Link>
-            </div>
-          ) }>
-        <InputPassword />
+          label="ID"
+          name="uid">
+        <Input />
       </FormItem>
       <Button
           className="mt-3"
           size="lg"
           disabled={ loading }
-          onClick={ () => signIn() }>登录</Button>
+          onClick={ () => updateInfo() }>修改并继续</Button>
       {
         error && (
           <FormError>{ error.message }</FormError>
         )
       }
+      <Button
+          className="mt-6"
+          variant="outline"
+          size="lg"
+          disabled={ loading }>跳过</Button>
+      <div className="text-right text-xs text-slate-500">稍后可以在个人中修改</div>
     </Form>
   );
 }
 
-export default SignInForm;
+export default UpdateForm;

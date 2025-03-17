@@ -45,10 +45,11 @@ function accountStats() {
   return HTTP.get('/auth/stats');
 }
 
-function updateInfo(name: string) {
-  return HTTP.post('/auth/info', {
-    name,
-  });
+function updateInfo(data: {
+  name?: string;
+  uid?: string;
+}) {
+  return HTTP.put('/auth/info', data);
 }
 
 function updatePassword(oldPassword: string, password: string) {

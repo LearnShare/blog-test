@@ -30,13 +30,13 @@ const KnownErrors = {
   'Invalid verification code': '无效的激活代码',
 };
 
-interface WelcomeFormProps {
+interface VerifyFormProps {
   onSuccess?: () => void;
 }
 
-function WelcomeForm({
+function VerifyForm({
   onSuccess,
-}: WelcomeFormProps) {
+}: VerifyFormProps) {
   const [
     formData,
     setFormData,
@@ -206,4 +206,4 @@ function WelcomeForm({
   );
 }
 
-export default WelcomeForm;
+export default VerifyForm;

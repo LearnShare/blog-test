@@ -26,7 +26,20 @@ function validatePassword(password: string): ValidateResult {
   return null;
 }
 
+function validateUid(uid: string): ValidateResult {
+  if (!uid) {
+    return '请输入 UID';
+  }
+
+  if (!Validator.validateUid(uid).success) {
+    return '请输入有效的 UID';
+  }
+
+  return null;
+}
+
 export {
   validateEmail,
   validatePassword,
+  validateUid,
 };

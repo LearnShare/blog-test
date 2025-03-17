@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import "./globals.css";
+import Provider from '@/components/provider';
+
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "A full-stack blog app",
+  title: 'Blog',
+  description: 'Just another blog system',
 };
 
 export default function RootLayout({
@@ -13,9 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html>
       <body>
-        {children}
+        <Provider>
+        { children }
+        </Provider>
       </body>
     </html>
   );
