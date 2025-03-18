@@ -12,7 +12,7 @@ function ForgotViews() {
   const [
     view,
     setView,
-  ] = useState<ViewType>('sent');
+  ] = useState<ViewType>('forgot');
 
   return (
     <>
