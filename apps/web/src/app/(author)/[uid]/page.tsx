@@ -2,6 +2,7 @@ import React from 'react';
 
 import HomeLayout from '@/components/page/home';
 import PostCard from '@/components/post/card';
+import Avatar from '@/components/avatar';
 
 export default async function PageAuthor({
   params,
@@ -17,9 +18,14 @@ export default async function PageAuthor({
   return (
     <HomeLayout>
       <div className="flex justify-between items-center">
-        <div className="py-2 flex-col gap-3">
-          <h4 className="text-2xl text-slate-800">Username</h4>
-          <p className="text-sm text-slate-400">@{uid.substring(3)}</p>
+        <div className="py-2 flex gap-2 items-center">
+          <Avatar
+              name="Username"
+              round />
+          <div className="flex-col gap-2">
+            <h4 className="text-lg text-slate-800">Username</h4>
+            <p className="text-sm text-slate-400">@{uid.substring(3)}</p>
+          </div>
         </div>
         <div className="w-[1px] h-[40px] bg-gray-300"></div>
         <div className="py-2 flex-col gap-3">
