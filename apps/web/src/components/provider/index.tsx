@@ -21,7 +21,13 @@ interface ProviderProps {
 function Provider({
   children,
 }: ProviderProps) {
-  const token = Store.getToken();
+  const [
+    token,
+    setToken,
+  ] = useState('');
+  useEffect(() => {
+    setToken(Store.getToken());
+  }, []);
 
   const [
     info,

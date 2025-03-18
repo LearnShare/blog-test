@@ -35,6 +35,10 @@ import {
 } from '@/hooks'
 import Store from '@/lib/store';
 
+const KnownErrors = {
+  'Account or Password error': '账号或密码错误',
+};
+
 function SignInForm() {
   const router = useRouter();
 
@@ -184,7 +188,7 @@ function SignInForm() {
           onClick={ () => signIn() }>登录</Button>
       {
         error && (
-          <FormError>{ error.message }</FormError>
+          <FormError>{ KnownErrors[error.message] || error.message }</FormError>
         )
       }
     </Form>

@@ -31,7 +31,7 @@ function WelcomeViews() {
       <p className="text-sm text-gray-500 text-center">{ message }</p>
       {
         view === 'verify' && (
-          <VerifyForm onSuccess={ () => setView('verify') } />
+          <VerifyForm onSuccess={ () => setView('update') } />
         )
       }
       {

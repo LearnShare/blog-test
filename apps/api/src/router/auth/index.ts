@@ -129,7 +129,7 @@ authRouter.post('/sign-up', async (req: Request, res: Response) => {
   }
 
   // 5. generate and save verification code
-  await generateCodeAndSendEmail(account.id, email, res);
+  generateCodeAndSendEmail(account.id, email, res);
 
   res.json(account);
 });

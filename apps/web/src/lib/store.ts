@@ -2,7 +2,12 @@
 
 const store = typeof window !== 'undefined'
     ? window.localStorage
-    : '';
+    : {
+      setItem: () => {},
+      getItem: () => {},
+      removeItem: () => {},
+      clear: () => {},
+    };
 const TOKEN_KEY = 'BLOG_TOKEN';
 
 function set(key: string, value: string) {

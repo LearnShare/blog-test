@@ -13,11 +13,23 @@ function getToken() {
 
 const HTTP = axios.create({
   baseURL: 'http://localhost:3000/api',
-  headers: {
-    Authorization: `Bearer ${getToken()}`,
-  },
   timeout: 10 * 1000, // 10s
 });
+
+HTTP.interceptors.request
+    .use((req) => {
+      const {
+        headers,
+      } = req;
+
+      return {
+        ...req,
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${getToken()}`,
+        },
+      };
+    });
 
 // TODO redirect to login when 401
 HTTP.interceptors.response

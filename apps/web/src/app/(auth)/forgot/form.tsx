@@ -28,6 +28,7 @@ import {
 } from '@/hooks'
 
 const KnownErrors = {
+  'Account not found': '账号不存在',
 };
 
 interface ForgotFormProps {

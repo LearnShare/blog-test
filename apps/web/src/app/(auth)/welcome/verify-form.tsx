@@ -176,6 +176,7 @@ function VerifyForm({
             dirty: Record<string, boolean>
           ) => formOnChange(data, dirty) }>
         <FormItem
+            label="激活代码"
             name="code">
           <Input />
         </FormItem>
