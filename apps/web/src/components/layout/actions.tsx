@@ -11,7 +11,10 @@ import {
   Handshake as IconHandshake,
   UserPen as IconUserPen,
   LogOut as IconLogOut,
+  House as IconHouse,
+  Settings2 as IconSettings2,
 } from 'lucide-react';
+import Cookies from 'js-cookie';
 
 import {
   buttonVariants,
@@ -31,8 +34,8 @@ import AccountContext from '@/components/provider/account-context';
 import Avatar from '@/components/avatar';
 import Store from '@/lib/store';
 import {
-  deleteCookie,
-} from '../../app/(auth)/sign-in/actions';
+  AuthorRoles,
+} from '@/lib/config';
 
 function HeaderActions() {
   const router = useRouter();
@@ -46,10 +49,13 @@ function HeaderActions() {
     Store.setToken('');
     setInfo(null);
 
-    deleteCookie();
+    Cookies.remove('BLOG_TOKEN');
 
     router.push('/');
   };
+
+  const author = info
+      && AuthorRoles.includes(info.role);
 
   return (
     <div className="flex gap-2 items-center">
@@ -88,13 +94,29 @@ function HeaderActions() {
               </div>
               <Command>
                 <CommandList>
+                  {
+                    (!author) && (
+                      <CommandItem>
+                        <IconHandshake />
+                        <span>成为作者</span>
+                      </CommandItem>
+                    )
+                  }
                   <CommandItem>
-                    <IconHandshake />
-                    <span>成为作者</span>
+                    <IconHouse />
+                    <span>个人主页</span>
                   </CommandItem>
+                  {
+                    (author) && (
+                      <CommandItem>
+                        <IconUserPen />
+                        <span>我的文章</span>
+                      </CommandItem>
+                    )
+                  }
                   <CommandItem>
-                    <IconUserPen />
-                    <span>个人设置</span>
+                    <IconSettings2 />
+                    <span>账号设置</span>
                   </CommandItem>
                   <CommandItem
                       onSelect={ () => logout() }>

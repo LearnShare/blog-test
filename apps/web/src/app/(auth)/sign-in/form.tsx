@@ -11,6 +11,7 @@ import {
   useRouter,
   useSearchParams,
 } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 import {
   Button,
@@ -35,9 +36,6 @@ import {
   useRequest,
 } from '@/hooks'
 import Store from '@/lib/store';
-import {
-  setCookie,
-} from './actions';
 
 const KnownErrors = {
   'Account or Password error': '账号或密码错误',
@@ -146,7 +144,7 @@ function SignInForm() {
       Store.setToken(token);
       setInfo(data);
 
-      setCookie(token);
+      Cookies.set('BLOG_TOKEN', token);
 
       if (!verified) {
         router.push('/welcome');
