@@ -3,11 +3,10 @@ import Account, {
   AccountPublicFields,
 } from './account';
 
-export interface PostData {
-  title: string;
-  content: string;
-  published: boolean;
-}
+import {
+  PostData,
+  PostsQuery,
+} from '../types';
 
 // create post
 async function createPost(accountId: number, postData: PostData) {
@@ -32,16 +31,6 @@ async function createPost(accountId: number, postData: PostData) {
       error,
     };
   }
-}
-
-export interface PostsQuery {
-  search?: string;
-  author?: number;
-  account?: boolean;
-  published?: boolean;
-  sort?: string;
-  page?: number;
-  size?: number;
 }
 
 // get posts
@@ -177,6 +166,31 @@ async function getPostById(id: number) {
   }
 }
 
+// get post by uid
+async function getPostByUid(uid: string) {
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        uid,
+      },
+      include: {
+        author: {
+          select: AccountPublicFields,
+        },
+      },
+    });
+
+    return {
+      data: post,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
 // update post
 async function updatePost(id: number, postData: PostData) {
   try {
@@ -249,6 +263,7 @@ export default {
   createPost,
   getPosts,
   getPostById,
+  getPostByUid,
   updatePost,
   getStats,
 };

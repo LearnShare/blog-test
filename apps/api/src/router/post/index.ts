@@ -10,6 +10,7 @@ import DB, {
   DB_SORT,
 } from '@packages/database';
 import Auth from '@/lib/auth';
+import Hash from '@packages/lib/hash';
 
 const postRouter = Router();
 
@@ -89,7 +90,10 @@ postRouter.post(
     } = req.user;
     const {
       title,
+      intro,
+      uid,
       content,
+      format,
       published,
     } = req.body;
 
@@ -104,13 +108,44 @@ postRouter.post(
       return;
     }
 
-    // 2. create post
+    if (uid) {
+      // 2. check is uid exist
+      const {
+        data: post,
+        error,
+      } = await DB.post.getPostByUid(uid);
+
+      if (error) {
+        res.status(500)
+          .json({
+            status: 500,
+            message: error,
+          });
+        return;
+      }
+
+      if (post) {
+        res.status(400)
+            .json({
+              status: 400,
+              message: 'UID exists',
+            });
+        return;
+      }
+    }
+
+    // 3. create post
     const {
       data: post,
       error,
     } = await DB.post.createPost(id, {
       title,
+      intro,
+      uid: uid
+          ? uid
+          : Hash.uuid(),
       content,
+      format,
       published,
     });
 

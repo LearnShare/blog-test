@@ -48,6 +48,7 @@ function FormItem({
             'group-data-[layout=vertical]:flex-col',
             {
               '[&_input]:border-red-500': errors?.[name],
+              '[&_textarea]:border-red-500': errors?.[name],
             },
             className
           ) }>

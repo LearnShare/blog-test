@@ -29,7 +29,7 @@ function DataGrid() {
           value="1234" />
       <div>
         <Link
-            href="/posts"
+            href="/write"
             className={ buttonVariants({
               variant: 'outline',
               size: 'sm',

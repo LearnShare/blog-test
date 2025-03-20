@@ -9,3 +9,22 @@ export interface ListQuery {
   search?: string;
   // [key: string]: any;
 }
+
+export interface PostData {
+  title: string;
+  intro?: string;
+  uid?: string;
+  content: string;
+  format?: string;
+  published?: boolean;
+}
+
+export interface PostsQuery {
+  search?: string;
+  author?: number;
+  account?: boolean;
+  published?: boolean;
+  sort?: string;
+  page?: number;
+  size?: number;
+}

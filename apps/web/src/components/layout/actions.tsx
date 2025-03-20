@@ -102,19 +102,22 @@ function HeaderActions() {
                       </CommandItem>
                     )
                   }
-                  <CommandItem>
+                  <CommandItem
+                      onSelect={ () => router.push('/home') }>
                     <IconHouse />
                     <span>个人主页</span>
                   </CommandItem>
                   {
                     (author) && (
-                      <CommandItem>
+                      <CommandItem
+                          onSelect={ () => router.push('/posts') }>
                         <IconUserPen />
                         <span>我的文章</span>
                       </CommandItem>
                     )
                   }
-                  <CommandItem>
+                  <CommandItem
+                      onSelect={ () => router.push('/settings') }>
                     <IconSettings2 />
                     <span>账号设置</span>
                   </CommandItem>

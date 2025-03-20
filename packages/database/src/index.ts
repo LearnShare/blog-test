@@ -4,6 +4,7 @@ import file from './modules/file';
 import code from './modules/code';
 
 export * from './config';
+export * from './types';
 
 export default {
   account,

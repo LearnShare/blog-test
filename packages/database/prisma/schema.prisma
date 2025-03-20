@@ -41,6 +41,7 @@ model Post {
   uid       String        @unique
   cover     Int?
   title     String
+  intro     String
   content   String
   format    ContentFormat @default(TEXT)
   images    Int[]

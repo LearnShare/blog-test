@@ -7,8 +7,6 @@ import {
   NotebookPen as IconNotebookPen,
 } from 'lucide-react';
 
-import DataGrid from './data/grid';
-import DataCharts from './data/charts';
 import {
   Button,
 } from '@/components/ui/button';
@@ -18,7 +16,11 @@ import {
   AuthorRoles,
 } from '@/lib/config';
 
-function HomeViews() {
+function AuthorCheck({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const {
     info,
   } = useContext(AccountContext);
@@ -27,12 +29,7 @@ function HomeViews() {
       && AuthorRoles.includes(info.role);
 
   if (author) {
-    return (
-      <>
-        <DataGrid />
-        <DataCharts />
-      </>
-    );
+    return children;
   }
 
   if (!author) {
@@ -49,4 +46,4 @@ function HomeViews() {
   }
 }
 
-export default HomeViews;
+export default AuthorCheck;
