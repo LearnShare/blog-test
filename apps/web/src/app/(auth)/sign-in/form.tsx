@@ -9,6 +9,7 @@ import React, {
 import Link from 'next/link';
 import {
   useRouter,
+  useSearchParams,
 } from 'next/navigation';
 
 import {
@@ -34,6 +35,9 @@ import {
   useRequest,
 } from '@/hooks'
 import Store from '@/lib/store';
+import {
+  setCookie,
+} from './actions';
 
 const KnownErrors = {
   'Account or Password error': '账号或密码错误',
@@ -41,6 +45,7 @@ const KnownErrors = {
 
 function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     setInfo,
@@ -135,17 +140,22 @@ function SignInForm() {
       } = res;
 
       const {
-        uid,
         verified,
       } = data;
 
       Store.setToken(token);
       setInfo(data);
 
+      setCookie(token);
+
       if (!verified) {
         router.push('/welcome');
       } else {
-        router.push(`/@${uid}`);
+        const redirect = searchParams.get('redirect');
+
+        router.push(redirect
+            ? window.decodeURIComponent(redirect)
+            : '/home');
       }
     },
   });

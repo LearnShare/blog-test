@@ -30,6 +30,9 @@ import {
 import AccountContext from '@/components/provider/account-context';
 import Avatar from '@/components/avatar';
 import Store from '@/lib/store';
+import {
+  deleteCookie,
+} from '../../app/(auth)/sign-in/actions';
 
 function HeaderActions() {
   const router = useRouter();
@@ -42,6 +45,8 @@ function HeaderActions() {
   const logout = () => {
     Store.setToken('');
     setInfo(null);
+
+    deleteCookie();
 
     router.push('/');
   };
