@@ -5,6 +5,9 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+import {
+  useRequest,
+} from 'ahooks';
 
 import {
   Button,
@@ -22,7 +25,6 @@ import {
   auth,
 } from '@packages/lib/sdk/web';
 import {
-  useRequest,
   useCountdown,
 } from '@/hooks'
 
@@ -130,7 +132,7 @@ function VerifyForm({
     loading,
     error,
   } = useRequest(validateAndSubmit, {
-    auto: false,
+    manual: true,
     onSuccess: () => {
       onSuccess?.();
     },
@@ -156,7 +158,7 @@ function VerifyForm({
 
     return auth.requestVerify();
   }, {
-    auto: false,
+    manual: true,
     onSuccess: () => {
       startCountdown();
     },

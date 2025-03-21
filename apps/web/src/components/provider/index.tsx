@@ -4,14 +4,14 @@ import React, {
   useState,
   useEffect,
 } from 'react';
+import {
+  useRequest,
+} from 'ahooks';
 
 import AccountContext from './account-context';
 import {
   auth,
 } from '@packages/lib/sdk/web';
-import {
-  useRequest,
-} from '@/hooks';
 import Store from '@/lib/store';
 
 interface ProviderProps {
@@ -34,34 +34,12 @@ function Provider({
     setInfo,
   ] = useState(null);
 
-  const {
-    run: getInfo,
-    loading,
-    data: loaded,
-    error,
-  } = useRequest(auth.accountInfo, {
-    auto: false,
+  const {} = useRequest(auth.accountInfo, {
+    ready: !!token,
     onSuccess: (res) => {
       setInfo(res);
     },
   });
-
-  useEffect(() => {
-    if (!info
-        && !loaded
-        && !loading
-        && !error
-        && token) {
-      getInfo();
-    }
-  }, [
-    info,
-    loaded,
-    loading,
-    error,
-    token,
-    getInfo,
-  ]);
 
   const contextValue = {
     info,

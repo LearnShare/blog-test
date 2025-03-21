@@ -49,6 +49,12 @@
     color: #777;
   }
 
+  ol {
+    list-style-type: decimal;
+  }
+  ul {
+    list-style-type: disc;
+  }
   ol,
   ul {
     margin: 1em 0;

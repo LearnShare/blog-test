@@ -22,19 +22,23 @@ HTTP.interceptors.request
         headers,
       } = req;
 
+      const data = headers.Authorization
+          ? headers
+          : {
+            ...headers,
+            Authorization: `Bearer ${getToken()}`,
+          };
+
       return {
         ...req,
-        headers: {
-          ...headers,
-          Authorization: `Bearer ${getToken()}`,
-        },
+        headers: data,
       };
     });
 
 // TODO redirect to login when 401
 HTTP.interceptors.response
     .use(
-      (res) => res,
+      (res) => res.data,
       (error) => {
         const {
           status,

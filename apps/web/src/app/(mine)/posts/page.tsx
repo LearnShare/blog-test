@@ -1,9 +1,10 @@
 import HomeLayout from '@/components/page/home';
+import Posts from './posts';
 
-export default function PagePosts() {
+export default async function PagePosts() {
   return (
     <HomeLayout>
-      my posts
+      <Posts />
     </HomeLayout>
   );
 }

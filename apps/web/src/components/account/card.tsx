@@ -9,6 +9,7 @@ import {
 export default function AccountCard({
   id,
   name,
+  uid,
   avatar,
 }: Account) {
   return (
@@ -25,7 +26,7 @@ export default function AccountCard({
               className="rounded-[50%]" />
         )
       }
-      <div className="group-hover:underline">{ name }</div>
+      <div className="group-hover:underline">{ name }（@{ uid }）</div>
     </Link>
   );
 }

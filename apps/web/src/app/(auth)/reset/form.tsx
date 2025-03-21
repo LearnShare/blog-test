@@ -8,6 +8,9 @@ import React, {
 import {
   useSearchParams,
 } from 'next/navigation';
+import {
+  useRequest,
+} from 'ahooks'
 
 import {
   Button,
@@ -23,9 +26,6 @@ import InputPassword from '@/components/form/controls/input-password';
 import {
   auth,
 } from '@packages/lib/sdk/web';
-import {
-  useRequest,
-} from '@/hooks'
 
 const KnownErrors = {
   'Invalid reset token': '无效的 token',
@@ -130,7 +130,7 @@ function ResetForm({
     loading,
     error,
   } = useRequest(validateAndSubmit, {
-    auto: false,
+    manual: true,
     onSuccess: () => {
       onSuccess?.();
     },

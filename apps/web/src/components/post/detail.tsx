@@ -1,16 +1,25 @@
 import React from 'react';
+import {
+  BookOpenText as IconBookOpenText,
+  BookCheck as IconBookCheck,
+} from 'lucide-react';
 
 import AccountCard from '@/components/account/card';
 import {
   Post,
 } from '@/types/post';
-
-import '@/css/markdown.scss';
+import time from '@packages/lib/time';
+import {
+  MarkdownRender,
+} from '@/components/render';
+import Divider from '@/components/divider';
 
 export default function PostDetail({
   cover,
   title,
+  intro,
   content,
+  format,
   author,
   utime,
 }: Post) {
@@ -43,14 +52,30 @@ export default function PostDetail({
         }
         {
           utime && (
-              <time
-                  dateTime={ utime.toISOString() }
-                  className="text-sm text-gray-500">{ utime.toISOString().substring(0, 10) }</time>
+            <time
+                dateTime={ time.format(utime) }
+                className="text-sm text-gray-500">{ time.format(utime) }</time>
           )
         }
       </div>
-      <div className="markdown-content">
-        { content }
+      {
+        intro && (
+          <div className="border border-gray-200 p-4 bg-gray-50">{ intro }</div>
+        )
+      }
+      <Divider className="my-3">
+        <IconBookOpenText />
+      </Divider>
+      <div>
+        {
+          format === 'MARKDOWN' && (
+            <MarkdownRender
+                content={ content } />
+          )
+        }
+        <Divider className="my-10">
+          <IconBookCheck />
+        </Divider>
       </div>
     </div>
   );

@@ -9,6 +9,9 @@ import React, {
 import {
   useRouter,
 } from 'next/navigation';
+import {
+  useRequest,
+} from 'ahooks'
 
 import {
   Button,
@@ -27,9 +30,6 @@ import AccountContext from '@/components/provider/account-context';
 import {
   auth,
 } from '@packages/lib/sdk/web';
-import {
-  useRequest,
-} from '@/hooks'
 
 function UpdateForm() {
   const router = useRouter();
@@ -125,7 +125,7 @@ function UpdateForm() {
     loading,
     error,
   } = useRequest(validateAndSubmit, {
-    auto: false,
+    manual: true,
     onSuccess: (res) => {
       setInfo(res);
 

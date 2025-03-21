@@ -12,6 +12,9 @@ import {
   useSearchParams,
 } from 'next/navigation';
 import Cookies from 'js-cookie';
+import {
+  useRequest,
+} from 'ahooks'
 
 import {
   Button,
@@ -32,9 +35,6 @@ import AccountContext from '@/components/provider/account-context';
 import {
   auth,
 } from '@packages/lib/sdk/web';
-import {
-  useRequest,
-} from '@/hooks'
 import Store from '@/lib/store';
 
 const KnownErrors = {
@@ -130,7 +130,7 @@ function SignInForm() {
     loading,
     error,
   } = useRequest(validateAndSubmit, {
-    auto: false,
+    manual: true,
     onSuccess: (res) => {
       const {
         token,

@@ -6,6 +6,9 @@ import React, {
   useCallback,
 } from 'react';
 import Link from 'next/link';
+import {
+  useRequest,
+} from 'ahooks'
 
 import {
   Button,
@@ -23,9 +26,6 @@ import {
 import {
   auth,
 } from '@packages/lib/sdk/web';
-import {
-  useRequest,
-} from '@/hooks'
 
 const KnownErrors = {
   'Account not found': '账号不存在',
@@ -115,7 +115,7 @@ function ForgotForm({
     loading,
     error,
   } = useRequest(validateAndSubmit, {
-    auto: false,
+    manual: true,
     onSuccess: () => {
       onSuccess?.();
     },

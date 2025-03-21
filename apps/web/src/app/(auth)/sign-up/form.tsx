@@ -26,7 +26,7 @@ import {
 } from '@packages/lib/sdk/web';
 import {
   useRequest,
-} from '@/hooks'
+} from 'ahooks'
 
 const KnownErrors = {
   'Account already exists': '账号已存在',
@@ -120,7 +120,7 @@ function SignUpForm({
     loading,
     error,
   } = useRequest(validateAndSubmit, {
-    auto: false,
+    manual: true,
     onSuccess: () => {
       onSuccess?.();
     },

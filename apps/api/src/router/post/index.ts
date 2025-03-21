@@ -19,6 +19,7 @@ const postRouter = Router();
  * query:
  * - search: title/content
  * - author: account.id
+ * - mine: 1|0
  * - account: 1|0
  * - published: 1|0
  * - sort: [-]ctime
@@ -30,11 +31,16 @@ postRouter.get('/', async (req: Request, res: Response) => {
     search,
     published,
     author,
+    mine,
     account,
     sort,
     page,
     size,
   } = req.query;
+
+  const authorId = (mine === 1)
+      ? id
+      : (author && Number(author));
 
   const {
     data,
@@ -161,6 +167,40 @@ postRouter.post(
     res.json(post);
   },
 );
+
+/**
+ * get post by uid
+ */
+postRouter.get('/uid/:uid', async (req: Request, res: Response) => {
+  const {
+    uid,
+  } = req.params;
+
+  const {
+    data: post,
+    error,
+  } = await DB.post.getPostByUid(uid);
+
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  if (!post) {
+    res.status(404)
+        .json({
+          status: 404,
+          message: 'Post not found',
+        });
+    return;
+  }
+
+  res.json(post);
+});
 
 /**
  * get post by id

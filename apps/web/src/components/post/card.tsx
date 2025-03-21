@@ -5,12 +5,13 @@ import Image from 'next/image';
 import {
   Post,
 } from '@/types/post';
+import time from '@packages/lib/time';
 
 export default function PostCard({
-  id,
+  uid,
   cover,
   title,
-  content,
+  intro,
   utime,
 }: Post) {
   return (
@@ -18,12 +19,14 @@ export default function PostCard({
       {
         utime && (
           <div className="text-xs text-gray-500 mb-2">
-            <time dateTime={ utime.toISOString() }>{ utime.toISOString().substring(0, 10) }</time>
+            <time
+                dateTime={ time.format(utime) }
+                className="text-sm text-gray-500">{ time.format(utime) }</time>
           </div>
         )
       }
       <Link
-          href={ `/post/${id}` }
+          href={ `/post/${uid}` }
           className="group flex flex-col gap-2">
         {
           cover && (
@@ -38,8 +41,8 @@ export default function PostCard({
         }
         <h3 className="group-hover:underline text-xl">{ title }</h3>
         {
-          content && (
-            <p className="text-sm text-gray-700">{ content }</p>
+          intro && (
+            <p className="text-sm text-gray-700">{ intro }</p>
           )
         }
       </Link>

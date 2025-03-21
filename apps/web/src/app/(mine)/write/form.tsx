@@ -8,6 +8,9 @@ import React, {
 import {
   useRouter,
 } from 'next/navigation';
+import {
+  useRequest,
+} from 'ahooks'
 
 import {
   Button,
@@ -28,9 +31,6 @@ import Validator from '@packages/lib/validator';
 import {
   post,
 } from '@packages/lib/sdk/web';
-import {
-  useRequest,
-} from '@/hooks'
 
 const KnownErrors = {
   'UID exists': 'ID 已存在',
@@ -141,7 +141,7 @@ function PostForm() {
     loading,
     error,
   } = useRequest(validateAndSubmit, {
-    auto: false,
+    manual: true,
     onSuccess: (res) => {
       console.log(res);
       const {
