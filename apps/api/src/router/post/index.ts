@@ -14,6 +14,7 @@ import Hash from '@packages/lib/hash';
 
 const postRouter = Router();
 
+// TODO another API for private
 /**
  * get posts
  * query:
@@ -26,57 +27,61 @@ const postRouter = Router();
  * - page
  * - size
  */
-postRouter.get('/', async (req: Request, res: Response) => {
-  const {
-    search,
-    published,
-    author,
-    mine,
-    account,
-    sort,
-    page,
-    size,
-  } = req.query;
+postRouter.get(
+  '/',
+  Auth.auto,
+  async (req: Request, res: Response) => {
+    const {
+      search,
+      published,
+      author,
+      mine,
+      account,
+      sort,
+      page,
+      size,
+    } = req.query;
 
-  const authorId = (mine === 1)
-      ? id
-      : (author && Number(author));
+    const authorId = (mine === '1' && req.user?.id)
+        ? req.user?.id
+        : (author && Number(author));
 
-  const {
-    data,
-    error,
-  } = await DB.post.getPosts({
-    search,
-    author: author
-        ? Number(author)
-        : null,
-    account: account
-        ? Boolean(Number(account))
-        : false,
-    published: published
-        ? Boolean(Number(published))
-        : null,
-    sort: sort
-        || DB_SORT,
-    page: page
-        ? Number(page)
-        : DB_PAGE,
-    size: size
-        ? Number(size)
-        : DB_SIZE,
-  });
+    const {
+      data,
+      error,
+    } = await DB.post.getPosts({
+      search,
+      author: authorId
+          ? Number(authorId)
+          : null,
+      account: account
+          ? Boolean(Number(account))
+          : false,
+      published: published
+          ? Boolean(Number(published))
+          : null,
+      sort: sort
+          || DB_SORT,
+      page: page
+          ? Number(page)
+          : DB_PAGE,
+      size: size
+          ? Number(size)
+          : DB_SIZE,
+    });
 
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
+    if (error) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: error,
+        });
+      return;
+    }
 
-  res.json(data);
-});
+    res.json(data);
+  },
+);
 
 /**
  * create post

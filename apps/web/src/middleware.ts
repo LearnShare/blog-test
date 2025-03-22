@@ -10,6 +10,8 @@ const protectedPaths = [
   '/home',
   '/posts',
   '/write',
+  '/draft/',
+  '/edit/',
 ];
 
 function included(path: string) {

@@ -35,7 +35,7 @@ function Posts() {
     loading,
     refresh,
   } = useRequest(() => post.getPosts({
-    mine: true,
+    mine: 1,
     page,
     size: 10,
     ...filters,

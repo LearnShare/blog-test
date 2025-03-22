@@ -20,9 +20,11 @@ import {
 } from '@/components/render';
 import Divider from '@/components/divider';
 import PostActions from '@/components/post/actions';
+import Error from '@/components/error';
 
 import time from '@packages/lib/time';
 import AccountContext from '@/components/provider/account-context';
+import Loading from '@/components/loading';
 
 export default function PostDetail({
   id,
@@ -57,10 +59,23 @@ export default function PostDetail({
     }
   };
 
+  if (!info) {
+    return (
+      <Loading />
+    );
+  }
+
+  if (!published
+      && info.id !== author.id) {
+    return (
+      <Error message="没有访问该页面的权限" />
+    );
+  }
+
   return (
     <div className="flex flex-col gap-3">
       {
-        (info?.id === author.id) && (
+        (info.id === author.id) && (
           <div className="relative h-[36px]">
             <PostActions
                 id={ id }

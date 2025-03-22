@@ -15,7 +15,6 @@ export default async function PagePost({
   const {
     uid,
   } = await params;
-
   const data = await post.get(uid);
 
   return (

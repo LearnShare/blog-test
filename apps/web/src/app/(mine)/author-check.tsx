@@ -28,6 +28,10 @@ function AuthorCheck({
   const author = info
       && AuthorRoles.includes(info.role);
 
+  if (!info) {
+    return null;
+  }
+
   if (author) {
     return children;
   }

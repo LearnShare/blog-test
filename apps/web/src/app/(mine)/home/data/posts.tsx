@@ -30,7 +30,7 @@ function DataPosts() {
     data,
     loading,
   } = useRequest(() => post.getPosts({
-    mine: true,
+    mine: 1,
     page: 1,
     size: 6,
   }));
