@@ -215,6 +215,24 @@ async function updatePost(id: number, postData: PostData) {
   }
 }
 
+// delete post
+async function deletePost(id: number, postData: PostData) {
+  try {
+    await prisma.post.delete({
+      where: {
+        id,
+      },
+    });
+
+    return {};
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
 // get post stats
 async function getStats(id?: number) {
   const authorQuery = id
@@ -265,5 +283,6 @@ export default {
   getPostById,
   getPostByUid,
   updatePost,
+  deletePost,
   getStats,
 };

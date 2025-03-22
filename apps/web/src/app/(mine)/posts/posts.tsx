@@ -33,6 +33,7 @@ function Posts() {
   const {
     data,
     loading,
+    refresh,
   } = useRequest(() => post.getPosts({
     mine: true,
     page,
@@ -44,6 +45,11 @@ function Posts() {
       filters,
     ],
   });
+
+  const onActionDone = (action: string, id: number) => {
+    console.log(action, id);
+    refresh();
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -59,7 +65,9 @@ function Posts() {
                 data.list.map((post) => (
                   <PostCard
                       key={ post.id }
-                      { ...post } />
+                      { ...post }
+                      actions
+                      onActionDone={ (action: string) => onActionDone(action, post.id) } />
                 ))
               }
             </div>

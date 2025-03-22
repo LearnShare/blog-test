@@ -1,5 +1,10 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import {
+  useRequest,
+} from 'ahooks';
 import {
   NotebookText as IconNotebookText,
   ChartNoAxesColumn as IconChartNoAxesColumn,
@@ -12,27 +17,34 @@ import {
 } from '@/components/ui/button';
 import DataItem from './item';
 
+import {
+  auth,
+} from '@packages/lib/sdk/web';
+
 function DataGrid() {
+  const {
+    data,
+  } = useRequest(() => auth.accountStats());
+
   return (
     <div className="flex gap-6">
       <DataItem
           icon={ <IconNotebookText /> }
           label="公开文章"
-          value="1234" />
+          value={ data?.post?.published || 0 } />
       <DataItem
           icon={ <IconChartNoAxesColumn /> }
           label="阅读统计"
-          value="1234" />
+          value="0" />
       <DataItem
           icon={ <IconBookHeart /> }
           label="读者收藏"
-          value="1234" />
+          value="0" />
       <div>
         <Link
             href="/write"
             className={ buttonVariants({
               variant: 'outline',
-              size: 'sm',
             }) }>
           <IconPencilLine />
           <span>编写文章</span>

@@ -2,20 +2,41 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import {
+import PostActions from '@/components/post/actions';
+
+import time from '@packages/lib/time';
+import type {
   Post,
 } from '@/types/post';
-import time from '@packages/lib/time';
+
+interface PostCardProps
+    extends Post {
+  actions?: boolean;
+  onActionDone?: (action: string) => void;
+}
 
 export default function PostCard({
+  id,
   uid,
   cover,
   title,
   intro,
+  published,
   utime,
-}: Post) {
+  actions = false,
+  onActionDone,
+}: PostCardProps) {
   return (
-    <div className="border rounded-lg border-gray-200 p-4">
+    <div className="relative border rounded-lg border-gray-200 p-4">
+      {
+        actions && (
+          <PostActions
+              id={ id }
+              uid={ uid }
+              published={ published }
+              onActionDone={ onActionDone } />
+        )
+      }
       {
         utime && (
           <div className="text-xs text-gray-500 mb-2">
@@ -26,7 +47,7 @@ export default function PostCard({
         )
       }
       <Link
-          href={ `/post/${uid}` }
+          href={ `/${ published ? 'post' : 'draft' }/${uid}` }
           className="group flex flex-col gap-2">
         {
           cover && (

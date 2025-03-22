@@ -34,7 +34,6 @@ function Filter({
   onChange,
 }: FilterProps) {
   const itemOnChange = (key: string, value: any) => {
-    console.log(key, value);
     onChange?.({
       ...values,
       [key]: value,

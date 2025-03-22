@@ -28,8 +28,18 @@ function getPosts(query: PostsQuery) {
   });
 }
 
+function update(id: number, data: PostData) {
+  return HTTP.put(`/post/${id}`, data);
+}
+
+function del(id: number) {
+  return HTTP.delete(`/post/${id}`);
+}
+
 export default {
   create,
   get,
   getPosts,
+  update,
+  del,
 };

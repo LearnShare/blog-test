@@ -252,24 +252,8 @@ postRouter.put(
       id,
     } = req.params;
     const postId = Number(id);
-    const {
-      title,
-      content,
-      published,
-    } = req.body;
 
-    // 1. check title and content
-    if (!title
-        || !content) {
-      res.status(400)
-          .json({
-            status: 400,
-            message: 'Title and Content required',
-          });
-      return;
-    }
-
-    // 2. check is post exist
+    // 1. check is post exist
     const {
       data: post,
       error,
@@ -293,7 +277,7 @@ postRouter.put(
       return;
     }
 
-    // 3. check author
+    // 2. check author
     if (post.authorId !== userId) {
       res.status(403)
           .json({
@@ -303,15 +287,11 @@ postRouter.put(
       return;
     }
 
-    // 4. update post
+    // 3. update post
     const {
       data: updatedPost,
       error: updateError,
-    } = await DB.post.updatePost(postId, {
-      title,
-      content,
-      published,
-    });
+    } = await DB.post.updatePost(postId, req.body);
 
     if (updateError) {
       res.status(500)
@@ -325,5 +305,52 @@ postRouter.put(
     res.json(updatedPost);
   },
 );
+
+/**
+ * delete post by id
+ */
+postRouter.delete('/:id', async (req: Request, res: Response) => {
+  const {
+    id,
+  } = req.params;
+
+  const {
+    data: post,
+    error,
+  } = await DB.post.getPostById(Number(id));
+
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  if (!post) {
+    res.status(404)
+        .json({
+          status: 404,
+          message: 'Post not found',
+        });
+    return;
+  }
+
+  const {
+    error: deleteError,
+  } = await DB.post.deletePost(Number(id));
+
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  res.end();
+});
 
 export default postRouter;

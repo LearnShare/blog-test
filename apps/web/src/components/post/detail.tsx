@@ -1,30 +1,75 @@
-import React from 'react';
+'use client';
+
+import React, {
+  useContext,
+} from 'react';
 import {
   BookOpenText as IconBookOpenText,
   BookCheck as IconBookCheck,
 } from 'lucide-react';
+import {
+  useRouter,
+} from 'next/navigation';
 
 import AccountCard from '@/components/account/card';
 import {
   Post,
 } from '@/types/post';
-import time from '@packages/lib/time';
 import {
   MarkdownRender,
 } from '@/components/render';
 import Divider from '@/components/divider';
+import PostActions from '@/components/post/actions';
+
+import time from '@packages/lib/time';
+import AccountContext from '@/components/provider/account-context';
 
 export default function PostDetail({
+  id,
+  uid,
   cover,
   title,
   intro,
   content,
   format,
+  published,
   author,
   utime,
 }: Post) {
+  const router = useRouter();
+
+  const {
+    info,
+  } = useContext(AccountContext);
+
+  const onActionDone = (action: string) => {
+    switch (action) {
+      case 'publish':
+        router.push(`/post/${uid}`);
+        return;
+      case 'withdraw':
+        router.push(`/draft/${uid}`);
+        return;
+      case 'delete':
+        router.push('/posts');
+        return;
+      default:
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3">
+      {
+        (info?.id === author.id) && (
+          <div className="relative h-[36px]">
+            <PostActions
+                id={ id }
+                uid={ uid }
+                published={ published }
+                onActionDone={ onActionDone } />
+          </div>
+        )
+      }
       <div
           data-cover={ !!cover }
           className="

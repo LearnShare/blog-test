@@ -46,7 +46,7 @@ function Avatar({
       }
       {
         name && !url && (
-          <span className="text-xl text-white select-none">{ name.substring(0, 1) }</span>
+          <span className="text-xl text-white select-none">{ name.substring(0, 1).toUpperCase() }</span>
         )
       }
     </div>

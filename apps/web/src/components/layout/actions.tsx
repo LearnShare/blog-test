@@ -10,6 +10,7 @@ import {
 import {
   Handshake as IconHandshake,
   UserPen as IconUserPen,
+  PencilLine as IconPencilLine,
   LogOut as IconLogOut,
   House as IconHouse,
   Settings2 as IconSettings2,
@@ -28,6 +29,7 @@ import {
   Command,
   CommandList,
   CommandItem,
+  CommandSeparator,
 } from '@/components/ui/command';
 
 import AccountContext from '@/components/provider/account-context';
@@ -95,6 +97,22 @@ function HeaderActions() {
               <Command>
                 <CommandList>
                   {
+                    (author) && (
+                      <>
+                        <CommandItem
+                            onSelect={ () => router.push('/write') }>
+                          <IconPencilLine />
+                          <span>编写文章</span>
+                        </CommandItem>
+                        <CommandItem
+                            onSelect={ () => router.push('/posts') }>
+                          <IconUserPen />
+                          <span>我的文章</span>
+                        </CommandItem>
+                      </>
+                    )
+                  }
+                  {
                     (!author) && (
                       <CommandItem>
                         <IconHandshake />
@@ -102,25 +120,18 @@ function HeaderActions() {
                       </CommandItem>
                     )
                   }
+                  <CommandSeparator className="my-1.5" />
                   <CommandItem
                       onSelect={ () => router.push('/home') }>
                     <IconHouse />
                     <span>个人主页</span>
                   </CommandItem>
-                  {
-                    (author) && (
-                      <CommandItem
-                          onSelect={ () => router.push('/posts') }>
-                        <IconUserPen />
-                        <span>我的文章</span>
-                      </CommandItem>
-                    )
-                  }
                   <CommandItem
                       onSelect={ () => router.push('/settings') }>
                     <IconSettings2 />
                     <span>账号设置</span>
                   </CommandItem>
+                  <CommandSeparator className="my-1.5" />
                   <CommandItem
                       onSelect={ () => logout() }>
                     <IconLogOut />
