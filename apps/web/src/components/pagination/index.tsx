@@ -7,12 +7,14 @@ import {
 import {
   Button,
 } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface PaginationProps {
   page: number;
   size?: number;
   total: number;
   onPageChange?: (page: number) => void;
+  className?: string;
 }
 
 function Pagination({
@@ -20,6 +22,7 @@ function Pagination({
   size = 10,
   total = 0,
   onPageChange,
+  className,
 }: PaginationProps) {
   if (!total) {
     return null;
@@ -28,7 +31,10 @@ function Pagination({
   const totalPage = Math.ceil(total / size);
 
   return (
-    <div className="my-6 flex gap-4 items-center justify-center">
+    <div className={ cn(
+      'flex gap-4 items-center justify-center',
+      className,
+    ) }>
       <Button
           variant="outline"
           size="icon"

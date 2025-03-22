@@ -34,9 +34,9 @@ function DataGrid() {
               variant: 'outline',
               size: 'sm',
             }) }>
-            <IconPencilLine />
-            <span>编写文章</span>
-          </Link>
+          <IconPencilLine />
+          <span>编写文章</span>
+        </Link>
       </div>
     </div>
   );
