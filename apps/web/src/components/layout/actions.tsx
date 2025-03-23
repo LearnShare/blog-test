@@ -13,7 +13,6 @@ import {
   PencilLine as IconPencilLine,
   LogOut as IconLogOut,
   House as IconHouse,
-  Settings2 as IconSettings2,
 } from 'lucide-react';
 import Cookies from 'js-cookie';
 
@@ -98,18 +97,11 @@ function HeaderActions() {
                 <CommandList>
                   {
                     (author) && (
-                      <>
-                        <CommandItem
-                            onSelect={ () => router.push('/write') }>
-                          <IconPencilLine />
-                          <span>编写文章</span>
-                        </CommandItem>
-                        <CommandItem
-                            onSelect={ () => router.push('/posts') }>
-                          <IconUserPen />
-                          <span>我的文章</span>
-                        </CommandItem>
-                      </>
+                      <CommandItem
+                          onSelect={ () => router.push('/write') }>
+                        <IconPencilLine />
+                        <span>编写文章</span>
+                      </CommandItem>
                     )
                   }
                   {
@@ -126,11 +118,15 @@ function HeaderActions() {
                     <IconHouse />
                     <span>个人主页</span>
                   </CommandItem>
-                  <CommandItem
-                      onSelect={ () => router.push('/settings') }>
-                    <IconSettings2 />
-                    <span>账号设置</span>
-                  </CommandItem>
+                  {
+                    (author) && (
+                      <CommandItem
+                          onSelect={ () => router.push('/posts') }>
+                        <IconUserPen />
+                        <span>我的文章</span>
+                      </CommandItem>
+                    )
+                  }
                   <CommandSeparator className="my-1.5" />
                   <CommandItem
                       onSelect={ () => logout() }>

@@ -11,21 +11,23 @@ import {
   useRouter,
 } from 'next/navigation';
 
-import AccountCard from '@/components/account/card';
-import {
-  Post,
-} from '@/types/post';
+import AuthorCard from '@/components/author';
 import {
   MarkdownRender,
 } from '@/components/render';
 import Divider from '@/components/divider';
 import PostActions from '@/components/post/actions';
 import Error from '@/components/error';
+import Loading from '@/components/loading';
+import {
+  Badge,
+} from '@/components/ui/badge';
 
+import {
+  Post,
+} from '@/types/post';
 import time from '@packages/lib/time';
 import AccountContext from '@/components/provider/account-context';
-import Loading from '@/components/loading';
-import { Badge } from '@/components/ui/badge';
 
 export default function PostDetail({
   id,
@@ -74,10 +76,10 @@ export default function PostDetail({
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {
         (info.id === author.id) && (
-          <div className="relative h-[36px]">
+          <div className="flex justify-end items-center has-data-[slot=badge]:justify-between">
             {
               !published && (
                 <Badge
@@ -113,7 +115,7 @@ export default function PostDetail({
       <div className="flex justify-between items-center">
         {
           author && (
-            <AccountCard
+            <AuthorCard
                 { ...author } />
           )
         }

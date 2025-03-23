@@ -35,6 +35,7 @@ interface PostActionProps {
   uid: string;
   published: boolean;
   onActionDone?: (action: string) => void;
+  className?: string;
 }
 
 function PostActions({
@@ -42,6 +43,7 @@ function PostActions({
   uid,
   published,
   onActionDone,
+  className,
 }: PostActionProps) {
   const router = useRouter();
 
@@ -98,7 +100,7 @@ function PostActions({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-            className="absolute right-1 top-1"
+            className={ className }
             variant="ghost"
             size="icon">
           <IconEllipsisVertical />

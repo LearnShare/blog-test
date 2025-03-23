@@ -22,6 +22,10 @@ function Posts() {
     posts,
     setPosts,
   ] = useState([]);
+  const [
+    authors,
+    setAuthors,
+  ] = useState({});
 
   const [
     page,
@@ -34,6 +38,7 @@ function Posts() {
   } = useRequest(() => post.getPosts({
     page,
     size,
+    account: 1,
   }), {
     refreshDeps: [
       page,
@@ -43,6 +48,10 @@ function Posts() {
         ...oldList,
         ...data.list,
       ]));
+      setAuthors((oldValue) => ({
+        ...oldValue,
+        ...data.accounts,
+      }));
     },
   });
 
@@ -53,7 +62,8 @@ function Posts() {
           posts.map((post) => (
             <PostCard
                 key={ post.id }
-                { ...post } />
+                { ...post }
+                author={ authors[post.authorId] } />
           ))
         }
       </div>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import PostActions from '@/components/post/actions';
+import AuthorCard from '@/components/author';
 
 import time from '@packages/lib/time';
 import type {
@@ -23,14 +24,16 @@ export default function PostCard({
   intro,
   published,
   utime,
+  author,
   actions = false,
   onActionDone,
 }: PostCardProps) {
   return (
-    <div className="relative border rounded-lg border-gray-200 p-4">
+    <div className="relative border rounded-lg border-gray-200 p-4 flex flex-col gap-4">
       {
         actions && (
           <PostActions
+              className="absolute right-1 top-1"
               id={ id }
               uid={ uid }
               published={ published }
@@ -39,7 +42,7 @@ export default function PostCard({
       }
       {
         utime && (
-          <div className="text-xs text-gray-500 mb-2">
+          <div className="text-xs text-gray-500">
             <time
                 dateTime={ time.format(utime) }
                 className="text-sm text-gray-500">{ time.format(utime) }</time>
@@ -67,6 +70,12 @@ export default function PostCard({
           )
         }
       </Link>
+      {
+        author && (
+          <AuthorCard
+              { ...author } />
+        )
+      }
     </div>
   );
 }

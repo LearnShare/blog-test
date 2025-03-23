@@ -1,4 +1,3 @@
-import HomeLayout from '@/components/page/home';
 import EditView from './view';
 
 export default async function PageEdit({
@@ -13,8 +12,6 @@ export default async function PageEdit({
   } = await params;
 
   return (
-    <HomeLayout>
-      <EditView uid={ uid } />
-    </HomeLayout>
+    <EditView uid={ uid } />
   );
 }

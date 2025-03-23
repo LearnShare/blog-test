@@ -1,4 +1,3 @@
-import HomeLayout from '@/components/page/home';
 import DraftView from './view';
 
 export default async function PageDraft({
@@ -13,8 +12,6 @@ export default async function PageDraft({
   } = await params;
 
   return (
-    <HomeLayout>
-      <DraftView uid={ uid } />
-    </HomeLayout>
+    <DraftView uid={ uid } />
   );
 }
