@@ -25,6 +25,7 @@ import Error from '@/components/error';
 import time from '@packages/lib/time';
 import AccountContext from '@/components/provider/account-context';
 import Loading from '@/components/loading';
+import { Badge } from '@/components/ui/badge';
 
 export default function PostDetail({
   id,
@@ -77,6 +78,12 @@ export default function PostDetail({
       {
         (info.id === author.id) && (
           <div className="relative h-[36px]">
+            {
+              !published && (
+                <Badge
+                    variant="outline">未发布</Badge>
+              )
+            }
             <PostActions
                 id={ id }
                 uid={ uid }

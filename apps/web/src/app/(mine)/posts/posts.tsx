@@ -12,7 +12,7 @@ import Filter from './filter';
 import Pagination from '@/components/pagination';
 
 import {
-  post,
+  auth,
 } from '@packages/lib/sdk/web';
 import Loading from '@/components/loading';
 import Empty from '@/components/empty';
@@ -34,8 +34,7 @@ function Posts() {
     data,
     loading,
     refresh,
-  } = useRequest(() => post.getPosts({
-    mine: 1,
+  } = useRequest(() => auth.getPosts({
     page,
     size: 10,
     ...filters,
@@ -46,8 +45,7 @@ function Posts() {
     ],
   });
 
-  const onActionDone = (action: string, id: number) => {
-    console.log(action, id);
+  const onActionDone = () => {
     refresh();
   };
 
@@ -67,7 +65,7 @@ function Posts() {
                       key={ post.id }
                       { ...post }
                       actions
-                      onActionDone={ (action: string) => onActionDone(action, post.id) } />
+                      onActionDone={ () => onActionDone() } />
                 ))
               }
             </div>

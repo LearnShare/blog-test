@@ -1,7 +1,7 @@
 import HomeLayout from '@/components/page/home';
-import DraftView from './view';
+import EditView from './view';
 
-export default async function PageDraft({
+export default async function PageEdit({
   params,
 }: {
   params: Promise<{
@@ -14,7 +14,7 @@ export default async function PageDraft({
 
   return (
     <HomeLayout>
-      <DraftView uid={ uid } />
+      <EditView uid={ uid } />
     </HomeLayout>
   );
 }

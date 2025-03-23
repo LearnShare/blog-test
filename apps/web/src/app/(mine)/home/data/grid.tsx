@@ -35,11 +35,11 @@ function DataGrid() {
       <DataItem
           icon={ <IconChartNoAxesColumn /> }
           label="阅读统计"
-          value="0" />
+          value="-" />
       <DataItem
           icon={ <IconBookHeart /> }
           label="读者收藏"
-          value="0" />
+          value="-" />
       <div>
         <Link
             href="/write"

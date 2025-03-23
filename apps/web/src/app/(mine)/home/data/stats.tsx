@@ -58,7 +58,7 @@ const chartConfig = {
 function DataStats() {
   return (
     <div className="flex flex-col gap-3 flex-1 border rounded-lg border-gray-200 p-4 max-w-[calc((100%-24px)/2)]">
-      <h3 className="text-sm text-slate-600 flex justify-between items-center">本周阅读数据</h3>
+      <h3 className="text-sm text-slate-600 flex justify-between items-center">本周阅读数据（暂无）</h3>
       <ChartContainer config={chartConfig}>
         <BarChart
             accessibilityLayer

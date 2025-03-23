@@ -1,4 +1,7 @@
 import HTTP from '../../http';
+import type {
+  PostsQuery,
+} from './post';
 
 function signUp(email: string, password: string) {
   return HTTP.post('/auth/sign-up', {
@@ -59,6 +62,16 @@ function updatePassword(oldPassword: string, password: string) {
   });
 }
 
+function getPosts(query: PostsQuery) {
+  return HTTP.get('/auth/post', {
+    params: query,
+  });
+}
+
+function getPost(uid: string) {
+  return HTTP.get(`/auth/post/${uid}`);
+}
+
 export default {
   signUp,
   signIn,
@@ -70,4 +83,6 @@ export default {
   accountStats,
   updateInfo,
   updatePassword,
+  getPosts,
+  getPost,
 };

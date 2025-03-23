@@ -595,4 +595,112 @@ authRouter.get(
   },
 );
 
+/**
+ * get account posts
+ */
+authRouter.get(
+  '/post',
+  Auth.check,
+  async (req: Request, res: Response) => {
+    const {
+      id,
+    } = req.user;
+
+    const {
+      search,
+      published,
+      account,
+      sort,
+      page,
+      size,
+    } = req.query;
+
+    const {
+      data,
+      error,
+    } = await DB.post.getPosts({
+      search,
+      author: id,
+      account: account
+          ? Boolean(Number(account))
+          : false,
+      published: published
+          ? Boolean(Number(published))
+          : null,
+      sort: sort
+          || DB_SORT,
+      page: page
+          ? Number(page)
+          : DB_PAGE,
+      size: size
+          ? Number(size)
+          : DB_SIZE,
+    });
+
+    if (error) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: error,
+        });
+      return;
+    }
+
+    res.json(data);
+  },
+);
+
+/**
+ * get post by uid
+ */
+authRouter.get(
+  '/post/:uid',
+  Auth.check,
+  async (req: Request, res: Response) => {
+    const {
+      uid,
+    } = req.params;
+    const {
+      id,
+    } = req.user;
+
+    const {
+      data: post,
+      error,
+    } = await DB.post.getPostByUid(uid);
+
+    if (error) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: error,
+        });
+      return;
+    }
+
+    // 1. check post exist
+    if (!post) {
+      res.status(404)
+          .json({
+            status: 404,
+            message: 'Post not found',
+          });
+      return;
+    }
+
+    // 2. check post.author is me
+    if (post.authorId
+        !== id) {
+      res.status(403)
+          .json({
+            status: 403,
+            message: 'Action not allowed',
+          });
+      return;
+    }
+
+    res.json(post);
+  },
+);
+
 export default authRouter;

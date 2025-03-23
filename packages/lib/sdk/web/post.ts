@@ -12,11 +12,10 @@ function get(uid: string) {
   return HTTP.get(`/post/uid/${uid}`);
 }
 
-interface PostsQuery {
+ interface PostsQuery {
   search?: string;
+  author?: string;
   account?: boolean;
-  mine?: boolean;
-  published?: boolean;
   sort?: string;
   page?: number;
   size?: number;

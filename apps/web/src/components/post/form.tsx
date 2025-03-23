@@ -31,6 +31,9 @@ import Validator from '@packages/lib/validator';
 import {
   post,
 } from '@packages/lib/sdk/web';
+import type {
+  PostData,
+} from '@packages/database';
 
 const KnownErrors = {
   'UID exists': 'ID 已存在',
@@ -46,7 +49,7 @@ function required(value: string, name: string) {
 
 function checkUid(value: string) {
   if (value
-      && !Validator.validateUid(value).success) {
+      && !Validator.validatePostUid(value).success) {
     return '请输入有效的文章 ID';
   }
 
@@ -55,7 +58,7 @@ function checkUid(value: string) {
 
 let published = false;
 
-function PostForm() {
+function PostForm(data?: PostData) {
   const router = useRouter();
 
   const [
@@ -129,11 +132,20 @@ function PostForm() {
       }
     }
 
-    return post.create({
-      ...formData,
-      format: 'MARKDOWN',
-      published,
-    });
+    if (data
+        && data.id) {
+      return post.update(data.id, {
+        ...formData,
+        format: 'MARKDOWN',
+        published,
+      });
+    } else {
+      return post.create({
+        ...formData,
+        format: 'MARKDOWN',
+        published,
+      });
+    }
   };
 
   const {
@@ -146,9 +158,10 @@ function PostForm() {
       console.log(res);
       const {
         uid,
+        published,
       } = res;
 
-      router.push(`/post/${uid}`);
+      router.push(`/${published ? 'post' : 'draft'}/${uid}`);
     },
   });
 
@@ -164,10 +177,14 @@ function PostForm() {
           [&>*]:last:flex-1 [&>*]:last:flex [&>*]:last:flex-col"
         layout="vertical"
         initialValue={ {
-          title: '',
-          uid: '',
-          intro: '',
-          content: '',
+          title: data.title
+              || '',
+          uid: data.uid
+              || '',
+          intro: data.intro
+              || '',
+          content: data.content
+              || '',
         } }
         errors={ errors }
         disabled={ loading }

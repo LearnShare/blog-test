@@ -9,33 +9,6 @@ import Redis from '@/lib/redis';
 import DB from '@packages/database';
 
 /**
- * auto
- * 1. check auth header
- * 2. attach req.user
- */
-async function auto(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const authHeader = req.get('Authorization');
-  const token = authHeader
-      && authHeader.split(' ')[1];
-
-  if (token) {
-    try {
-      const data = await JWT.decrypt(token);
-
-      req.user = data;
-    } catch (error) {
-      //
-    }
-  }
-
-  next();
-}
-
-/**
  * check
  * 1. should login
  * 2. token valid
@@ -159,7 +132,6 @@ async function checkFileLimits(
 }
 
 export default {
-  auto,
   check,
   checkVerified,
   checkRole,

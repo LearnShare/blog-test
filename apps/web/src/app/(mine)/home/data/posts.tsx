@@ -21,7 +21,7 @@ import Loading from '@/components/loading';
 import Empty from '@/components/empty';
 
 import {
-  post,
+  auth,
 } from '@packages/lib/sdk/web';
 import time from '@packages/lib/time';
 
@@ -29,8 +29,7 @@ function DataPosts() {
   const {
     data,
     loading,
-  } = useRequest(() => post.getPosts({
-    mine: 1,
+  } = useRequest(() => auth.getPosts({
     page: 1,
     size: 6,
   }));
@@ -55,6 +54,7 @@ function DataPosts() {
                   <TableRow>
                     <TableHead>标题</TableHead>
                     <TableHead>更新时间</TableHead>
+                    <TableHead>状态</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -64,6 +64,7 @@ function DataPosts() {
                           key={ post.id }>
                         <TableCell>{ post.title }</TableCell>
                         <TableCell>{ time.format(post.utime) }</TableCell>
+                        <TableCell>{ post.published ? '已发布' : '未发布' }</TableCell>
                       </TableRow>
                     ))
                   }

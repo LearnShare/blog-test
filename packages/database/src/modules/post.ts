@@ -98,6 +98,10 @@ async function getPosts(postQuery: PostsQuery) {
       },
       skip: (page - 1) * size,
       take: size,
+      // no content in list
+      omit: {
+        content: true,
+      },
     });
 
     const data = {

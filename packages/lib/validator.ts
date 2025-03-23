@@ -39,8 +39,22 @@ function validateUid(uid: string) {
   return ZodUid.safeParse(uid);
 }
 
+const postUidReg = /^[A-Za-z0-9-_]{8,64}$/;
+const ZodPostUid = z.string()
+    .min(8)
+    .max(64)
+    .regex(postUidReg);
+/**
+ * validate post uid string
+ * @param uid string
+ */
+function validatePostUid(uid: string) {
+  return ZodPostUid.safeParse(uid);
+}
+
 export default {
   validateEmail,
   validatePassword,
   validateUid,
+  validatePostUid,
 };
