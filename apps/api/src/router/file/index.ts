@@ -260,7 +260,6 @@ fileRouter.get('/hash/:hash', async (req: Request, res: Response) => {
     data: file,
     error,
   } = await DB.file.getFileByHash(hash);
-  console.log(file);
   if (error) {
     res.status(500)
       .json({

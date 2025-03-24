@@ -58,17 +58,25 @@ function AvatarDialog({
     avatar,
   ]);
 
+  const [
+    done,
+    setDone,
+  ] = useState(false);
+
   const {
-    data,
     loading: uploading,
   } = useRequest(() => file.uploadAvatar(avatar), {
     ready: !!avatar,
     onSuccess: (res) => {
       setInfo(res);
+      setDone(true);
     },
   });
 
   const onOpenChange = (isOpen: boolean) => {
+    setAvatar(null);
+    setDone(false);
+
     if (!isOpen) {
       onClose?.();
     }
@@ -84,7 +92,7 @@ function AvatarDialog({
   if (uploading) {
     message = '上传中';
   }
-  if (data) {
+  if (done) {
     message = '上传完毕';
   }
 
