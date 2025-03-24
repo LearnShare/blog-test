@@ -38,6 +38,7 @@ function Avatar({
       {
         url && (
           <Image
+              className="rounded-[50%]"
               src={ url }
               width={ width }
               height={ height }

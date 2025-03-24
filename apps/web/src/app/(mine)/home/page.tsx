@@ -1,13 +1,13 @@
 import React from 'react';
 
 import DataGrid from './data/grid';
-import DataCharts from './data/charts';
+import DataBlocks from './data/blocks';
 
 export default function PageHome() {
   return (
     <>
       <DataGrid />
-      <DataCharts />
+      <DataBlocks />
     </>
   );
 }

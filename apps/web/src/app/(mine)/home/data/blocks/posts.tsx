@@ -48,7 +48,7 @@ function DataPosts() {
       <div className="flex flex-col gap-2">
         <Loading loading={ loading } />
           {
-            !loading && data && (
+            !loading && data?.count > 0 && (
               <Table>
                 <TableHeader>
                   <TableRow>

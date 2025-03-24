@@ -16,7 +16,7 @@ function Empty({
 }: EmptyProps) {
   return (
     <div className={ cn(
-      'flex flex-col gap-6 items-center justify-center',
+      'flex flex-col gap-6 p-6 items-center justify-center',
       className,
     ) }>
       <IconBird

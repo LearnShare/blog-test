@@ -89,21 +89,24 @@ const acceptUploadTypes = [
   'post-cover',
 ] as const;
 
+const serverHost = 'http://localhost:3000/api/file/hash';
+
 async function continueUpload(
   accountId: number,
-  fileId: number,
+  file: any,
   type: typeof acceptUploadTypes,
   res: Response,
 ) {
   switch (type) {
     case 'account-avatar':
       updateAccount(accountId, {
-        avatar: fileId,
+        avatar: file.id,
+        avatarUrl: `${serverHost}/${file.hash}`,
       }, res);
       break;
     case 'post-cover':
       res.json({
-        id: fileId,
+        id: file.id,
       });
       break;
     default:
@@ -209,9 +212,9 @@ fileRouter.post(
         return;
       }
 
-      continueUpload(id, file.id, type, res);
+      continueUpload(id, file, type, res);
     } else {
-      continueUpload(id, existingFile.id, type, res);
+      continueUpload(id, existingFile, type, res);
     }
   },
 );
@@ -257,6 +260,7 @@ fileRouter.get('/hash/:hash', async (req: Request, res: Response) => {
     data: file,
     error,
   } = await DB.file.getFileByHash(hash);
+  console.log(file);
   if (error) {
     res.status(500)
       .json({

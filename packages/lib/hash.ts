@@ -1,5 +1,11 @@
 import Crypto from 'node:crypto';
 import Bcrypt from 'bcrypt';
+import {
+  customAlphabet,
+} from 'nanoid';
+
+const dict = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-1234567890_abcdefghijklmnopqrstuvwxyz';
+const NanoId = customAlphabet(dict, 12);
 
 function generateRandomNumber(length: number): string {
   const num = Crypto.webcrypto.getRandomValues(new Uint32Array(1));
@@ -13,6 +19,10 @@ function hashData(data: Crypto.BinaryLike): string {
 
 function uuid(): string {
   return Crypto.randomUUID();
+}
+
+function nanoid(length = 12): string {
+  return NanoId(length);
 }
 
 function hashPassword(password: string): string {
@@ -29,6 +39,7 @@ export default {
   generateRandomNumber,
   hashData,
   uuid,
+  nanoid,
   hashPassword,
   checkPassword,
 };

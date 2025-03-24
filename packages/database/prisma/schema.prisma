@@ -14,18 +14,19 @@ enum Role {
 }
 
 model Account {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String
-  name     String?
-  uid      String   @unique
-  avatar   Int?
-  role     Role     @default(USER)
-  verified Boolean  @default(false)
-  disabled Boolean  @default(false)
-  posts    Post[]
-  ctime    DateTime @default(now())
-  utime    DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  uid       String   @unique
+  avatar    Int?
+  avatarUrl String?
+  role      Role     @default(USER)
+  verified  Boolean  @default(false)
+  disabled  Boolean  @default(false)
+  posts     Post[]
+  ctime     DateTime @default(now())
+  utime     DateTime @updatedAt
 }
 
 enum ContentFormat {
@@ -40,6 +41,7 @@ model Post {
   authorId  Int
   uid       String        @unique
   cover     Int?
+  coverUrl  String?
   title     String
   intro     String
   content   String

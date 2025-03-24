@@ -83,6 +83,7 @@ function HeaderActions() {
           <Popover>
             <PopoverTrigger>
               <Avatar
+                  url={ info.avatarUrl }
                   name={ info.name }
                   round />
             </PopoverTrigger>

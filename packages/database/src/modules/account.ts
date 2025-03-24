@@ -1,4 +1,5 @@
 import prisma from '../prisma';
+import Hash from '@packages/lib/hash';
 
 export const AccountPublicFields = {
   id: true,
@@ -6,6 +7,7 @@ export const AccountPublicFields = {
   name: true,
   uid: true,
   avatar: true,
+  avatarUrl: true,
   verified: true,
   role: true,
   ctime: true,
@@ -13,14 +15,19 @@ export const AccountPublicFields = {
 };
 
 // create account
-async function createAccount(email: string, password: string, role = 'USER', verified = false) {
+async function createAccount(
+  email: string,
+  password: string,
+  role = 'AUTHOR',
+  verified = false,
+) {
   try {
     const account = await prisma.account.create({
       data: {
         email,
-        name: email.replace('@', '#'),
+        name: email.substring(0, email.indexOf('@')),
         password,
-        uid: email.replace('@', '#'),
+        uid: Hash.nanoid(),
         role,
         verified,
       },

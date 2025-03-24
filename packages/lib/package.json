@@ -10,6 +10,7 @@
     "highlight.js": "^11.11.1",
     "jsonwebtoken": "^9.0.2",
     "markdown-it": "^14.1.0",
+    "nanoid": "^5.1.5",
     "zod": "^3.24.2"
   }
 }

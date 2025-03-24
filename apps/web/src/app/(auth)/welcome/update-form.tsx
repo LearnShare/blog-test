@@ -133,7 +133,7 @@ function UpdateForm() {
         uid,
       } = res;
 
-      router.push(`/@${uid}`);
+      router.push(`/author/@${uid}`);
     },
   });
 
