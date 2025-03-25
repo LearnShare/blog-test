@@ -28,6 +28,7 @@ import {
 import AvatarDialog from './dialogs/avatar';
 import Alert from '@/components/dialog/alert';
 import ProfileDialog from './dialogs/profile';
+import PasswordDialog from './dialogs/password';
 
 import AccountContext from '@/components/provider/account-context';
 import {
@@ -72,10 +73,14 @@ function ProfileActions({
     deleteAvatar();
   };
 
-
   const [
     profileDialogOpen,
     setProfileDialogOpen,
+  ] = useState(false);
+
+  const [
+    passwordDialogOpen,
+    setPasswordDialogOpen,
   ] = useState(false);
 
   const menuOnSelect = (action: string) => {
@@ -90,6 +95,7 @@ function ProfileActions({
         setProfileDialogOpen(true);
         return;
       case 'password':
+        setPasswordDialogOpen(true);
         return;
       default:
     }
@@ -151,6 +157,10 @@ function ProfileActions({
       <ProfileDialog
           open={ profileDialogOpen }
           onClose={ () => setProfileDialogOpen(false) } />
+
+      <PasswordDialog
+          open={ passwordDialogOpen }
+          onClose={ () => setPasswordDialogOpen(false) } />
     </DropdownMenu>
   );
 }

@@ -56,7 +56,7 @@ function updateInfo(data: {
 }
 
 function updatePassword(oldPassword: string, password: string) {
-  return HTTP.post('/auth/info', {
+  return HTTP.put('/auth/password', {
     oldPassword,
     password,
   });
