@@ -2,18 +2,31 @@
 
 import React, {
   useState,
+  useContext,
+  useEffect,
 } from 'react';
 
 import VerifyForm from './verify-form';
 import UpdateForm from './update-form';
 
+import AccountContext from '@/components/provider/account-context';
+
 type ViewType = 'verify' | 'update';
 
 function WelcomeViews() {
+  const {
+    info,
+  } = useContext(AccountContext);
+
   const [
     view,
     setView,
   ] = useState<ViewType>('verify');
+  useEffect(() => {
+    setView(info?.verified ? 'update' : 'verify');
+  }, [
+    info,
+  ]);
 
   let message = '';
   switch (view) {
@@ -24,6 +37,10 @@ function WelcomeViews() {
       message = '设置您的账号信息';
       break;
     default:
+  }
+
+  if (!info) {
+    return;
   }
 
   return (

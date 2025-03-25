@@ -3,6 +3,7 @@
 import React, {
   useContext,
 } from 'react';
+import Link from 'next/link';
 
 import Avatar from '@/components/avatar';
 import InfoList from '@/components/info-list';
@@ -54,7 +55,9 @@ function DataStats() {
               height={ 80 }
               round />
           <div className="mt-4 text-center">{ info?.name }</div>
-          <div className="text-sm text-slate-500 text-center">@{ info?.uid }</div>
+          <Link
+              className="text-sm text-slate-500 text-center hover:underline"
+              href={ `/author/@${ info?.uid }` }>@{ info?.uid }</Link>
         </div>
         <InfoList
             list={ list } />

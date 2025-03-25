@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AvatarDialog from './dialogs/avatar';
 import Alert from '@/components/dialog/alert';
+import ProfileDialog from './dialogs/profile';
 
 import AccountContext from '@/components/provider/account-context';
 import {
@@ -71,6 +72,12 @@ function ProfileActions({
     deleteAvatar();
   };
 
+
+  const [
+    profileDialogOpen,
+    setProfileDialogOpen,
+  ] = useState(false);
+
   const menuOnSelect = (action: string) => {
     switch (action) {
       case 'upload-avatar':
@@ -80,6 +87,7 @@ function ProfileActions({
         setDeleteDialogOpen(true);
         return;
       case 'profile':
+        setProfileDialogOpen(true);
         return;
       case 'password':
         return;
@@ -139,6 +147,10 @@ function ProfileActions({
           cancel="取消"
           ok="删除"
           onOk={ () => deleteOnClick() } />
+
+      <ProfileDialog
+          open={ profileDialogOpen }
+          onClose={ () => setProfileDialogOpen(false) } />
     </DropdownMenu>
   );
 }
