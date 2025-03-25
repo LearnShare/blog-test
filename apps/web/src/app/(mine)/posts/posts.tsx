@@ -45,13 +45,20 @@ function Posts() {
     ],
   });
 
+  const {
+    data: stats,
+    refresh: refreshStats,
+  } = useRequest(() => auth.accountStats());
+
   const onActionDone = () => {
     refresh();
+    refreshStats();
   };
 
   return (
     <div className="flex flex-col gap-6">
       <Filter
+          stats={ stats?.post }
           values={ filters }
           onChange={ (data: Record<string, any>) => setFilters(data) } />
       <Loading loading={ loading } />

@@ -14,6 +14,10 @@ import {
 } from '@/components/ui/button';
 
 interface FilterProps {
+  stats?: {
+    published: number;
+    unpublished: number;
+  };
   values: Record<string, any>;
   onChange: (data: Record<string, any>) => void;
 }
@@ -21,15 +25,18 @@ interface FilterProps {
 const publishedOptions = [
   {
     label: '已发布',
+    key: 'published',
     value: 1,
   },
   {
     label: '未发布',
+    key: 'unpublished',
     value: 0,
   },
 ];
 
 function Filter({
+  stats,
   values,
   onChange,
 }: FilterProps) {
@@ -50,7 +57,7 @@ function Filter({
             publishedOptions.map((option) => (
               <TabsTrigger
                   key={ option.value }
-                  value={ option.value }>{ option.label }</TabsTrigger>
+                  value={ option.value }>{ option.label } { stats?.[option.key] }</TabsTrigger>
             ))
           }
         </TabsList>
