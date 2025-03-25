@@ -195,6 +195,14 @@ postRouter.get('/uid/:uid', async (req: Request, res: Response) => {
     return;
   }
 
+  DB.post.updatePostViews(post.id);
+
+  DB.requestLog.createLog({
+    ip: req.ip,
+    target: post.id,
+    type: 'POST',
+  });
+
   res.json(post);
 });
 

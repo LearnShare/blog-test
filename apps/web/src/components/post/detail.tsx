@@ -6,6 +6,7 @@ import React, {
 import {
   BookOpenText as IconBookOpenText,
   BookCheck as IconBookCheck,
+  Eye as IconEye,
 } from 'lucide-react';
 import {
   useRouter,
@@ -18,7 +19,6 @@ import {
 import Divider from '@/components/divider';
 import PostActions from '@/components/post/actions';
 import Error from '@/components/error';
-import Loading from '@/components/loading';
 import {
   Badge,
 } from '@/components/ui/badge';
@@ -39,6 +39,7 @@ export default function PostDetail({
   format,
   published,
   author,
+  views,
   utime,
 }: Post) {
   const router = useRouter();
@@ -120,6 +121,12 @@ export default function PostDetail({
                 className="text-sm text-gray-500">{ time.format(utime) }</time>
           )
         }
+        <div className="flex gap-4">
+          <div className="flex flex-col items-center text-gray-400">
+            <IconEye size={ 20 } />
+            <span className="text-sm">{ views || 0 }</span>
+          </div>
+        </div>
       </div>
       {
         intro && (

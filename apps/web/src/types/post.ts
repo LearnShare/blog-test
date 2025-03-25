@@ -12,5 +12,6 @@ export interface Post {
   format?: string;
   author?: Account;
   published?: boolean;
+  views?: number;
   utime?: Date;
 }

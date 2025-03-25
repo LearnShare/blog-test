@@ -37,7 +37,7 @@ function DataPosts() {
   return (
     <div className="flex flex-col gap-3 flex-1 border rounded-lg border-gray-200 p-4 max-w-[calc((100%-24px)/2)]">
       <h3 className="text-sm text-slate-600 flex justify-between items-center">
-        <span>最新文章</span>
+        <span>最近更新</span>
         <Link
             href="/posts"
             className={ buttonVariants({
@@ -55,6 +55,7 @@ function DataPosts() {
                     <TableHead>标题</TableHead>
                     <TableHead>更新时间</TableHead>
                     <TableHead>状态</TableHead>
+                    <TableHead>阅读</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -62,9 +63,15 @@ function DataPosts() {
                     data.list.map((post) => (
                       <TableRow
                           key={ post.id }>
-                        <TableCell>{ post.title }</TableCell>
+                        <TableCell>
+                          <Link
+                              className="hover:underline"
+                              href={ `/${post.published ? 'post' : 'draft'}/${post.uid}` }
+                              target="_blank">{ post.title }</Link>
+                        </TableCell>
                         <TableCell>{ time.format(post.utime) }</TableCell>
                         <TableCell>{ post.published ? '已发布' : '未发布' }</TableCell>
+                        <TableCell>{ post.views }</TableCell>
                       </TableRow>
                     ))
                   }

@@ -48,6 +48,7 @@ model Post {
   format    ContentFormat @default(TEXT)
   images    Int[]
   published Boolean       @default(false)
+  views     Int           @default(0)
   ctime     DateTime      @default(now())
   utime     DateTime      @updatedAt
 }
@@ -84,4 +85,16 @@ model Code {
   used    Boolean  @default(false)
   ctime   DateTime @default(now())
   etime   DateTime
+}
+
+enum TargetType {
+  POST
+}
+
+model RequestLog {
+  id     Int        @id @default(autoincrement())
+  time   DateTime   @default(now())
+  ip     String
+  type   TargetType
+  target Int
 }

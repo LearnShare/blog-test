@@ -34,11 +34,11 @@ function DataGrid() {
           value={ data?.post?.published || 0 } />
       <DataItem
           icon={ <IconChartNoAxesColumn /> }
-          label="阅读统计"
-          value="-" />
+          label="阅读总计"
+          value={ data?.post?.views || 0 } />
       <DataItem
           icon={ <IconBookHeart /> }
-          label="读者收藏"
+          label="收藏总计"
           value="-" />
       <div>
         <Link

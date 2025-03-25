@@ -219,6 +219,24 @@ async function updatePost(id: number, postData: PostData) {
   }
 }
 
+// update post views
+async function updatePostViews(id: number) {
+  try {
+    await prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // delete post
 async function deletePost(id: number, postData: PostData) {
   try {
@@ -265,13 +283,24 @@ async function getStats(id?: number) {
         published: false,
       },
     });
-    console.log(total, published, unpublished);
+    const viewsSum = await prisma.post.aggregate({
+      where: {
+        ...authorQuery,
+        published: true,
+      },
+      _sum: {
+        views: true,
+      },
+    });
+    const views = viewsSum._sum.views
+        || 0;
 
     return {
       data: {
         total,
         published,
         unpublished,
+        views,
       },
     };
   } catch (error) {
@@ -287,6 +316,7 @@ export default {
   getPostById,
   getPostByUid,
   updatePost,
+  updatePostViews,
   deletePost,
   getStats,
 };
