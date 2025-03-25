@@ -314,4 +314,23 @@ fileRouter.get('/:id', async (req: Request, res: Response) => {
   returnFile(file, res);
 });
 
+/**
+ * delete avatar
+ */
+fileRouter.delete(
+  '/avatar',
+  Auth.check,
+  Auth.checkVerified,
+  async (req: Request, res: Response) => {
+    const {
+      id,
+    } = req.user;
+
+    updateAccount(id, {
+      avatar: null,
+      avatarUrl: '',
+    }, res);
+  },
+);
+
 export default fileRouter;

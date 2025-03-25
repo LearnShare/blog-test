@@ -2,7 +2,11 @@
 
 import React, {
   useState,
+  useContext,
 } from 'react';
+import {
+  useRequest,
+} from 'ahooks';
 import {
   EllipsisVertical as IconEllipsisVertical,
   PencilLine as IconPencilLine,
@@ -22,9 +26,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import AvatarDialog from './dialogs/avatar';
+import Alert from '@/components/dialog/alert';
+
+import AccountContext from '@/components/provider/account-context';
+import {
+  file,
+} from '@packages/lib/sdk/web';
 
 interface ProfileActionProps {
-  onActionDone?: (action: string) => void;
+  // onActionDone?: (action: string) => void;
   className?: string;
 }
 
@@ -32,21 +42,46 @@ function ProfileActions({
   // onActionDone,
   className,
 }: ProfileActionProps) {
+  const {
+    info,
+    setInfo,
+  } = useContext(AccountContext);
+
   const [
     avatarDialogOpen,
     setAvatarDialogOpen,
   ] = useState(false);
+
+  const [
+    deleteDialogOpen,
+    setDeleteDialogOpen,
+  ] = useState(false);
+
+  const {
+    run: deleteAvatar,
+    loading: deleting,
+  } = useRequest(() => file.deleteAvatar(), {
+    manual: true,
+    onSuccess: (res) => {
+      setInfo(res);
+    },
+  });
+  const deleteOnClick = () => {
+    setDeleteDialogOpen(false);
+    deleteAvatar();
+  };
 
   const menuOnSelect = (action: string) => {
     switch (action) {
       case 'upload-avatar':
         setAvatarDialogOpen(true);
         return;
-      case 'publish':
+      case 'delete-avatar':
+        setDeleteDialogOpen(true);
         return;
-      case 'withdraw':
+      case 'profile':
         return;
-      case 'delete':
+      case 'password':
         return;
       default:
     }
@@ -64,15 +99,21 @@ function ProfileActions({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
+            disabled={ deleting }
             onSelect={ () => menuOnSelect('upload-avatar') }>
           <IconUpload />
           <span>上传头像</span>
         </DropdownMenuItem>
-        <DropdownMenuItem
-            onSelect={ () => menuOnSelect('delete-avatar') }>
-          <IconTrash2 />
-          <span>删除头像</span>
-        </DropdownMenuItem>
+        {
+          info?.avatar && (
+            <DropdownMenuItem
+                disabled={ deleting }
+                onSelect={ () => menuOnSelect('delete-avatar') }>
+              <IconTrash2 />
+              <span>删除头像</span>
+            </DropdownMenuItem>
+          )
+        }
         <DropdownMenuSeparator />
         <DropdownMenuItem
             onSelect={ () => menuOnSelect('profile') }>
@@ -89,6 +130,15 @@ function ProfileActions({
       <AvatarDialog
           open={ avatarDialogOpen }
           onClose={ () => setAvatarDialogOpen(false) } />
+
+      <Alert
+          open={ deleteDialogOpen }
+          onClose={ () => setDeleteDialogOpen(false) }
+          title="提示"
+          content="删除您的头像？"
+          cancel="取消"
+          ok="删除"
+          onOk={ () => deleteOnClick() } />
     </DropdownMenu>
   );
 }

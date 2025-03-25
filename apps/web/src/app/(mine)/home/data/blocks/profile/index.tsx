@@ -39,16 +39,11 @@ function DataStats() {
     },
   ];
 
-  const onActionDone = (action: string) => {
-    console.log(action);
-  };
-
   return (
     <div className="flex flex-col gap-3 flex-1 border rounded-lg border-gray-200 p-4">
       <h3 className="text-sm text-slate-600 flex justify-between items-center">
         <span>个人资料</span>
-        <ProfileActions
-            onActionDone={ (action: string) => onActionDone(action) } />
+        <ProfileActions />
       </h3>
       <div className="flex gap-10 justify-center items-center">
         <div className="flex flex-col gap-1 items-center">

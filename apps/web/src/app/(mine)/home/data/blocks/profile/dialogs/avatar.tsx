@@ -67,6 +67,9 @@ function AvatarDialog({
     loading: uploading,
   } = useRequest(() => file.uploadAvatar(avatar), {
     ready: !!avatar,
+    refreshDeps: [
+      avatar,
+    ],
     onSuccess: (res) => {
       setInfo(res);
       setDone(true);

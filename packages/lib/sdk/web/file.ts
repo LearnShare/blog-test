@@ -12,6 +12,11 @@ function uploadAvatar(file: File) {
   });
 }
 
+function deleteAvatar() {
+  return HTTP.delete('/file/avatar');
+}
+
 export default {
   uploadAvatar,
+  deleteAvatar,
 };
