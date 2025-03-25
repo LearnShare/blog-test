@@ -6,17 +6,15 @@ import { cn } from '@/lib/utils';
 
 interface AuthorCardProps {
   uid: string;
-  avatar?: string;
+  avatarUrl?: string;
   name: string;
-  // email?: string;
   className?: string;
 }
 
 function AuthorCard({
   uid,
-  avatar,
+  avatarUrl,
   name,
-  // email,
   className,
 }: AuthorCardProps) {
   return (
@@ -27,12 +25,12 @@ function AuthorCard({
         ) }
         href={ `/author/@${uid}` }>
       <Avatar
-          url={ avatar }
+          url={ avatarUrl }
           name={ name }
           round />
       <div className="flex flex-col">
         <div className="text-slate-700">{ name }</div>
-        <div className="text-sm text-slate-500 underline">@{ uid }</div>
+        <div className="text-sm text-slate-500 group-hover:underline">@{ uid }</div>
       </div>
     </Link>
   );

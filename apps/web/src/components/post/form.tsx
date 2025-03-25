@@ -11,6 +11,10 @@ import {
 import {
   useRequest,
 } from 'ahooks'
+import {
+  ImageUp as IconImageUp,
+  Trash2 as IconTrash2,
+} from 'lucide-react';
 
 import {
   Button,
@@ -34,6 +38,7 @@ import {
 import type {
   PostData,
 } from '@packages/database';
+import CoverDialog from '@/components/post/dialogs/cover';
 
 const KnownErrors = {
   'UID exists': 'ID 已存在',
@@ -132,20 +137,42 @@ function PostForm(data?: PostData) {
       }
     }
 
+    const postData = {
+      ...formData,
+      format: 'MARKDOWN',
+      published,
+      cover: cover?.id || null,
+      coverUrl: cover?.url || '',
+    };
+
     if (data
         && data.id) {
-      return post.update(data.id, {
-        ...formData,
-        format: 'MARKDOWN',
-        published,
-      });
+      return post.update(data.id, postData);
     } else {
-      return post.create({
-        ...formData,
-        format: 'MARKDOWN',
-        published,
-      });
+      return post.create(postData);
     }
+  };
+
+  const [
+    cover,
+    setCover,
+  ] = useState((data?.cover && data?.coverUrl)
+      ? {
+        id: data.cover,
+        url: data.coverUrl,
+      }
+      : null
+    );
+  const [
+    coverDialogOpen,
+    setCoverDialogOpen,
+  ] = useState(false);
+  const coverDialogOnClose = (data: any) => {
+    if (data) {
+      setCover(data);
+    }
+
+    setCoverDialogOpen(false);
   };
 
   const {
@@ -155,7 +182,6 @@ function PostForm(data?: PostData) {
   } = useRequest(validateAndSubmit, {
     manual: true,
     onSuccess: (res) => {
-      console.log(res);
       const {
         uid,
         published,
@@ -194,6 +220,24 @@ function PostForm(data?: PostData) {
         ) => formOnChange(data, dirty) }>
       <div className="flex gap-4 items-center">
         <h2 className="text-xl flex-1">编写文章</h2>
+        {
+          cover && cover.url && (
+            <Button
+                variant="outline"
+                disabled={ loading }
+                onClick={ () => setCover(null) }>
+              <IconTrash2 />
+              <span>删除封面</span>
+            </Button>
+          )
+        }
+        <Button
+            variant="outline"
+            disabled={ loading }
+            onClick={ () => setCoverDialogOpen(true) }>
+          <IconImageUp />
+          <span>上传封面</span>
+        </Button>
         <Button
             variant="outline"
             disabled={ loading }
@@ -205,6 +249,16 @@ function PostForm(data?: PostData) {
       {
         error && (
           <FormError>{ KnownErrors[error.message] || error.message }</FormError>
+        )
+      }
+      {
+        cover && cover.url && (
+          <div className="flex justify-center">
+            <img
+                className="max-w-[100%]"
+                src={ cover.url }
+                alt="cover" />
+          </div>
         )
       }
       <FormItem
@@ -226,8 +280,12 @@ function PostForm(data?: PostData) {
           className="flex-1"
           label="内容（Markdown 格式）"
           name="content">
-        <Textarea className="flex-1" />
+        <Textarea className="flex-1 min-h-[600px]" />
       </FormItem>
+
+      <CoverDialog
+          open={ coverDialogOpen }
+          onClose={ (data?: any) => coverDialogOnClose(data) } />
     </Form>
   );
 }

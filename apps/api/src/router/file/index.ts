@@ -97,16 +97,19 @@ async function continueUpload(
   type: typeof acceptUploadTypes,
   res: Response,
 ) {
+  const url = `${serverHost}/${file.hash}`;
+
   switch (type) {
     case 'account-avatar':
       updateAccount(accountId, {
         avatar: file.id,
-        avatarUrl: `${serverHost}/${file.hash}`,
+        avatarUrl: url,
       }, res);
       break;
     case 'post-cover':
       res.json({
         id: file.id,
+        url,
       });
       break;
     default:

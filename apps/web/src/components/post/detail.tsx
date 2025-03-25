@@ -32,7 +32,7 @@ import AccountContext from '@/components/provider/account-context';
 export default function PostDetail({
   id,
   uid,
-  cover,
+  coverUrl,
   title,
   intro,
   content,
@@ -62,14 +62,8 @@ export default function PostDetail({
     }
   };
 
-  if (!info) {
-    return (
-      <Loading />
-    );
-  }
-
   if (!published
-      && info.id !== author.id) {
+      && info?.id !== author.id) {
     return (
       <Error message="没有访问该页面的权限" />
     );
@@ -78,7 +72,7 @@ export default function PostDetail({
   return (
     <div className="flex flex-col gap-4">
       {
-        (info.id === author.id) && (
+        (info?.id === author.id) && (
           <div className="flex justify-end items-center has-data-[slot=badge]:justify-between">
             {
               !published && (
@@ -95,13 +89,13 @@ export default function PostDetail({
         )
       }
       <div
-          data-cover={ !!cover }
+          data-cover={ !!coverUrl }
           className="
               group relative bg-no-repeat bg-top bg-cover
               data-[cover=true]:min-h-[300px]"
           style={ {
-            backgroundImage: cover
-              ? `url(${cover})`
+            backgroundImage: coverUrl
+              ? `url(${coverUrl})`
               : '',
           } }>
         <h3 className="

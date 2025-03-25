@@ -19,7 +19,7 @@ interface PostCardProps
 export default function PostCard({
   id,
   uid,
-  cover,
+  coverUrl,
   title,
   intro,
   published,
@@ -53,12 +53,12 @@ export default function PostCard({
           href={ `/${ published ? 'post' : 'draft' }/${uid}` }
           className="group flex flex-col gap-2">
         {
-          cover && (
-            <div className="max-h-[300px] overflow-hidden flex justify-center">
+          coverUrl && (
+            <div className="h-[160px] overflow-hidden flex justify-center relative">
               <Image
-                  src={ cover }
-                  width="471"
-                  height="223"
+                  src={ coverUrl }
+                  fill
+                  objectFit="cover"
                   alt={ title } />
             </div>
           )

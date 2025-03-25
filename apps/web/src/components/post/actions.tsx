@@ -49,7 +49,7 @@ function PostActions({
 
   const {
     run: publishPost,
-  } = useRequest(() => post.update(id, {
+  } = useRequest(() => post.updatePublished(id, {
     published: true,
   }), {
     manual: true,
@@ -60,7 +60,7 @@ function PostActions({
 
   const {
     run: withdrawPost,
-  } = useRequest(() => post.update(id, {
+  } = useRequest(() => post.updatePublished(id, {
     published: false,
   }), {
     manual: true,

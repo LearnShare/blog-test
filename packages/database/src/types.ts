@@ -14,6 +14,8 @@ export interface PostData {
   title: string;
   intro?: string;
   uid?: string;
+  cover?: number;
+  coverUrl?: string;
   content: string;
   format?: string;
   published?: boolean;

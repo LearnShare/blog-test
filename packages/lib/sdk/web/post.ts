@@ -31,6 +31,12 @@ function update(id: number, data: PostData) {
   return HTTP.put(`/post/${id}`, data);
 }
 
+function updatePublished(id: number, data: {
+  published: boolean;
+}) {
+  return HTTP.put(`/post/${id}/published`, data);
+}
+
 function del(id: number) {
   return HTTP.delete(`/post/${id}`);
 }
@@ -40,5 +46,6 @@ export default {
   get,
   getPosts,
   update,
+  updatePublished,
   del,
 };

@@ -89,6 +89,8 @@ postRouter.post(
       title,
       intro,
       uid,
+      cover,
+      coverUrl,
       content,
       format,
       published,
@@ -141,6 +143,8 @@ postRouter.post(
       uid: uid
           ? uid
           : Hash.uuid(),
+      cover,
+      coverUrl,
       content,
       format,
       published,
@@ -246,6 +250,140 @@ postRouter.put(
     } = req.params;
     const postId = Number(id);
 
+    const {
+      title,
+      intro,
+      uid,
+      cover,
+      coverUrl,
+      content,
+      format,
+      published,
+    } = req.body;
+
+    // 1. check title and content
+    if (!title
+        || !content) {
+      res.status(400)
+          .json({
+            status: 400,
+            message: 'Title and Content required',
+          });
+      return;
+    }
+
+    // 2. check is post exist
+    const {
+      data: post,
+      error,
+    } = await DB.post.getPostById(postId);
+
+    if (error) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: error,
+        });
+      return;
+    }
+
+    if (!post) {
+      res.status(404)
+          .json({
+            status: 404,
+            message: 'Post not found',
+          });
+      return;
+    }
+
+    // 3. check author
+    if (post.authorId !== userId) {
+      res.status(403)
+          .json({
+            status: 403,
+            message: 'Action not allowed',
+          });
+      return;
+    }
+
+    if (uid) {
+      // 4. check is uid exist
+      const {
+        data: post,
+        error,
+      } = await DB.post.getPostByUid(uid);
+
+      if (error) {
+        res.status(500)
+          .json({
+            status: 500,
+            message: error,
+          });
+        return;
+      }
+
+      if (post
+          && post.id !== postId) {
+        res.status(400)
+            .json({
+              status: 400,
+              message: 'UID exists',
+            });
+        return;
+      }
+    }
+
+    // 5. update post
+    const {
+      data: updatedPost,
+      error: updateError,
+    } = await DB.post.updatePost(postId, {
+      title,
+      intro,
+      uid: uid
+          ? uid
+          : Hash.uuid(),
+      cover,
+      coverUrl,
+      content,
+      format,
+      published,
+    });
+
+    if (updateError) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: updateError,
+        });
+      return;
+    }
+
+    res.json(updatedPost);
+  },
+);
+
+/**
+ * update post published by id
+ */
+postRouter.put(
+  '/:id/published',
+  Auth.check,
+  Auth.checkVerified,
+  Auth.checkRole(['ADMIN', 'AUTHOR']),
+  async (req: Request, res: Response) => {
+    const {
+      id: userId,
+    } = req.user;
+    const {
+      id,
+    } = req.params;
+    const postId = Number(id);
+
+    const {
+      published,
+    } = req.body;
+
     // 1. check is post exist
     const {
       data: post,
@@ -284,7 +422,9 @@ postRouter.put(
     const {
       data: updatedPost,
       error: updateError,
-    } = await DB.post.updatePost(postId, req.body);
+    } = await DB.post.updatePost(postId, {
+      published,
+    });
 
     if (updateError) {
       res.status(500)
