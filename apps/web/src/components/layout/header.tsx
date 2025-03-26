@@ -21,11 +21,6 @@ export default function Header() {
             </li>
             <li>
               <Link
-                  href="/data"
-                  className={ linkCns }>数据</Link>
-            </li>
-            <li>
-              <Link
                   href="/about"
                   className={ linkCns }>关于</Link>
             </li>

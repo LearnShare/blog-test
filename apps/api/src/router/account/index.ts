@@ -33,6 +33,7 @@ accountRouter.get(
   async (req: Request, res: Response) => {
     const {
       search,
+      role,
       posts,
       sort,
       page,
@@ -44,6 +45,7 @@ accountRouter.get(
       error,
     } = await DB.account.getAccounts({
       search,
+      role,
       posts: posts
           ? Boolean(Number(posts))
           : null,

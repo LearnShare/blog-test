@@ -32,7 +32,12 @@ async function createAccounts() {
     const {
       data,
       error,
-    } = await DB.account.createAccount(email, hash, role, true);
+    } = await DB.account.createAccount({
+      email,
+      password: hash,
+      role,
+      verified: true,
+  });
 
     if (error) {
       console.error('[SEED]:', `create account "${email}" error`);

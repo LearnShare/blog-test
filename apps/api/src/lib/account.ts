@@ -83,7 +83,8 @@ export async function updateAccount(id: number, data: Record<string, any>, res: 
       return;
     }
 
-    if (account) {
+    if (account
+        && account.id !== id) {
       res.status(400)
           .json({
             status: 400,

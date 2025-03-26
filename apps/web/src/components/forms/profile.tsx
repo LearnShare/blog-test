@@ -17,6 +17,9 @@ import {
   Input,
 } from '@/components/ui/input';
 import {
+  Textarea,
+} from '@/components/ui/textarea';
+import {
   Form,
   FormItem,
   FormError,
@@ -146,6 +149,7 @@ function ProfileForm({
         initialValue={ {
           name: info.name,
           uid: info.uid,
+          intro: info.intro,
         } }
         errors={ errors }
         disabled={ loading }
@@ -162,6 +166,11 @@ function ProfileForm({
           label="ID"
           name="uid">
         <Input />
+      </FormItem>
+      <FormItem
+          label="介绍"
+          name="intro">
+        <Textarea maxLength={ 120 } />
       </FormItem>
       <Button
           className="mt-3"

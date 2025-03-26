@@ -8,6 +8,7 @@ import helloRouter from './hello';
 import fileRouter from './file';
 import authRouter from './auth';
 import accountRouter from './account';
+import authorRouter from './author';
 import postRouter from './post';
 
 const router = Router();
@@ -16,6 +17,7 @@ router.use('/api/hello', helloRouter);
 router.use('/api/file', fileRouter);
 router.use('/api/auth', authRouter);
 router.use('/api/account', accountRouter);
+router.use('/api/author', authorRouter);
 router.use('/api/post', postRouter);
 
 // 404

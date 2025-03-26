@@ -117,7 +117,10 @@ authRouter.post('/sign-up', async (req: Request, res: Response) => {
   const {
     data: account,
     error: createError,
-  } = await DB.account.createAccount(email, hash);
+  } = await DB.account.createAccount({
+    email,
+    password: hash,
+  });
 
   if (createError) {
     res.status(500)

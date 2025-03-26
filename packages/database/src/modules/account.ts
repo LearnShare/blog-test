@@ -10,17 +10,25 @@ export const AccountPublicFields = {
   avatarUrl: true,
   verified: true,
   role: true,
+  intro: true,
   ctime: true,
   utime: true,
 };
 
+interface AccountData {
+  email: string;
+  password: string;
+  role?: string;
+  verified: boolean;
+}
+
 // create account
-async function createAccount(
-  email: string,
-  password: string,
+async function createAccount({
+  email,
+  password,
   role = 'AUTHOR',
   verified = false,
-) {
+}: AccountData) {
   try {
     const account = await prisma.account.create({
       data: {
@@ -133,6 +141,7 @@ async function getAccountsByIds(ids: number[]) {
 
 export interface AccountsQuery {
   search?: string;
+  role?: string;
   posts?: boolean;
   sort?: string;
   page?: number;
@@ -143,6 +152,7 @@ export interface AccountsQuery {
 async function getAccounts(accountQuery: AccountsQuery) {
   const {
     search,
+    role,
     posts,
     sort,
     page,
@@ -169,27 +179,42 @@ async function getAccounts(accountQuery: AccountsQuery) {
               contains: search,
             },
           },
+          {
+            uid: {
+              contains: search,
+            },
+          },
         ],
       }
       : {};
+  const roleQuery = role
+      ? {
+        role,
+      }
+      : {};
   const selectQuery = posts
-        ? {
-          ...AccountPublicFields,
-          _count: {
-            select: {
-              posts: true,
-            },
+      ? {
+        ...AccountPublicFields,
+        _count: {
+          select: {
+            posts: true,
           },
-        }
-        : AccountPublicFields;
+        },
+      }
+      : AccountPublicFields;
+
+  const query = {
+    ...searchQuery,
+    ...roleQuery,
+  };
 
   try {
     const count = await prisma.account.count({
-      where: searchQuery,
+      where: query,
     });
 
     const list = await prisma.account.findMany({
-      where: searchQuery,
+      where: query,
       orderBy: {
         [name]: direction,
       },
@@ -203,7 +228,87 @@ async function getAccounts(accountQuery: AccountsQuery) {
         count,
         page,
         size,
-        list,
+        list: list.map((item) => {
+          const {
+            _count,
+            ...rest
+          } = item;
+
+          return {
+            ...rest,
+            postsCount: _count?.posts
+                || 0,
+          };
+        }),
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
+export interface AuthorssQuery {
+  posts?: boolean;
+  page?: number;
+  size?: number;
+}
+
+// get authors
+async function getAuthors(authorsQuery: AuthorssQuery) {
+  const {
+    posts,
+    page,
+    size,
+  } = authorsQuery;
+
+  const query = {
+    role: 'AUTHOR',
+  };
+
+  try {
+    const count = await prisma.account.count({
+      where: query,
+    });
+
+    const list = await prisma.account.findMany({
+      where: query,
+      orderBy: {
+        posts: {
+          _count: 'desc',
+        },
+      },
+      select: {
+        ...AccountPublicFields,
+        _count: {
+          select: {
+            posts: true,
+          },
+        },
+      },
+      skip: (page - 1) * size,
+      take: size,
+    });
+
+    return {
+      data: {
+        count,
+        page,
+        size,
+        list: list.map((item) => {
+          const {
+            _count,
+            ...rest
+          } = item;
+
+          return {
+            ...rest,
+            postsCount: _count?.posts
+                || 0,
+          };
+        }),
       },
     };
   } catch (error) {
@@ -241,6 +346,7 @@ async function updateAccount(id: number, data: Record<string, any>) {
 
 export default {
   createAccount,
+  getAuthors,
   getAccountByEmail,
   getAccountById,
   getAccountByUid,

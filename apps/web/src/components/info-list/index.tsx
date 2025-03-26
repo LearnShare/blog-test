@@ -27,8 +27,8 @@ function InfoList({
         list.map((item, i) => (
           <li
               key={ i }
-              className="flex gap-3 items-center text-sm">
-            <span className="w-[30%] text-right text-gray-500">{ item.label }: </span>
+              className="flex gap-3 items-top text-sm">
+            <span className="w-[30%] text-right text-gray-400">{ item.label }: </span>
             <span className="flex-1">{ item.value }</span>
           </li>
         ))

@@ -38,6 +38,10 @@ function DataStats() {
       value: roles[info?.role]
           || info?.role,
     },
+    {
+      label: '介绍',
+      value: info?.intro,
+    },
   ];
 
   return (
