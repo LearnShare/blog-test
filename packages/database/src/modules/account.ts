@@ -346,11 +346,12 @@ async function updateAccount(id: number, data: Record<string, any>) {
 
 export default {
   createAccount,
-  getAuthors,
   getAccountByEmail,
   getAccountById,
   getAccountByUid,
   getAccounts,
   getAccountsByIds,
   updateAccount,
+
+  getAuthors,
 };

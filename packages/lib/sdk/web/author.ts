@@ -12,6 +12,11 @@ function getAuthors(query: AuthorsQuery) {
   });
 }
 
+function getAuthor(uid: string) {
+  return HTTP.get(`/author/${uid}`);
+}
+
 export default {
   getAuthors,
+  getAuthor,
 };

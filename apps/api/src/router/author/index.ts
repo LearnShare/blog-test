@@ -60,4 +60,66 @@ authorRouter.get(
   },
 );
 
+/**
+ * get author info by uid
+ */
+authorRouter.get(
+  '/:uid',
+  async (req: Request, res: Response) => {
+    const {
+      uid,
+    } = req.params;
+
+    // 1. account info
+    const {
+      data: account,
+      error,
+    } = await DB.account.getAccountByUid(uid);
+
+    if (error) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: error,
+        });
+      return;
+    }
+
+    // 2. check is account exist
+    if (!account) {
+      res.status(404)
+          .json({
+            status: 404,
+            message: 'Account not found',
+          });
+      return;
+    }
+
+    // 3. post stats
+    const {
+      data: postStats,
+      error: postError,
+    } = await DB.post.getStats(account.id);
+
+    if (postError) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: postError,
+        });
+      return;
+    }
+
+    const {
+      password,
+      ...rest
+    } = account;
+
+    res.json({
+      ...rest,
+      postStats,
+    });
+  },
+);
+
 export default authorRouter;
