@@ -219,7 +219,7 @@ function PostForm(data?: PostData) {
           dirty: Record<string, boolean>
         ) => formOnChange(data, dirty) }>
       <div className="flex gap-4 items-center">
-        <h2 className="text-xl flex-1">编写文章</h2>
+        <h2 className="text-xl flex-1">{ data.id ? '修改' : '编写' }文章</h2>
         {
           cover && cover.url && (
             <Button

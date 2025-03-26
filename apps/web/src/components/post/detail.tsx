@@ -6,7 +6,6 @@ import React, {
 import {
   BookOpenText as IconBookOpenText,
   BookCheck as IconBookCheck,
-  Eye as IconEye,
 } from 'lucide-react';
 import {
   useRouter,
@@ -22,6 +21,15 @@ import Error from '@/components/error';
 import {
   Badge,
 } from '@/components/ui/badge';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import PostStats from './stats';
 
 import {
   Post,
@@ -74,19 +82,30 @@ export default function PostDetail({
     <div className="flex flex-col gap-4">
       {
         (info?.id === author.id) && (
-          <div className="flex justify-end items-center has-data-[slot=badge]:justify-between">
-            {
-              !published && (
-                <Badge
-                    variant="outline">未发布</Badge>
-              )
-            }
-            <PostActions
-                id={ id }
-                uid={ uid }
-                published={ published }
-                onActionDone={ onActionDone } />
-          </div>
+          <>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/home">我的主页</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/posts">全部文章</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbPage>文章详情</BreadcrumbPage>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <div className="flex items-center justify-between">
+              <Badge
+                  variant="outline">{ published ? '已发布' : '未发布' }</Badge>
+              <PostActions
+                  id={ id }
+                  uid={ uid }
+                  published={ published }
+                  onActionDone={ onActionDone } />
+            </div>
+          </>
         )
       }
       <div
@@ -121,12 +140,8 @@ export default function PostDetail({
                 className="text-sm text-gray-500">{ time.format(utime) }</time>
           )
         }
-        <div className="flex gap-4">
-          <div className="flex flex-col items-center text-gray-400">
-            <IconEye size={ 20 } />
-            <span className="text-sm">{ views || 0 }</span>
-          </div>
-        </div>
+        <PostStats
+            views={ views } />
       </div>
       {
         intro && (

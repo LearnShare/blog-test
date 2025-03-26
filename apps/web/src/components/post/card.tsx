@@ -2,8 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import PostActions from '@/components/post/actions';
+import PostActions from './actions';
 import AuthorCard from '@/components/author';
+import PostStats from './stats';
 
 import time from '@packages/lib/time';
 import type {
@@ -25,6 +26,7 @@ export default function PostCard({
   published,
   utime,
   author,
+  views,
   actions = false,
   onActionDone,
 }: PostCardProps) {
@@ -51,7 +53,7 @@ export default function PostCard({
       }
       <Link
           href={ `/${ published ? 'post' : 'draft' }/${uid}` }
-          className="group flex flex-col gap-2">
+          className="flex-1 group flex flex-col gap-2">
         {
           coverUrl && (
             <div className="h-[160px] overflow-hidden flex justify-center relative">
@@ -70,12 +72,16 @@ export default function PostCard({
           )
         }
       </Link>
-      {
-        author && (
-          <AuthorCard
-              { ...author } />
-        )
-      }
+      <div className="flex items-center justify-end has-[>a]:justify-between">
+        {
+          author && (
+            <AuthorCard
+                { ...author } />
+          )
+        }
+        <PostStats
+            views={ views } />
+      </div>
     </div>
   );
 }

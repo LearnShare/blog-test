@@ -10,12 +10,20 @@ import {
 import PostCard from '@/components/post/card';
 import Filter from './filter';
 import Pagination from '@/components/pagination';
+import Loading from '@/components/loading';
+import Empty from '@/components/empty';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
 import {
   auth,
 } from '@packages/lib/sdk/web';
-import Loading from '@/components/loading';
-import Empty from '@/components/empty';
 
 function Posts() {
   const [
@@ -57,6 +65,15 @@ function Posts() {
 
   return (
     <div className="flex flex-col gap-6">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/home">我的主页</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbPage>全部文章</BreadcrumbPage>
+        </BreadcrumbList>
+      </Breadcrumb>
       <Filter
           stats={ stats?.post }
           values={ filters }
