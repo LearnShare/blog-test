@@ -27,6 +27,8 @@ export default function PostCard({
   utime,
   author,
   views,
+  bookmarks,
+  bookmarked,
   actions = false,
   onActionDone,
 }: PostCardProps) {
@@ -80,7 +82,10 @@ export default function PostCard({
           )
         }
         <PostStats
-            views={ views } />
+            id={ id }
+            views={ views }
+            bookmarks={ bookmarks }
+            bookmarked={ bookmarked } />
       </div>
     </div>
   );

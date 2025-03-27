@@ -1,35 +1,33 @@
 import React from 'react';
 import {
   Eye as IconEye,
-  // Star as IconStar,
-  // Heart as IconHeart,
 } from 'lucide-react';
 
+import Bookmark from './actions/bookmark';
+
 interface PostStatsProps {
+  id: number;
   views: number;
-  stars: number;
-  likes: number;
+  bookmarks: number;
+  bookmarked?: boolean;
 }
 
 function PostStats({
+  id,
   views,
-  // stars,
-  // likes,
+  bookmarks,
+  bookmarked,
 }: PostStatsProps) {
   return (
-    <div className="flex gap-2">
-      <div className="w-[40px] flex flex-col items-center text-gray-400">
+    <div className="flex gap-2 select-none">
+      <div className="min-w-[44px] h-[44px] flex flex-col items-center justify-center text-gray-400">
         <IconEye size={ 20 } />
         <span className="text-sm">{ views || 0 }</span>
       </div>
-      {/* <div className="w-[40px] flex flex-col items-center text-gray-400">
-        <IconStar size={ 20 } />
-        <span className="text-sm">{ stars || 0 }</span>
-      </div>
-      <div className="w-[40px] flex flex-col items-center text-gray-400">
-        <IconHeart size={ 20 } />
-        <span className="text-sm">{ likes || 0 }</span>
-      </div> */}
+      <Bookmark
+          id={ id }
+          bookmarks={ bookmarks }
+          bookmarked={ bookmarked } />
     </div>
   );
 }

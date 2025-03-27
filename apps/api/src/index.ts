@@ -9,6 +9,8 @@ import {
 } from 'express-rate-limit';
 import cors from 'cors';
 
+import Auth from './lib/auth';
+
 Dotenv.config();
 Dotenv.config({
   path: '.env.local',
@@ -35,6 +37,8 @@ app.use(rateLimiter);
 app.use(express.json());
 // log request
 app.use(log);
+// token
+app.use(Auth.auto);
 // router modules
 app.use(router);
 // error

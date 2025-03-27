@@ -14,20 +14,21 @@ enum Role {
 }
 
 model Account {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
   password  String
-  name      String   @default("")
-  uid       String   @unique
+  name      String     @default("")
+  uid       String     @unique
   avatar    Int?
   avatarUrl String?
-  role      Role     @default(USER)
-  intro     String   @default("")
-  verified  Boolean  @default(false)
-  disabled  Boolean  @default(false)
+  role      Role       @default(USER)
+  intro     String     @default("")
+  verified  Boolean    @default(false)
+  disabled  Boolean    @default(false)
   posts     Post[]
-  ctime     DateTime @default(now())
-  utime     DateTime @updatedAt
+  bookmarks Bookmark[]
+  ctime     DateTime   @default(now())
+  utime     DateTime   @updatedAt
 }
 
 enum ContentFormat {
@@ -50,6 +51,7 @@ model Post {
   images    Int[]
   published Boolean       @default(false)
   views     Int           @default(0)
+  bookmarks Bookmark[]
   ctime     DateTime      @default(now())
   utime     DateTime      @updatedAt
 }
@@ -98,4 +100,14 @@ model RequestLog {
   ip     String
   type   TargetType
   target Int
+}
+
+model Bookmark {
+  time      DateTime @default(now())
+  account   Account  @relation(fields: [accountId], references: [id])
+  accountId Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+
+  @@id([accountId, postId])
 }

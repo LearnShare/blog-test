@@ -2,6 +2,7 @@ import prisma from '../prisma';
 import Account, {
   AccountPublicFields,
 } from './account';
+import Bookmark from './bookmark';
 
 import {
   PostData,
@@ -39,6 +40,7 @@ async function getPosts(postQuery: PostsQuery) {
     search,
     author,
     account,
+    bookmarkBy,
     published,
     sort,
     page,
@@ -98,17 +100,50 @@ async function getPosts(postQuery: PostsQuery) {
       },
       skip: (page - 1) * size,
       take: size,
-      // no content in list
-      omit: {
-        content: true,
+      include: {
+        _count: {
+          select: {
+            bookmarks: true,
+          },
+        },
       },
+      // no content in list
+      // omit: {
+      //   content: true,
+      // },
     });
+
+    const bookmarkedPosts = {};
+    // include bookmark status
+    if (bookmarkBy) {
+      const {
+        data: bookmarkData,
+      } = await Bookmark.searchBookmark(bookmarkBy);
+
+      for (const item of bookmarkData.list) {
+        bookmarkedPosts[item.postId] = true;
+      }
+    }
 
     const data = {
       count,
       page,
       size,
-      list,
+      list: list.map((item) => {
+        const {
+          _count,
+          content,
+          ...rest
+        } = item;
+
+        return {
+          ...rest,
+          bookmarks: _count?.bookmarks
+              || 0,
+          bookmarked: bookmarkBy
+              && bookmarkedPosts[item.id],
+        };
+      }),
     };
 
     // include accounts info
@@ -181,11 +216,27 @@ async function getPostByUid(uid: string) {
         author: {
           select: AccountPublicFields,
         },
+        _count: {
+          select: {
+            bookmarks: true,
+          },
+        },
       },
     });
 
+    const {
+      _count,
+      ...rest
+    } = post;
+
+    const data = {
+      ...rest,
+      bookmarks: _count?.bookmarks
+          || 0,
+    };
+
     return {
-      data: post,
+      data,
     };
   } catch (error) {
     console.log(error);

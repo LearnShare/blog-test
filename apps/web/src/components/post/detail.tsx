@@ -10,6 +10,9 @@ import {
 import {
   useRouter,
 } from 'next/navigation';
+import {
+  useRequest,
+} from 'ahooks';
 
 import AuthorCard from '@/components/author';
 import {
@@ -36,6 +39,9 @@ import {
 } from '@/types/post';
 import time from '@packages/lib/time';
 import AccountContext from '@/components/provider/account-context';
+import {
+  bookmark,
+} from '@packages/lib/sdk/web';
 
 export default function PostDetail({
   id,
@@ -48,6 +54,7 @@ export default function PostDetail({
   published,
   author,
   views,
+  bookmarks,
   utime,
 }: Post) {
   const router = useRouter();
@@ -55,6 +62,14 @@ export default function PostDetail({
   const {
     info,
   } = useContext(AccountContext);
+
+  const {
+    data,
+  } = useRequest(() => bookmark.check(id),
+    {
+      ready: !!info?.id,
+    },
+  );
 
   const onActionDone = (action: string) => {
     switch (action) {
@@ -141,7 +156,10 @@ export default function PostDetail({
           )
         }
         <PostStats
-            views={ views } />
+            id={ id }
+            views={ views }
+            bookmarks={ bookmarks }
+            bookmarked={ data?.bookmarked } />
       </div>
       {
         intro && (

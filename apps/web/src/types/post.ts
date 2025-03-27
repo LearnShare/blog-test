@@ -13,5 +13,7 @@ export interface Post {
   author?: Account;
   published?: boolean;
   views?: number;
+  bookmarks?: number;
+  bookmarked?: boolean;
   utime?: Date;
 }

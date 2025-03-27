@@ -45,6 +45,7 @@ postRouter.get('/', async (req: Request, res: Response) => {
     account: account
         ? Boolean(Number(account))
         : false,
+    bookmarkBy: req.user && req.user.id,
     // only published visible
     published: true,
     sort: sort
