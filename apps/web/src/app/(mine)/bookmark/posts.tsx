@@ -55,29 +55,32 @@ function Posts() {
   });
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px] *:max-w-[calc(50%-12px)]">
+    <section>
+      <h2 className="text-xl my-4">我的收藏（{ data?.count || 0 }）</h2>
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px] *:max-w-[calc(50%-12px)]">
+          {
+            list.map((item) => (
+              <PostCard
+                  key={ `${item.accountId}-${item.postId}` }
+                  { ...item.post }
+                  author={ authors[item.post.authorId] } />
+            ))
+          }
+        </div>
+        <LoadMore
+            page={ page }
+            size={ size }
+            total={ data?.count }
+            loading={ loading }
+            onPageChange={ (p: number) => setPage(p) } />
         {
-          list.map((item) => (
-            <PostCard
-                key={ `${item.accountId}-${item.postId}` }
-                { ...item.post }
-                author={ authors[item.post.authorId] } />
-          ))
+          !loading && !data?.count && (
+            <Empty />
+          )
         }
       </div>
-      <LoadMore
-          page={ page }
-          size={ size }
-          total={ data?.count }
-          loading={ loading }
-          onPageChange={ (p: number) => setPage(p) } />
-      {
-        !loading && !data?.count && (
-          <Empty />
-        )
-      }
-    </div>
+    </section>
   );
 }
 

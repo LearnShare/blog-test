@@ -334,6 +334,7 @@ async function getStats(id?: number) {
         published: false,
       },
     });
+
     const viewsSum = await prisma.post.aggregate({
       where: {
         ...authorQuery,
@@ -346,12 +347,26 @@ async function getStats(id?: number) {
     const views = viewsSum._sum.views
         || 0;
 
+    const bookmarksTotal = await prisma.bookmark.aggregate({
+      where: {
+        post: {
+          authorId: id,
+        },
+      },
+      _count: {
+        _all: true,
+      },
+    });
+    const bookmarks = bookmarksTotal._count._all
+        || 0;
+
     return {
       data: {
         total,
         published,
         unpublished,
         views,
+        bookmarks,
       },
     };
   } catch (error) {

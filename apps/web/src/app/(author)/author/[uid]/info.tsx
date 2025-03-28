@@ -18,7 +18,8 @@ function AuthorInfo({
           )
         }
         <PostStats
-            views={ data?.postStats?.views } />
+            views={ data?.postStats?.views }
+            bookmarks={ data?.postStats?.bookmarks } />
       </div>
       {
         data?.intro && (

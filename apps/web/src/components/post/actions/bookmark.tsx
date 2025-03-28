@@ -23,7 +23,7 @@ import {
 } from '@packages/lib/sdk/web';
 
 interface BookmarkProps {
-  id: number;
+  id?: number;
   bookmarks: number;
   bookmarked?: boolean;
 }
@@ -93,7 +93,8 @@ function Bookmark({
     </>
   );
 
-  if (!info) {
+  if (!id
+      || !info) {
     return (
       <div className="min-w-[44px] h-[44px] flex flex-col items-center justify-center text-gray-400">
         { content }
