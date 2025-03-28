@@ -1,5 +1,19 @@
 import HTTP from '../../http';
 
+interface BookmarksQuery {
+ page?: number;
+ size?: number;
+}
+
+function getBookmarks(query: BookmarksQuery) {
+  return HTTP.get('/bookmark', {
+    params: {
+      ...query,
+      sort: '-time',
+    },
+  });
+}
+
 function save(postId: number) {
   return HTTP.post('/bookmark', {
     postId,
@@ -15,6 +29,7 @@ function check(postId: number) {
 }
 
 export default {
+  getBookmarks,
   save,
   remove,
   check,

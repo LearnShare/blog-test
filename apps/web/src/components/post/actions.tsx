@@ -1,6 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, {
+  useState,
+} from 'react';
 import {
   EllipsisVertical as IconEllipsisVertical,
   PencilLine as IconPencilLine,
@@ -25,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Alert from '@/components/dialog/alert';
 
 import {
   post,
@@ -78,6 +81,15 @@ function PostActions({
     },
   });
 
+  const [
+    deleteDialogOpen,
+    setDeleteDialogOpen,
+  ] = useState(false);
+  const deleteOnClick = () => {
+    setDeleteDialogOpen(false);
+    deletePost();
+  };
+
   const menuOnSelect = (action: string) => {
     switch (action) {
       case 'edit':
@@ -90,55 +102,65 @@ function PostActions({
         withdrawPost();
         return;
       case 'delete':
-        deletePost();
+        setDeleteDialogOpen(true);
         return;
       default:
     }
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-            className={ className }
-            variant="ghost"
-            size="icon">
-          <IconEllipsisVertical />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
-            onSelect={ () => menuOnSelect('edit') }>
-          <IconPencilLine />
-          <span>修改</span>
-        </DropdownMenuItem>
-        {
-          !published && (
-            <DropdownMenuItem
-                onSelect={ () => menuOnSelect('publish') }>
-              <IconSend />
-              <span>发布</span>
-            </DropdownMenuItem>
-          )
-        }
-        {
-          published && (
-            <DropdownMenuItem
-                onSelect={ () => menuOnSelect('withdraw') }>
-              <IconUndo2 />
-              <span>取消发布</span>
-            </DropdownMenuItem>
-          )
-        }
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-            onSelect={ () => menuOnSelect('delete') }>
-          <IconTrash2 />
-          <span>删除</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+              className={ className }
+              variant="ghost"
+              size="icon">
+            <IconEllipsisVertical />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+              onSelect={ () => menuOnSelect('edit') }>
+            <IconPencilLine />
+            <span>修改</span>
+          </DropdownMenuItem>
+          {
+            !published && (
+              <DropdownMenuItem
+                  onSelect={ () => menuOnSelect('publish') }>
+                <IconSend />
+                <span>发布</span>
+              </DropdownMenuItem>
+            )
+          }
+          {
+            published && (
+              <DropdownMenuItem
+                  onSelect={ () => menuOnSelect('withdraw') }>
+                <IconUndo2 />
+                <span>取消发布</span>
+              </DropdownMenuItem>
+            )
+          }
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+              onSelect={ () => menuOnSelect('delete') }>
+            <IconTrash2 />
+            <span>删除</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
+      <Alert
+          open={ deleteDialogOpen }
+          onClose={ () => setDeleteDialogOpen(false) }
+          title="请确认"
+          content="文章删除后，将无法恢复。仍然继续？"
+          cancel="取消"
+          ok="删除"
+          onOk={ () => deleteOnClick() } />
+    </>
   );
 }
 

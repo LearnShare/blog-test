@@ -3,24 +3,24 @@ import {
 } from '@prisma/client';
 
 const prisma = new PrismaClient({
-  log: [
-    {
-      level: 'query',
-      emit: 'event',
-    },
-    {
-      level: 'error',
-      emit: 'stdout',
-    },
-    {
-      level: 'info',
-      emit: 'stdout',
-    },
-    {
-      level: 'warn',
-      emit: 'stdout',
-    },
-  ],
+  // log: [
+  //   {
+  //     level: 'query',
+  //     emit: 'event',
+  //   },
+  //   {
+  //     level: 'error',
+  //     emit: 'stdout',
+  //   },
+  //   {
+  //     level: 'info',
+  //     emit: 'stdout',
+  //   },
+  //   {
+  //     level: 'warn',
+  //     emit: 'stdout',
+  //   },
+  // ],
 });
 
 prisma.$on('query', (event) => {

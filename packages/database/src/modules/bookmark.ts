@@ -1,4 +1,5 @@
 import prisma from '../prisma';
+import Account from './account';
 
 export interface BookmarksQuery {
   account?: number;
@@ -45,7 +46,15 @@ async function getBookmarks(bookmarkQuery: BookmarksQuery) {
       skip: (page - 1) * size,
       take: size,
       include: {
-        post: true,
+        post: {
+          include: {
+            _count: {
+              select: {
+                bookmarks: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -53,8 +62,49 @@ async function getBookmarks(bookmarkQuery: BookmarksQuery) {
       count,
       page,
       size,
-      list,
+      list: list.map((item) => {
+        const {
+          post,
+          ...rest
+        } = item;
+
+        const {
+          _count,
+          ...postData
+        } = post;
+
+        return {
+          ...rest,
+          post: {
+            ...postData,
+            bookmarks: _count?.bookmarks
+                || 0,
+            bookmarked: true,
+          },
+        };
+      }),
     };
+
+    // author data
+    const ids = {};
+    for (const item of list) {
+      if (!ids[item.post.authorId]) {
+        ids[item.post.authorId] = true;
+      }
+    }
+
+    const accountsData = await Account.getAccountsByIds(
+      Object.keys(ids)
+          .map((id) => Number(id))
+    );
+    const accounts = {};
+    for (const account of accountsData.data) {
+      if (!accounts[account.id]) {
+        accounts[account.id] = account;
+      }
+    }
+
+    data.accounts = accounts;
 
     return {
       data,

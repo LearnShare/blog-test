@@ -16,7 +16,7 @@ const bookmarkRouter = Router();
 /**
  * get mine bookmarks
  * query:
- * - sort: [-]ctime
+ * - sort: -time
  * - page
  * - size
  */
@@ -39,8 +39,7 @@ bookmarkRouter.get(
       error,
     } = await DB.bookmark.getBookmarks({
       account: id,
-      sort: sort
-          || DB_SORT,
+      sort,
       page: page
           ? Number(page)
           : DB_PAGE,

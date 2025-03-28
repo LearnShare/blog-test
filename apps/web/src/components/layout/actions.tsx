@@ -2,6 +2,7 @@
 
 import React, {
   useContext,
+  useState,
 } from 'react';
 import Link from 'next/link';
 import {
@@ -13,6 +14,7 @@ import {
   PencilLine as IconPencilLine,
   LogOut as IconLogOut,
   House as IconHouse,
+  BookMarked as IconBookMarked,
 } from 'lucide-react';
 import Cookies from 'js-cookie';
 
@@ -58,6 +60,38 @@ function HeaderActions() {
   const author = info
       && AuthorRoles.includes(info.role);
 
+  // const [
+  //   menuOpen,
+  //   setMenuOpen,
+  // ] = useState(false);
+  // const toggleMenu = () => {
+  //   setMenuOpen((oldValue) => !oldValue);
+  // };
+  const itemOnSelect = (action: string) => {
+    // setMenuOpen(false);
+
+    // TODO hide menu
+    // switch to dropdown menu
+    switch (action) {
+      case 'write':
+        router.push('/write');
+        break;
+      case 'home':
+        router.push('/home');
+        break;
+      case 'posts':
+        router.push('/posts');
+        break;
+      case 'bookmark':
+        router.push('/bookmark');
+        break;
+      case 'log-out':
+        logout();
+        break;
+      default:
+    }
+  };
+
   return (
     <div className="flex gap-2 items-center">
       {
@@ -80,12 +114,14 @@ function HeaderActions() {
       }
       {
         info && (
-          <Popover>
+          <Popover
+              /* open={ menuOpen } */>
             <PopoverTrigger>
               <Avatar
                   url={ info.avatarUrl }
                   name={ info.name }
-                  round />
+                  round
+                  /* onClick={ () => toggleMenu() } */ />
             </PopoverTrigger>
             <PopoverContent
                 align="end"
@@ -99,7 +135,7 @@ function HeaderActions() {
                   {
                     (author) && (
                       <CommandItem
-                          onSelect={ () => router.push('/write') }>
+                          onSelect={ () => itemOnSelect('write') }>
                         <IconPencilLine />
                         <span>编写文章</span>
                       </CommandItem>
@@ -115,22 +151,27 @@ function HeaderActions() {
                   }
                   <CommandSeparator className="my-1.5" />
                   <CommandItem
-                      onSelect={ () => router.push('/home') }>
+                      onSelect={ () => itemOnSelect('home') }>
                     <IconHouse />
                     <span>个人主页</span>
                   </CommandItem>
                   {
                     (author) && (
                       <CommandItem
-                          onSelect={ () => router.push('/posts') }>
+                          onSelect={ () => itemOnSelect('posts') }>
                         <IconUserPen />
                         <span>我的文章</span>
                       </CommandItem>
                     )
                   }
+                  <CommandItem
+                      onSelect={ () => itemOnSelect('bookmark') }>
+                    <IconBookMarked />
+                    <span>我的收藏</span>
+                  </CommandItem>
                   <CommandSeparator className="my-1.5" />
                   <CommandItem
-                      onSelect={ () => logout() }>
+                      onSelect={ () => itemOnSelect('logout') }>
                     <IconLogOut />
                     <span>退出登录</span>
                   </CommandItem>

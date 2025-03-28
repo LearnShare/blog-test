@@ -106,7 +106,7 @@ model Bookmark {
   time      DateTime @default(now())
   account   Account  @relation(fields: [accountId], references: [id])
   accountId Int
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
 
   @@id([accountId, postId])

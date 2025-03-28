@@ -12,6 +12,7 @@ interface AvatarProps {
   height?: number;
   round?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 
 function Avatar({
@@ -21,6 +22,7 @@ function Avatar({
   height = 40,
   round = false,
   className,
+  onClick,
 }: AvatarProps) {
   return (
     <div
@@ -34,7 +36,8 @@ function Avatar({
           borderRadius: round
               ? '50%'
               : '0px',
-        } }>
+        } }
+        onClick={ () => onClick?.() }>
       {
         url && (
           <Image
