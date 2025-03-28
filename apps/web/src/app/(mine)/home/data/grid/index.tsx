@@ -1,6 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, {
+  useContext,
+} from 'react';
 import Link from 'next/link';
 import {
   useRequest,
@@ -20,11 +22,22 @@ import DataItem from './item';
 import {
   auth,
 } from '@packages/lib/sdk/web';
+import AccountContext from '@/components/provider/account-context';
+import {
+  AuthorRoles,
+} from '@/lib/config';
 
 function DataGrid() {
   const {
+    info,
+  } = useContext(AccountContext);
+
+  const {
     data,
   } = useRequest(() => auth.accountStats());
+
+  const author = info
+      && AuthorRoles.includes(info.role);
 
   return (
     <div className="flex gap-6">
@@ -40,16 +53,20 @@ function DataGrid() {
           icon={ <IconBookHeart /> }
           label="被收藏总数"
           value={ data?.post?.bookmarks || 0 } />
-      <div>
-        <Link
-            href="/write"
-            className={ buttonVariants({
-              variant: 'outline',
-            }) }>
-          <IconPencilLine />
-          <span>编写文章</span>
-        </Link>
-      </div>
+      {
+        author && (
+          <div>
+            <Link
+                href="/write"
+                className={ buttonVariants({
+                  variant: 'outline',
+                }) }>
+              <IconPencilLine />
+              <span>编写文章</span>
+            </Link>
+          </div>
+        )
+      }
     </div>
   );
 }

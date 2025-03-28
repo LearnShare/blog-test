@@ -1,5 +1,4 @@
 import HomeLayout from '@/components/page/home';
-import AuthorCheck from './author-check';
 
 export default function MineLayout({
   children,
@@ -8,9 +7,7 @@ export default function MineLayout({
 }>) {
   return (
     <HomeLayout>
-      <AuthorCheck>
-        { children }
-      </AuthorCheck>
+      { children }
     </HomeLayout>
   );
 }

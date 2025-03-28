@@ -85,7 +85,7 @@ function HeaderActions() {
       case 'bookmark':
         router.push('/bookmark');
         break;
-      case 'log-out':
+      case 'logout':
         logout();
         break;
       default:

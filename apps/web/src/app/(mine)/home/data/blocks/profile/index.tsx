@@ -53,8 +53,8 @@ function DataStats() {
       <div className="flex gap-10 justify-center items-center">
         <div className="flex flex-col gap-1 items-center">
           <Avatar
-              url={ info.avatarUrl }
-              name={ info.name }
+              url={ info?.avatarUrl }
+              name={ info?.name }
               width={ 80 }
               height={ 80 }
               round />

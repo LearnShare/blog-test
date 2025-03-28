@@ -1,3 +1,4 @@
+import AuthorCheck from '../author-check';
 import EditView from './view';
 
 export default async function PageEdit({
@@ -12,6 +13,8 @@ export default async function PageEdit({
   } = await params;
 
   return (
-    <EditView uid={ uid } />
+    <AuthorCheck>
+      <EditView uid={ uid } />
+    </AuthorCheck>
   );
 }

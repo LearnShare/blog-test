@@ -1,3 +1,4 @@
+import AuthorCheck from '../author-check';
 import DraftView from './view';
 
 export default async function PageDraft({
@@ -12,6 +13,8 @@ export default async function PageDraft({
   } = await params;
 
   return (
-    <DraftView uid={ uid } />
+    <AuthorCheck>
+      <DraftView uid={ uid } />
+    </AuthorCheck>
   );
 }

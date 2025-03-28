@@ -1,5 +1,6 @@
 import React from 'react';
 
+import AuthorCheck from '../author-check';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +13,7 @@ import PostForm from '@/components/post/form';
 
 export default function PageWrite() {
   return (
-    <>
+    <AuthorCheck>
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -27,6 +28,6 @@ export default function PageWrite() {
         </BreadcrumbList>
       </Breadcrumb>
       <PostForm />
-    </>
+    </AuthorCheck>
   );
 }
