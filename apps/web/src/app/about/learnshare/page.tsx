@@ -4,7 +4,7 @@ import Content from './content.mdx';
 
 import '@/css/markdown.scss';
 
-export default function PageAbout() {
+export default function PageAuthor() {
   return (
     <div
         className="markdown-content">
