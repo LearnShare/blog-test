@@ -11,7 +11,7 @@ import FormContext from './context';
 import FormError from './error';
 
 interface FormItemProps {
-  className: string;
+  className?: string;
   label: string;
   name: string;
   hint?: React.ReactNode;
@@ -33,10 +33,11 @@ function FormItem({
   } = useContext(FormContext);
 
   const childrenClone = React.cloneElement(children, {
+    // @ts-expect-error: should work
     name,
     id: name,
     value: value[name],
-    onChange: (event) => itemOnChange(name, event.currentTarget.value),
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => itemOnChange(name, event.currentTarget.value),
     onInput: () => itemOnInput(name),
   });
 

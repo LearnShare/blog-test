@@ -52,7 +52,7 @@ function Bookmark({
     setActive,
   ] = useState(!!bookmarked);
   useEffect(() => {
-    setActive(bookmarked);
+    setActive(!!bookmarked);
   }, [
     bookmarked,
   ]);
@@ -61,8 +61,8 @@ function Bookmark({
     run,
     loading,
   } = useRequest(() => active
-      ? bookmark.remove(id)
-      : bookmark.save(id),
+      ? bookmark.remove(id!)
+      : bookmark.save(id!),
     {
       manual: true,
       onSuccess() {

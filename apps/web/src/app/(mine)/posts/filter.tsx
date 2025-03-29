@@ -14,10 +14,7 @@ import {
 } from '@/components/ui/button';
 
 interface FilterProps {
-  stats?: {
-    published: number;
-    unpublished: number;
-  };
+  stats?: Record<string, number>;
   values: Record<string, any>;
   onChange: (data: Record<string, any>) => void;
 }
@@ -26,12 +23,12 @@ const publishedOptions = [
   {
     label: '已发布',
     key: 'published',
-    value: 1,
+    value: '1',
   },
   {
     label: '未发布',
     key: 'unpublished',
-    value: 0,
+    value: '0',
   },
 ];
 
@@ -51,7 +48,7 @@ function Filter({
     <div className="flex gap-4 items-center justify-between">
       <Tabs
           defaultValue={ values.published }
-          onValueChange={ (value: boolean) => itemOnChange('published', value) }>
+          onValueChange={ (value: string) => itemOnChange('published', Number(value)) }>
         <TabsList>
           {
             publishedOptions.map((option) => (

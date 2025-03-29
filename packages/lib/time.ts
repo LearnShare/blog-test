@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 const dateRule = 'YYYY-MM-DD';
 const timeRule = 'HH:mm:ss';
 
-const rules = {
+const rules: Record<string, string> = {
   datetime: `${dateRule} ${timeRule}`,
   date: dateRule,
   time: timeRule,

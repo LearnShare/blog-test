@@ -15,7 +15,7 @@ import {
 
 interface InputPasswordProps
     extends React.ComponentProps<'input'> {
-  showToggle: boolean;
+  showToggle?: boolean;
 }
 
 function InputPassword({

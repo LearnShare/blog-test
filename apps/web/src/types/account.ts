@@ -3,5 +3,8 @@ export interface Account {
   email?: string;
   name: string;
   uid: string;
-  avatar?: string;
+  avatar?: number;
+  avatarUrl?: string;
+  intro?: string;
+  postsCount?: number;
 }

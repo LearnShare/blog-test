@@ -7,6 +7,9 @@ import {
   useRequest,
 } from 'ahooks';
 
+import type {
+  Post,
+} from '@/types/post';
 import PostCard from '@/components/post/card';
 import Pagination from '@/components/pagination';
 import Loading from '@/components/loading';
@@ -49,7 +52,7 @@ function Posts({
             <>
               <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px] *:max-w-[calc(50%-12px)]">
                 {
-                  data.list.map((post) => (
+                  data.list.map((post: Post) => (
                     <PostCard
                         key={ post.id }
                         { ...post } />

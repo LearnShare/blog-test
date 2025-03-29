@@ -10,6 +10,12 @@ import {
 import PostCard from '@/components/post/card';
 import LoadMore from '@/components/load-more';
 
+import type {
+  Bookmark,
+} from '@/types/bookmark';
+import type {
+  Account,
+} from '@/types/account';
 import {
   bookmark,
 } from '@packages/lib/sdk/web';
@@ -21,11 +27,11 @@ function Posts() {
   const [
     list,
     setList,
-  ] = useState([]);
+  ] = useState<Bookmark[]>([]);
   const [
     authors,
     setAuthors,
-  ] = useState({});
+  ] = useState<Record<number, Account>>({});
 
   const [
     page,

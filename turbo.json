@@ -5,6 +5,12 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "generate": {
+      "dependsOn": []
+    },
+    "build": {
+      "dependsOn": ["^generate"]
     }
   }
 }

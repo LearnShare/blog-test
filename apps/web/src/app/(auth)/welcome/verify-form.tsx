@@ -28,7 +28,7 @@ import {
   useCountdown,
 } from '@/hooks'
 
-const KnownErrors = {
+const KnownErrors: Record<string, string> = {
   'Invalid verification code': '无效的激活代码',
 };
 
@@ -62,7 +62,7 @@ function VerifyForm({
       return '请输入激活代码';
     }
 
-    return null;
+    return '';
   };
 
   const validate = useCallback((name: string, value: any) => {
@@ -151,13 +151,7 @@ function VerifyForm({
     run: send,
     loading: sending,
     error: sendError,
-  } = useRequest(() => {
-    if (sending) {
-      return;
-    }
-
-    return auth.requestVerify();
-  }, {
+  } = useRequest(() => auth.requestVerify(), {
     manual: true,
     onSuccess: () => {
       startCountdown();
@@ -172,7 +166,6 @@ function VerifyForm({
             code: '',
           } }
           errors={ errors }
-          disabled={ loading }
           onChange={ (
             data: Record<string, any>,
             dirty: Record<string, boolean>

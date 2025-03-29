@@ -2,6 +2,7 @@
 
 import React, {
   useState,
+  Suspense,
 } from 'react';
 import Link from 'next/link';
 
@@ -9,6 +10,7 @@ import {
   buttonVariants,
 } from '@/components/ui/button';
 import ResetForm from './form';
+import Loading from '@/components/loading';
 
 type ViewType = 'reset' | 'success';
 
@@ -22,7 +24,12 @@ function ResetViews() {
     <>
       {
         view === 'reset' && (
-          <ResetForm onSuccess={ () => setView('success') } />
+          <Suspense
+              fallback={
+                <Loading loading />
+              }>
+            <ResetForm onSuccess={ () => setView('success') } />
+          </Suspense>
         )
       }
       {

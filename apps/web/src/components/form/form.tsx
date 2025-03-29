@@ -17,8 +17,7 @@ interface FormProps {
   className?: string;
   layout?: 'horizontal' | 'vertical',
   initialValue: Record<string, any>;
-  errors?: Record<string, string | null>;
-  disabled?: boolean;
+  errors?: Record<string, string>;
   onChange?: (data: Record<string, any>, dirty: Record<string, boolean>) => void;
   children: React.ReactNode;
 }
@@ -28,7 +27,6 @@ function Form({
   layout = 'horizontal',
   initialValue,
   errors = {},
-  disabled = false,
   onChange,
   children,
 }: FormProps) {
@@ -80,7 +78,6 @@ function Form({
       <form
           className={ cn('group flex flex-col gap-3', className) }
           data-layout={ layout }
-          disabled={ disabled }
           onSubmit={ (event) => {
             event.preventDefault();
           } }>

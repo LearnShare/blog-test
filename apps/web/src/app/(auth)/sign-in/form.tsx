@@ -37,7 +37,7 @@ import {
 } from '@packages/lib/sdk/web';
 import Store from '@/lib/store';
 
-const KnownErrors = {
+const KnownErrors: Record<string, string> = {
   'Account or Password error': '账号或密码错误',
 };
 
@@ -166,7 +166,6 @@ function SignInForm() {
           password: '',
         } }
         errors={ errors }
-        disabled={ loading }
         onChange={ (
           data: Record<string, any>,
           dirty: Record<string, boolean>

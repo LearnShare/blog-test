@@ -10,13 +10,19 @@ interface CountdownConfig {
   tick?: number;
 }
 
-function useCountdown(config?: CountdownConfig) {
+function useCountdown(config: CountdownConfig = {}) {
   const {
-    from = 60,
-    to = 0,
-    step = 1,
-    tick = 1000,
-  } = config;
+    from,
+    to,
+    step,
+    tick,
+  } = {
+    from: 60,
+    to: 0,
+    step: 1,
+    tick: 1000,
+    ...config,
+  };
 
   const [
     value,
@@ -29,7 +35,7 @@ function useCountdown(config?: CountdownConfig) {
 
   useEffect(() => {
     if (!start) {
-      return;
+      return () => {};
     }
 
     const timer = window.setInterval(() => {

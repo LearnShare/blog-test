@@ -17,7 +17,7 @@ const HTTP = axios.create({
 });
 
 HTTP.interceptors.request
-    .use((req) => {
+    .use((req: any) => {
       const {
         headers,
       } = req;
@@ -38,8 +38,8 @@ HTTP.interceptors.request
 // TODO redirect to login when 401
 HTTP.interceptors.response
     .use(
-      (res) => res.data,
-      (error) => {
+      (res: any) => res.data,
+      (error: any) => {
         const {
           status,
           message,

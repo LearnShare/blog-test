@@ -36,11 +36,11 @@ import {
   post,
 } from '@packages/lib/sdk/web';
 import type {
-  PostData,
-} from '@packages/database';
+  Post,
+} from '@/types/post';
 import CoverDialog from '@/components/post/dialogs/cover';
 
-const KnownErrors = {
+const KnownErrors: Record<string, string> = {
   'UID exists': 'ID 已存在',
 };
 
@@ -49,7 +49,7 @@ function required(value: string, name: string) {
     return `请填写${name}`;
   }
 
-  return null;
+  return '';
 }
 
 function checkUid(value: string) {
@@ -58,12 +58,16 @@ function checkUid(value: string) {
     return '请输入有效的文章 ID';
   }
 
-  return null;
+  return '';
 }
 
 let published = false;
 
-function PostForm(data?: PostData) {
+function PostForm({
+  data,
+}: {
+  data?: Post;
+}) {
   const router = useRouter();
 
   const [
@@ -79,8 +83,8 @@ function PostForm(data?: PostData) {
     setErrors,
   ] = useState<Record<string, string>>({});
 
-  const formOnChange = (data: Record<string, any>, dirty: Record<string, any>) => {
-    setFormData(data);
+  const formOnChange = (formData: Record<string, any>, dirty: Record<string, any>) => {
+    setFormData(formData);
     setFormDirty(dirty);
   };
 
@@ -108,12 +112,12 @@ function PostForm(data?: PostData) {
   };
 
   const validateForm = useCallback((
-    data: Record<string, any>,
+    formData: Record<string, any>,
     dirty: Record<string, boolean>
   ) => {
-    for (const name in data) {
+    for (const name in formData) {
       if (dirty?.[name]) {
-        validate(name, data[name]);
+        validate(name, formData[name]);
       }
     }
   }, []);
@@ -139,9 +143,8 @@ function PostForm(data?: PostData) {
 
     const postData = {
       ...formData,
-      format: 'MARKDOWN',
       published,
-      cover: cover?.id || null,
+      cover: cover?.id,
       coverUrl: cover?.url || '',
     };
 
@@ -158,8 +161,8 @@ function PostForm(data?: PostData) {
     setCover,
   ] = useState((data?.cover && data?.coverUrl)
       ? {
-        id: data.cover,
-        url: data.coverUrl,
+        id: data?.cover,
+        url: data?.coverUrl,
       }
       : null
     );
@@ -167,9 +170,9 @@ function PostForm(data?: PostData) {
     coverDialogOpen,
     setCoverDialogOpen,
   ] = useState(false);
-  const coverDialogOnClose = (data: any) => {
-    if (data) {
-      setCover(data);
+  const coverDialogOnClose = (coverData: any) => {
+    if (coverData) {
+      setCover(coverData);
     }
 
     setCoverDialogOpen(false);
@@ -203,23 +206,22 @@ function PostForm(data?: PostData) {
           [&>*]:last:flex-1 [&>*]:last:flex [&>*]:last:flex-col"
         layout="vertical"
         initialValue={ {
-          title: data.title
+          title: data?.title
               || '',
-          uid: data.uid
+          uid: data?.uid
               || '',
-          intro: data.intro
+          intro: data?.intro
               || '',
-          content: data.content
+          content: data?.content
               || '',
         } }
         errors={ errors }
-        disabled={ loading }
         onChange={ (
-          data: Record<string, any>,
+          formData: Record<string, any>,
           dirty: Record<string, boolean>
-        ) => formOnChange(data, dirty) }>
+        ) => formOnChange(formData, dirty) }>
       <div className="flex gap-4 items-center">
-        <h2 className="text-xl flex-1">{ data.id ? '修改' : '编写' }文章</h2>
+        <h2 className="text-xl flex-1">{ data?.id ? '修改' : '编写' }文章</h2>
         {
           cover && cover.url && (
             <Button
@@ -285,7 +287,7 @@ function PostForm(data?: PostData) {
 
       <CoverDialog
           open={ coverDialogOpen }
-          onClose={ (data?: any) => coverDialogOnClose(data) } />
+          onClose={ (coverData?: any) => coverDialogOnClose(coverData) } />
     </Form>
   );
 }

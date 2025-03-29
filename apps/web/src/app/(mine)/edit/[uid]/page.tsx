@@ -1,4 +1,4 @@
-import AuthorCheck from '../author-check';
+import AuthorCheck from '../../author-check';
 import EditView from './view';
 
 export default async function PageEdit({

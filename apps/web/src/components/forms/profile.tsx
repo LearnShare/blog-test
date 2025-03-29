@@ -68,7 +68,7 @@ function ProfileForm({
       return '名字不能为空';
     }
 
-    return null;
+    return '';
   };
 
   // TODO validate in form-item props
@@ -152,7 +152,6 @@ function ProfileForm({
           intro: info.intro,
         } }
         errors={ errors }
-        disabled={ loading }
         onChange={ (
           data: Record<string, any>,
           dirty: Record<string, boolean>

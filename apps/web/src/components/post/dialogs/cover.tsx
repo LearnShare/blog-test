@@ -33,7 +33,7 @@ import {
 
 interface CoverDialogProps {
   open?: boolean;
-  onClose?: () => void;
+  onClose?: (data?: any) => void;
 }
 
 function CoverDialog({
@@ -63,7 +63,7 @@ function CoverDialog({
   const {
     data,
     loading: uploading,
-  } = useRequest(() => file.uploadCover(cover), {
+  } = useRequest(() => file.uploadCover(cover!), {
     ready: !!cover,
     refreshDeps: [
       cover,

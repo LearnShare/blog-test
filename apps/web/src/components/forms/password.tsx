@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useContext,
 } from 'react';
 import {
   useRequest,
@@ -26,10 +25,10 @@ import {
 } from '@packages/lib/sdk/web';
 
 interface PasswordFormProps {
-  onSuccess?: (data: any) => void;
+  onSuccess?: (data?: any) => void;
 }
 
-const KnownErrors = {
+const KnownErrors: Record<string, string> = {
   'Old Password error': '旧密码错误',
 };
 
@@ -145,7 +144,6 @@ function PasswordForm({
           repeat: '',
         } }
         errors={ errors }
-        disabled={ loading }
         onChange={ (
           data: Record<string, any>,
           dirty: Record<string, boolean>

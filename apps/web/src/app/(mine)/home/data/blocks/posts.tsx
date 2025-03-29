@@ -21,6 +21,9 @@ import {
 import Loading from '@/components/loading';
 import Empty from '@/components/empty';
 
+import type {
+  Post,
+} from '@/types/post';
 import {
   auth,
 } from '@packages/lib/sdk/web';
@@ -62,7 +65,7 @@ function DataPosts() {
                   </TableHeader>
                   <TableBody>
                     {
-                      data.list.map((post) => (
+                      data.list.map((post: Post) => (
                         <TableRow
                             key={ post.id }>
                           <TableCell>

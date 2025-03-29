@@ -47,7 +47,7 @@ function Avatar({
               src={ url }
               width={ width }
               height={ height }
-              alt={ name } />
+              alt={ name || '' } />
         )
       }
       {

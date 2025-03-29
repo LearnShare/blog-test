@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+  Suspense,
+} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -7,6 +9,7 @@ import {
 } from '@/components/ui/button';
 import Divider from '@/components/divider';
 import SignInForm from './form';
+import Loading from '@/components/loading';
 
 export default function PageSignIn() {
   return (
@@ -42,7 +45,12 @@ export default function PageSignIn() {
         </Link>
       </div>
       <Divider className="my-4">OR</Divider>
-      <SignInForm />
+      <Suspense
+          fallback={
+            <Loading loading />
+          }>
+        <SignInForm />
+      </Suspense>
       <div className="mt-4 text-right text-sm text-slate-500">
         <span>还没有账号，</span>
         <Link

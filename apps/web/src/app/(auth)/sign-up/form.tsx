@@ -28,7 +28,7 @@ import {
   useRequest,
 } from 'ahooks'
 
-const KnownErrors = {
+const KnownErrors: Record<string, string> = {
   'Account already exists': '账号已存在',
 };
 
@@ -134,7 +134,6 @@ function SignUpForm({
           password: '',
         } }
         errors={ errors }
-        disabled={ loading }
         onChange={ (
           data: Record<string, any>,
           dirty: Record<string, boolean>

@@ -5,6 +5,7 @@ import {
 } from 'express';
 
 import DB, {
+  ContentFormat,
   DB_PAGE,
   DB_SIZE,
   DB_SORT,
@@ -93,7 +94,7 @@ postRouter.post(
       cover,
       coverUrl,
       content,
-      format,
+      format = ContentFormat.MARKDOWN,
       published,
     } = req.body;
 
@@ -266,7 +267,7 @@ postRouter.put(
       cover,
       coverUrl,
       content,
-      format,
+      format: ContentFormat.MARKDOWN,
       published,
     } = req.body;
 

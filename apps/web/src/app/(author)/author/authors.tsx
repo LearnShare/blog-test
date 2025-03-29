@@ -19,6 +19,9 @@ import {
 } from '@packages/lib/sdk/web';
 import Empty from '@/components/empty';
 import AuthorCard from '@/components/author';
+import type {
+  Account,
+} from '@/types/account';
 
 const size = 12;
 
@@ -26,7 +29,7 @@ function Authors() {
   const [
     authors,
     setAuthors,
-  ] = useState([]);
+  ] = useState<Account[]>([]);
 
   const [
     page,

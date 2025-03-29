@@ -1,16 +1,22 @@
+import {
+  Prisma,
+  type Account,
+} from '../../client';
+
 import prisma from '../prisma';
-import Account, {
+import accountModule, {
   AccountPublicFields,
 } from './account';
 import Bookmark from './bookmark';
 
 import {
   PostData,
+  PostCreateData,
   PostsQuery,
 } from '../types';
 
 // create post
-async function createPost(accountId: number, postData: PostData) {
+async function createPost(accountId: number, postData: PostCreateData) {
   try {
     const post = await prisma.post.create({
       data: {
@@ -113,19 +119,22 @@ async function getPosts(postQuery: PostsQuery) {
       // },
     });
 
-    const bookmarkedPosts = {};
+    const bookmarkedPosts: Record<number, boolean> = {};
     // include bookmark status
     if (bookmarkBy) {
       const {
         data: bookmarkData,
       } = await Bookmark.searchBookmark(bookmarkBy);
 
-      for (const item of bookmarkData.list) {
-        bookmarkedPosts[item.postId] = true;
+      if (bookmarkData
+          && bookmarkData.list) {
+        for (const item of bookmarkData.list) {
+          bookmarkedPosts[item.postId] = true;
+        }
       }
     }
 
-    const data = {
+    const data: Record<string, any> = {
       count,
       page,
       size,
@@ -148,21 +157,24 @@ async function getPosts(postQuery: PostsQuery) {
 
     // include accounts info
     if (account) {
-      const ids = {};
+      const ids: Record<number, boolean> = {};
       for (const item of list) {
         if (!ids[item.authorId]) {
           ids[item.authorId] = true;
         }
       }
 
-      const accountsData = await Account.getAccountsByIds(
+      const accountsData = await accountModule.getAccountsByIds(
         Object.keys(ids)
             .map((id) => Number(id))
       );
-      const accounts = {};
-      for (const account of accountsData.data) {
-        if (!accounts[account.id]) {
-          accounts[account.id] = account;
+      const accounts: Record<number, any> = {};
+      if (accountsData
+          && accountsData.data) {
+        for (const account of accountsData.data) {
+          if (!accounts[account.id]) {
+            accounts[account.id] = account;
+          }
         }
       }
 
@@ -224,16 +236,19 @@ async function getPostByUid(uid: string) {
       },
     });
 
-    const {
-      _count,
-      ...rest
-    } = post;
+    let data = null;
+    if (post) {
+      const {
+        _count,
+        ...rest
+      } = post;
 
-    const data = {
-      ...rest,
-      bookmarks: _count?.bookmarks
-          || 0,
-    };
+      data = {
+        ...rest,
+        bookmarks: _count?.bookmarks
+            || 0,
+      };
+    }
 
     return {
       data,

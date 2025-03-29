@@ -21,6 +21,9 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
+import type {
+  Post,
+} from '@/types/post';
 import {
   auth,
 } from '@packages/lib/sdk/web';
@@ -84,7 +87,7 @@ function Posts() {
           <>
             <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px] *:max-w-[calc(50%-12px)]">
               {
-                data.list.map((post) => (
+                data.list.map((post: Post) => (
                   <PostCard
                       key={ post.id }
                       { ...post }

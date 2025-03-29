@@ -27,7 +27,7 @@ import {
   auth,
 } from '@packages/lib/sdk/web';
 
-const KnownErrors = {
+const KnownErrors: Record<string, string> = {
   'Account not found': '账号不存在',
 };
 
@@ -128,7 +128,6 @@ function ForgotForm({
           email: '',
         } }
         errors={ errors }
-        disabled={ loading }
         onChange={ (
           data: Record<string, any>,
           dirty: Record<string, boolean>

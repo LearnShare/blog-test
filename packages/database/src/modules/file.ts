@@ -4,9 +4,9 @@ type FileType = 'UNKNOWN' | 'IMAGE' | 'VIDEO' | 'AUDIO';
 
 export interface FilesQuery {
   creator?: number;
-  sort?: string;
-  page?: number;
-  size?: number;
+  sort: string;
+  page: number;
+  size: number;
 }
 
 // get files

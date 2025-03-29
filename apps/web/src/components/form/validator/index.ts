@@ -1,8 +1,6 @@
 import Validator from '@packages/lib/validator';
 
-type ValidateResult = string | null;
-
-function validateEmail(email: string): ValidateResult {
+function validateEmail(email: string): string {
   if (!email) {
     return '请输入邮箱';
   }
@@ -11,10 +9,10 @@ function validateEmail(email: string): ValidateResult {
     return '请输入有效的邮箱地址';
   }
 
-  return null;
+  return '';
 }
 
-function validatePassword(password: string): ValidateResult {
+function validatePassword(password: string): string {
   if (!password) {
     return '请输入密码';
   }
@@ -23,10 +21,10 @@ function validatePassword(password: string): ValidateResult {
     return '请输入有效的密码';
   }
 
-  return null;
+  return '';
 }
 
-function validateUid(uid: string): ValidateResult {
+function validateUid(uid: string): string {
   if (!uid) {
     return '请输入 UID';
   }
@@ -35,7 +33,7 @@ function validateUid(uid: string): ValidateResult {
     return '请输入有效的 UID';
   }
 
-  return null;
+  return '';
 }
 
 export {

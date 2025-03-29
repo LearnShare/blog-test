@@ -1,17 +1,18 @@
+import type { Account } from '../../client';
 import prisma from '../prisma';
-import Account from './account';
+import account from './account';
 
 export interface BookmarksQuery {
   account?: number;
-  sort?: string;
-  page?: number;
-  size?: number;
+  sort: string;
+  page: number;
+  size: number;
 }
 
 // get bookmarks
 async function getBookmarks(bookmarkQuery: BookmarksQuery) {
   const {
-    account,
+    account: accountId,
     sort,
     page,
     size,
@@ -25,10 +26,10 @@ async function getBookmarks(bookmarkQuery: BookmarksQuery) {
     ? 'desc'
     : 'asc';
 
-  const query = account
+  const query = accountId
       ? {
         account: {
-          id: account,
+          id: accountId,
         },
       }
       : {};
@@ -58,7 +59,7 @@ async function getBookmarks(bookmarkQuery: BookmarksQuery) {
       },
     });
 
-    const data = {
+    const data: Record<string, any> = {
       count,
       page,
       size,
@@ -86,21 +87,24 @@ async function getBookmarks(bookmarkQuery: BookmarksQuery) {
     };
 
     // author data
-    const ids = {};
+    const ids: Record<number, boolean> = {};
     for (const item of list) {
       if (!ids[item.post.authorId]) {
         ids[item.post.authorId] = true;
       }
     }
 
-    const accountsData = await Account.getAccountsByIds(
+    const accountsData = await account.getAccountsByIds(
       Object.keys(ids)
           .map((id) => Number(id))
     );
-    const accounts = {};
-    for (const account of accountsData.data) {
-      if (!accounts[account.id]) {
-        accounts[account.id] = account;
+    const accounts: Record<number, Account> = {};
+    if (accountsData
+        && accountsData.data) {
+      for (const item of accountsData.data) {
+        if (!accounts[item.id]) {
+          accounts[item.id] = item as Account;
+        }
       }
     }
 

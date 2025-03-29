@@ -57,7 +57,7 @@ function PostActions({
   }), {
     manual: true,
     onSuccess: () => {
-      onActionDone('publish');
+      onActionDone?.('publish');
     },
   });
 
@@ -68,7 +68,7 @@ function PostActions({
   }), {
     manual: true,
     onSuccess: () => {
-      onActionDone('withdraw');
+      onActionDone?.('withdraw');
     },
   });
 
@@ -77,7 +77,7 @@ function PostActions({
   } = useRequest(() => post.del(id), {
     manual: true,
     onSuccess: () => {
-      onActionDone('delete');
+      onActionDone?.('delete');
     },
   });
 

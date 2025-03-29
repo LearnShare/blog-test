@@ -1,5 +1,5 @@
 import Crypto from 'node:crypto';
-import Bcrypt from 'bcrypt';
+import Bcrypt from 'bcryptjs';
 import {
   customAlphabet,
 } from 'nanoid';
@@ -25,13 +25,13 @@ function nanoid(length = 12): string {
   return NanoId(length);
 }
 
-function hashPassword(password: string): string {
+function hashPassword(password: string): Promise<string> {
   const saltRounds = 12;
 
   return Bcrypt.hash(password, saltRounds);
 }
 
-function checkPassword(password: string, hash: string): boolean {
+function checkPassword(password: string, hash: string): Promise<boolean> {
   return Bcrypt.compare(password, hash);
 }
 

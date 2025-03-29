@@ -1,3 +1,7 @@
+import {
+  Role,
+} from '../../client';
+
 import prisma from '../prisma';
 import Hash from '@packages/lib/hash';
 
@@ -18,7 +22,7 @@ export const AccountPublicFields = {
 interface AccountData {
   email: string;
   password: string;
-  role?: string;
+  role?: Role;
   verified: boolean;
 }
 
@@ -141,11 +145,11 @@ async function getAccountsByIds(ids: number[]) {
 
 export interface AccountsQuery {
   search?: string;
-  role?: string;
+  role?: Role;
   posts?: boolean;
-  sort?: string;
-  page?: number;
-  size?: number;
+  sort: string;
+  page: number;
+  size: number;
 }
 
 // get accounts
@@ -192,16 +196,15 @@ async function getAccounts(accountQuery: AccountsQuery) {
         role,
       }
       : {};
-  const selectQuery = posts
+  const countQuery = posts
       ? {
-        ...AccountPublicFields,
         _count: {
           select: {
             posts: true,
           },
         },
       }
-      : AccountPublicFields;
+      : {};
 
   const query = {
     ...searchQuery,
@@ -218,7 +221,10 @@ async function getAccounts(accountQuery: AccountsQuery) {
       orderBy: {
         [name]: direction,
       },
-      select: selectQuery,
+      include: countQuery,
+      omit: {
+        password: true,
+      },
       skip: (page - 1) * size,
       take: size,
     });
@@ -228,18 +234,20 @@ async function getAccounts(accountQuery: AccountsQuery) {
         count,
         page,
         size,
-        list: list.map((item) => {
-          const {
-            _count,
-            ...rest
-          } = item;
+        list: posts
+            ? list.map((item) => {
+              const {
+                _count,
+                ...rest
+              } = item;
 
-          return {
-            ...rest,
-            postsCount: _count?.posts
-                || 0,
-          };
-        }),
+              return {
+                ...rest,
+                postsCount: _count?.posts
+                    || 0,
+              };
+            })
+            : list,
       },
     };
   } catch (error) {
@@ -250,14 +258,14 @@ async function getAccounts(accountQuery: AccountsQuery) {
   }
 }
 
-export interface AuthorssQuery {
-  posts?: boolean;
-  page?: number;
-  size?: number;
+export interface AuthorsQuery {
+  posts: boolean;
+  page: number;
+  size: number;
 }
 
 // get authors
-async function getAuthors(authorsQuery: AuthorssQuery) {
+async function getAuthors(authorsQuery: AuthorsQuery) {
   const {
     posts,
     page,
@@ -265,7 +273,7 @@ async function getAuthors(authorsQuery: AuthorssQuery) {
   } = authorsQuery;
 
   const query = {
-    role: 'AUTHOR',
+    role: Role.AUTHOR,
   };
 
   try {

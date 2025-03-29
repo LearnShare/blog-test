@@ -11,7 +11,7 @@ import ProfileActions from './actions';
 
 import AccountContext from '@/components/provider/account-context';
 
-const roles = {
+const roles: Record<string, string> = {
   ADMIN: '系统管理员',
   AUTHOR: '文章作者',
   USER: '普通用户',

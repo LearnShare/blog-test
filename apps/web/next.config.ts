@@ -5,6 +5,7 @@ import type {
 import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   outputFileTracingRoot: path.join(__dirname, '../../'),
   pageExtensions: [
     'js',
@@ -25,6 +26,13 @@ const nextConfig: NextConfig = {
         search: '',
       },
     ],
+  },
+  // https://github.com/replicate/replicate-javascript/issues/225#issuecomment-2065499818
+  webpack: (config) => {
+    config.externals.push({
+      'node:crypto': 'commonjs crypto',
+    });
+    return config;
   },
 };
 

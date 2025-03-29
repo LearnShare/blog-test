@@ -14,3 +14,14 @@ services:
     restart: always
     ports:
       - 6379:6379
+  prod-web:
+    container_name: blog-web
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+      platforms:
+        - linux/arm64
+    ports:
+      - "80:3000"
+    environment:
+      - NODE_ENV=production

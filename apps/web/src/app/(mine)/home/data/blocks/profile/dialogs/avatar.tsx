@@ -65,7 +65,7 @@ function AvatarDialog({
 
   const {
     loading: uploading,
-  } = useRequest(() => file.uploadAvatar(avatar), {
+  } = useRequest(() => file.uploadAvatar(avatar!), {
     ready: !!avatar,
     refreshDeps: [
       avatar,

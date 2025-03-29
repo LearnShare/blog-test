@@ -10,6 +10,12 @@ import {
 import PostCard from '@/components/post/card';
 import LoadMore from '@/components/load-more';
 
+import type {
+  Account,
+} from '@/types/account';
+import type {
+  Post,
+} from '@/types/post';
 import {
   post,
 } from '@packages/lib/sdk/web';
@@ -21,11 +27,11 @@ function Posts() {
   const [
     posts,
     setPosts,
-  ] = useState([]);
+  ] = useState<Post[]>([]);
   const [
     authors,
     setAuthors,
-  ] = useState({});
+  ] = useState<Record<number, Account>>({});
 
   const [
     page,
@@ -38,7 +44,7 @@ function Posts() {
   } = useRequest(() => post.getPosts({
     page,
     size,
-    account: 1,
+    account: true,
   }), {
     refreshDeps: [
       page,

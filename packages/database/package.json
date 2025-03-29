@@ -4,6 +4,7 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
+    "generate": "prisma generate",
     "reset": "prisma db push --force-reset && prisma db seed"
   },
   "prisma": {

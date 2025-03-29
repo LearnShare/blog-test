@@ -26,7 +26,7 @@ function Provider({
     setToken,
   ] = useState('');
   useEffect(() => {
-    setToken(Store.getToken());
+    setToken(Store.getToken() || '');
   }, []);
 
   const [

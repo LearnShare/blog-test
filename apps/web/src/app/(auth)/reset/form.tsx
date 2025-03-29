@@ -27,7 +27,7 @@ import {
   auth,
 } from '@packages/lib/sdk/web';
 
-const KnownErrors = {
+const KnownErrors: Record<string, string> = {
   'Invalid reset token': '无效的 token',
 };
 
@@ -120,7 +120,8 @@ function ResetForm({
       return Promise.reject();
     }
 
-    const token = searchParams.get('token');
+    const token = searchParams.get('token')
+        || '';
 
     return auth.resetPassword(token, password);
   };
@@ -144,7 +145,6 @@ function ResetForm({
           repeat: '',
         } }
         errors={ errors }
-        disabled={ loading }
         onChange={ (
           data: Record<string, any>,
           dirty: Record<string, boolean>
