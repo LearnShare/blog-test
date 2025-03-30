@@ -46,7 +46,7 @@ accountRouter.get(
       error,
     } = await DB.account.getAccounts({
       search: search as string,
-      role as AccountRole,
+      role: role as AccountRole,
       posts: posts
           ? Boolean(Number(posts))
           : null,

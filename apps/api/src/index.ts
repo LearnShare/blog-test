@@ -24,7 +24,6 @@ import error from '@/lib/error';
 import Redis from '@/lib/redis';
 
 const app: Express = express();
-const port: number = 3000;
 
 app.use(cors());
 // rate-limit: 100 req in 5min
@@ -39,6 +38,8 @@ app.use(Auth.auto);
 app.use(router);
 // error
 app.use(error);
+
+const port: number = Number(process.env.SERVER_PORT) || 3000;
 
 app.listen(port, () => {
   console.log(`[API]: ready, port: ${ port }`, '\n');

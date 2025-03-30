@@ -5,7 +5,7 @@ import {
 } from 'express';
 
 import DB, {
-  ContentFormat,
+  type PostContentFormat,
   DB_PAGE,
   DB_SIZE,
   DB_SORT,
@@ -150,7 +150,7 @@ postRouter.post(
       cover,
       coverUrl,
       content,
-      format: ContentFormat[format],
+      format: format as PostContentFormat,
       published,
     });
 
@@ -358,7 +358,7 @@ postRouter.put(
       cover,
       coverUrl,
       content,
-      format: ContentFormat[format],
+      format: format as PostContentFormat,
       published,
     });
 

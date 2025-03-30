@@ -5,6 +5,9 @@ packages/database/client/
 uploads/
 .envs/local/
 .envs/prod/
+/apps/*/.env
+/packages/*/.env
+/.env
 out/
 prod/
 dist/
