@@ -28,9 +28,9 @@
     "start": "turbo run start",
     "generate": "turbo run generate",
     "env": "node ./scripts/set-env.js",
-    "docker:start": "docker-compose up postgres redis -d",
-    "docker:prod:web": "docker-compose up prod-web",
-    "docker:prod:api": "docker-compose up prod-api"
+    "docker:start": "docker compose up postgres redis -d",
+    "docker:prod:web": "docker compose up prod-web",
+    "docker:prod:api": "docker compose up prod-api"
   },
   "dependencies": {
     "@packages/database": "workspace:*",

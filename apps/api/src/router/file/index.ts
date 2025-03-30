@@ -91,7 +91,8 @@ const acceptUploadTypes = [
   'post-cover',
 ];
 
-const serverHost = 'http://localhost:3000/api/file/hash';
+const host = process.env.SERVER_HOST;
+const serverHost = `${host}/api/file/hash`;
 
 async function continueUpload(
   accountId: number,
