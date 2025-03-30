@@ -1,7 +1,3 @@
-networks:
-  blog_network:
-    external: true
-
 services:
   prod-web:
     container_name: blog-web
@@ -11,11 +7,9 @@ services:
       platforms:
         - linux/arm64
     ports:
-      - "3001:3001"
+      - "3000:3000"
     environment:
       - NODE_ENV=production
-    networks:
-      - blog_network
 
   prod-api:
     container_name: blog-api
@@ -25,29 +19,23 @@ services:
       platforms:
         - linux/arm64
     ports:
-      - "3000:3000"
+      - "3030:3030"
     environment:
       - NODE_ENV=production
-    networks:
-      - blog_network
 
   postgres:
     image: postgres
     restart: always
     shm_size: 128mb
     ports:
-      - 5435:5432
+      - "5432:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    networks:
-      - blog_network
 
   redis:
     image: redis
     restart: always
     ports:
-      - 6379:6379
-    networks:
-      - blog_network
+      - "6379:6379"

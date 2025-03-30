@@ -1,4 +1,3 @@
-import Dotenv from 'dotenv';
 import express, {
   Express,
   Request,
@@ -9,19 +8,18 @@ import {
 } from 'express-rate-limit';
 import cors from 'cors';
 
+import '@/lib/dotenv';
+import log from '@/lib/log';
+import router from '@/router';
+import error from '@/lib/error';
 import Auth from './lib/auth';
-
-Dotenv.config();
+import Redis from '@/lib/redis';
 
 const rateLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   limit: 100,
 });
 
-import log from '@/lib/log';
-import router from '@/router';
-import error from '@/lib/error';
-import Redis from '@/lib/redis';
 
 const app: Express = express();
 
@@ -39,7 +37,7 @@ app.use(router);
 // error
 app.use(error);
 
-const port: number = Number(process.env.SERVER_PORT) || 3000;
+const port: number = Number(process.env.SERVER_PORT) || 3030;
 
 app.listen(port, () => {
   console.log(`[API]: ready, port: ${ port }`, '\n');

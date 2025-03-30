@@ -5,7 +5,12 @@ import {
 import DB from '@packages/database';
 
 const redis = createClient({
-  url: process.env.REDIS_URL,
+  // url: process.env.REDIS_URL,
+  legacyMode: true,
+  socket: {
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT),
+  },
 });
 
 (async () => {
