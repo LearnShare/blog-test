@@ -5,6 +5,7 @@ packages/database/client/
 uploads/
 .git
 .gitignore
+.env.local
 dist/
 out/
 prod/

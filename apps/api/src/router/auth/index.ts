@@ -12,7 +12,9 @@ import DB, {
   DB_SIZE,
   DB_SORT,
 } from '@packages/database';
-import Auth from '@/lib/auth';
+import Auth, {
+  type CustomRequest,
+} from '@/lib/auth';
 import {
   getAccountInfo,
   updateAccount,
@@ -140,7 +142,7 @@ authRouter.post('/sign-up', async (req: Request, res: Response) => {
 /**
  * verify account - send verification code
  */
-authRouter.get('/verify', Auth.check, async (req: Request, res: Response) => {
+authRouter.get('/verify', Auth.check, async (req: CustomRequest, res: Response) => {
   const {
     id,
   } = req.user;
@@ -185,7 +187,7 @@ authRouter.get('/verify', Auth.check, async (req: Request, res: Response) => {
 /**
  * verify account - check verification code
  */
-authRouter.post('/verify', Auth.check, async (req: Request, res: Response) => {
+authRouter.post('/verify', Auth.check, async (req: CustomRequest, res: Response) => {
   const {
     id,
   } = req.user;
@@ -335,7 +337,7 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
 /**
  * get current account info
  */
-authRouter.get('/info', Auth.check, async (req: Request, res: Response) => {
+authRouter.get('/info', Auth.check, async (req: CustomRequest, res: Response) => {
   const {
     id,
   } = req.user;
@@ -350,7 +352,7 @@ authRouter.put(
   '/info',
   Auth.check,
   Auth.checkVerified,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -538,7 +540,7 @@ authRouter.put(
   '/password',
   Auth.check,
   Auth.checkVerified,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -558,7 +560,7 @@ authRouter.get(
   '/stats',
   Auth.check,
   Auth.checkVerified,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -604,7 +606,7 @@ authRouter.get(
 authRouter.get(
   '/post',
   Auth.check,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -622,7 +624,7 @@ authRouter.get(
       data,
       error,
     } = await DB.post.getPosts({
-      search,
+      search: search as string,
       author: id,
       account: account
           ? Boolean(Number(account))
@@ -630,7 +632,7 @@ authRouter.get(
       published: published
           ? Boolean(Number(published))
           : null,
-      sort: sort
+      sort: (sort as string)
           || DB_SORT,
       page: page
           ? Number(page)
@@ -659,7 +661,7 @@ authRouter.get(
 authRouter.get(
   '/post/:uid',
   Auth.check,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       uid,
     } = req.params;

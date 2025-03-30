@@ -1,20 +1,11 @@
-import {
-  ContentFormat,
-} from '../client';
-
 export * from '../client';
 
-export interface OrderBy {
-  [key: string]: 'asc' | 'desc';
-}
+export type AccountRole = 'ADMIN'
+    | 'AUTHOR'
+    | 'USER';
 
-export interface ListQuery {
-  page?: number;
-  size?: number;
-  orderBy?: OrderBy;
-  search?: string;
-  // [key: string]: any;
-}
+export type PostContentFormat = 'TEXT'
+    | 'MARKDOWN';
 
 export interface PostData {
   id?: number;
@@ -23,8 +14,8 @@ export interface PostData {
   uid?: string;
   cover?: number;
   coverUrl?: string;
-  content?: string;
-  format?: ContentFormat;
+  content?: PostContentFormat;
+  format?: string;
   published?: boolean;
 }
 
@@ -34,8 +25,8 @@ export interface PostCreateData {
   uid: string;
   cover: number;
   coverUrl: string;
-  content: string;
-  format: ContentFormat;
+  content: PostContentFormat;
+  format: string;
   published: boolean;
 }
 

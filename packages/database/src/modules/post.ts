@@ -304,7 +304,7 @@ async function updatePostViews(id: number) {
 }
 
 // delete post
-async function deletePost(id: number, postData: PostData) {
+async function deletePost(id: number) {
   try {
     await prisma.post.delete({
       where: {

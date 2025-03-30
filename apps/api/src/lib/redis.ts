@@ -5,9 +5,12 @@ import {
 import DB from '@packages/database';
 
 const redis = createClient({
-  host: 'localhost',
-  port: 6379,
+  url: process.env.REDIS_URL,
 });
+
+(async () => {
+  await redis.connect();
+})();
 
 redis.on('error', (error) => {
   console.log('[REDIS]: ', error);
@@ -16,8 +19,6 @@ redis.on('error', (error) => {
 redis.on('ready', () => {
   console.log('[REDIS]: ready');
 });
-
-await redis.connect();
 
 function setAccountInfo(id: number, data: any): void {
   const key = [
@@ -30,7 +31,7 @@ function setAccountInfo(id: number, data: any): void {
   redis.set(key, value);
 }
 
-async function getAccountInfo(id): any {
+async function getAccountInfo(id): Promise<any> {
   const key = [
     'account',
     id,

@@ -3,6 +3,8 @@ packages/database/client/
 .next/
 .turbo/
 uploads/
-.env.local
+.envs/local/
+.envs/prod/
 out/
 prod/
+dist/

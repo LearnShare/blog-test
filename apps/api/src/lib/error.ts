@@ -2,7 +2,6 @@ import {
   Request,
   Response,
   NextFunction,
-  ErrorRequestHandler,
 } from 'express';
 
 export default function error(
@@ -10,7 +9,7 @@ export default function error(
   req: Request,
   res: Response,
   next: NextFunction,
-): ErrorRequestHandler {
+) {
   if (err) {
     console.log(err);
     res.status(500)

@@ -2,9 +2,10 @@
   "name": "api",
   "version": "0.0.1",
   "main": "src/index.ts",
-  "type": "module",
   "scripts": {
-    "dev": "tsx watch ./src/index.ts"
+    "dev": "tsx watch ./src/index.ts",
+    "build": "tsc",
+    "start": "node -r esbuild-register ./src/index.ts"
   },
   "dependencies": {
     "@packages/database": "workspace:*",
@@ -18,9 +19,13 @@
     "redis": "^4.7.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.13.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.14",
+    "@types/nodemailer": "^6.4.17",
+    "esbuild": "^0.25.1",
+    "esbuild-register": "^3.6.0",
     "tsx": "^4.19.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }

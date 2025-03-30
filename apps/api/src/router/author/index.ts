@@ -110,13 +110,8 @@ authorRouter.get(
       return;
     }
 
-    const {
-      password,
-      ...rest
-    } = account;
-
     res.json({
-      ...rest,
+      ...account,
       postStats,
     });
   },

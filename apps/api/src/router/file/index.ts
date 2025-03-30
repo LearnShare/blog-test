@@ -14,7 +14,9 @@ import DB, {
   DB_SORT,
 } from '@packages/database';
 import Hash from '@packages/lib/hash';
-import Auth from '@/lib/auth';
+import Auth, {
+  type CustomRequest,
+} from '@/lib/auth';
 import {
   updateAccount,
 } from '@/lib/account';
@@ -56,7 +58,7 @@ fileRouter.get(
       creator: creator
           ? Number(creator)
           : null,
-      sort: sort
+      sort: (sort as string)
           || DB_SORT,
       page: page
           ? Number(page)
@@ -87,14 +89,14 @@ const acceptMimeTypes = [
 const acceptUploadTypes = [
   'account-avatar',
   'post-cover',
-] as const;
+];
 
 const serverHost = 'http://localhost:3000/api/file/hash';
 
 async function continueUpload(
   accountId: number,
   file: any,
-  type: typeof acceptUploadTypes,
+  type: typeof acceptUploadTypes[number],
   res: Response,
 ) {
   const url = `${serverHost}/${file.hash}`;
@@ -130,7 +132,7 @@ fileRouter.post(
   Auth.checkVerified,
   Auth.checkFileLimits,
   upload.single('file'),
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -324,7 +326,7 @@ fileRouter.delete(
   '/avatar',
   Auth.check,
   Auth.checkVerified,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;

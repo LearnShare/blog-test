@@ -8,12 +8,25 @@ import JWT from '@packages/lib/jwt';
 import Redis from '@/lib/redis';
 import DB from '@packages/database';
 
+interface FileData {
+  originalname: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+}
+
+export interface CustomRequest
+    extends Request {
+  user: any;
+  file: FileData;
+}
+
 /**
  * auto
  * 1. check and dectypt token
  */
 async function auto(
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {
@@ -43,7 +56,7 @@ async function auto(
  * 2. token valid
  */
 async function check(
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {
@@ -78,7 +91,7 @@ async function check(
 }
 
 async function checkVerified(
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {
@@ -102,7 +115,7 @@ async function checkVerified(
 
 function checkRole(roles: string[]) {
   return async function (
-    req: Request,
+    req: CustomRequest,
     res: Response,
     next: NextFunction,
   ) {
@@ -126,7 +139,7 @@ function checkRole(roles: string[]) {
 }
 
 async function checkFileLimits(
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {

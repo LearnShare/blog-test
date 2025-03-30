@@ -11,6 +11,9 @@
     },
     "build": {
       "dependsOn": ["^generate"]
+    },
+    "start": {
+      "dependsOn": ["^build"]
     }
   }
 }

@@ -10,7 +10,9 @@ import DB, {
   DB_SIZE,
   DB_SORT,
 } from '@packages/database';
-import Auth from '@/lib/auth';
+import Auth, {
+  type CustomRequest,
+} from '@/lib/auth';
 import Hash from '@packages/lib/hash';
 
 const postRouter = Router();
@@ -25,7 +27,7 @@ const postRouter = Router();
  * - page
  * - size
  */
-postRouter.get('/', async (req: Request, res: Response) => {
+postRouter.get('/', async (req: CustomRequest, res: Response) => {
   const {
     search,
     author,
@@ -39,7 +41,7 @@ postRouter.get('/', async (req: Request, res: Response) => {
     data,
     error,
   } = await DB.post.getPosts({
-    search,
+    search: search as string,
     author: author
         ? Number(author)
         : null,
@@ -49,7 +51,7 @@ postRouter.get('/', async (req: Request, res: Response) => {
     bookmarkBy: req.user && req.user.id,
     // only published visible
     published: true,
-    sort: sort
+    sort: (sort as string)
         || DB_SORT,
     page: page
         ? Number(page)
@@ -83,7 +85,7 @@ postRouter.post(
   Auth.check,
   Auth.checkVerified,
   Auth.checkRole(['ADMIN', 'AUTHOR']),
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -94,7 +96,7 @@ postRouter.post(
       cover,
       coverUrl,
       content,
-      format = ContentFormat.MARKDOWN,
+      format,
       published,
     } = req.body;
 
@@ -148,7 +150,7 @@ postRouter.post(
       cover,
       coverUrl,
       content,
-      format,
+      format: ContentFormat[format],
       published,
     });
 
@@ -251,7 +253,7 @@ postRouter.put(
   Auth.check,
   Auth.checkVerified,
   Auth.checkRole(['ADMIN', 'AUTHOR']),
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id: userId,
     } = req.user;
@@ -267,7 +269,7 @@ postRouter.put(
       cover,
       coverUrl,
       content,
-      format: ContentFormat.MARKDOWN,
+      format,
       published,
     } = req.body;
 
@@ -356,7 +358,7 @@ postRouter.put(
       cover,
       coverUrl,
       content,
-      format,
+      format: ContentFormat[format],
       published,
     });
 
@@ -381,7 +383,7 @@ postRouter.put(
   Auth.check,
   Auth.checkVerified,
   Auth.checkRole(['ADMIN', 'AUTHOR']),
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id: userId,
     } = req.user;

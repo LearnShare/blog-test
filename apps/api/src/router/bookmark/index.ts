@@ -9,7 +9,9 @@ import DB, {
   DB_SIZE,
   DB_SORT,
 } from '@packages/database';
-import Auth from '@/lib/auth';
+import Auth, {
+  type CustomRequest,
+} from '@/lib/auth';
 
 const bookmarkRouter = Router();
 
@@ -24,7 +26,7 @@ bookmarkRouter.get(
   '/',
   Auth.check,
   Auth.checkVerified,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -39,7 +41,7 @@ bookmarkRouter.get(
       error,
     } = await DB.bookmark.getBookmarks({
       account: id,
-      sort,
+      sort: sort as string,
       page: page
           ? Number(page)
           : DB_PAGE,
@@ -70,7 +72,7 @@ bookmarkRouter.post(
   '/',
   Auth.check,
   Auth.checkVerified,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -80,7 +82,7 @@ bookmarkRouter.post(
 
     // 1. check is exist
     const {
-      bookmark: existsBookmark,
+      data: existsBookmark,
       error,
     } = await DB.bookmark.searchBookmark(id, postId);
 
@@ -93,7 +95,7 @@ bookmarkRouter.post(
       return;
     }
 
-    if (existsBookmark) {
+    if (existsBookmark?.list?.length) {
       res.status(400)
           .json({
             status: 400,
@@ -128,7 +130,7 @@ bookmarkRouter.get(
   '/:postId',
   Auth.check,
   Auth.checkVerified,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;
@@ -163,7 +165,7 @@ bookmarkRouter.delete(
   '/:postId',
   Auth.check,
   Auth.checkVerified,
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest, res: Response) => {
     const {
       id,
     } = req.user;

@@ -1,17 +1,11 @@
 generator client {
   provider = "prisma-client-js"
-  output = "../client"
+  output   = "../client"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-enum Role {
-  ADMIN
-  AUTHOR
-  USER
 }
 
 model Account {
@@ -22,7 +16,7 @@ model Account {
   uid       String     @unique
   avatar    Int?
   avatarUrl String?
-  role      Role       @default(USER)
+  role      String     @default("USER")
   intro     String     @default("")
   verified  Boolean    @default(false)
   disabled  Boolean    @default(false)
@@ -32,43 +26,30 @@ model Account {
   utime     DateTime   @updatedAt
 }
 
-enum ContentFormat {
-  TEXT
-  MARKDOWN
-  HTML
-}
-
 model Post {
-  id        Int           @id @default(autoincrement())
-  author    Account       @relation(fields: [authorId], references: [id])
+  id        Int        @id @default(autoincrement())
+  author    Account    @relation(fields: [authorId], references: [id])
   authorId  Int
-  uid       String        @unique
+  uid       String     @unique
   cover     Int?
   coverUrl  String?
   title     String
   intro     String
   content   String
-  format    ContentFormat @default(TEXT)
+  format    String     @default("TEXT")
   images    Int[]
-  published Boolean       @default(false)
-  views     Int           @default(0)
+  published Boolean    @default(false)
+  views     Int        @default(0)
   bookmarks Bookmark[]
-  ctime     DateTime      @default(now())
-  utime     DateTime      @updatedAt
-}
-
-enum FileType {
-  UNKNOWN
-  IMAGE
-  VIDEO
-  AUDIO
+  ctime     DateTime   @default(now())
+  utime     DateTime   @updatedAt
 }
 
 model File {
   id      Int      @id @default(autoincrement())
   creator Int
   hash    String   @unique
-  type    FileType @default(UNKNOWN)
+  type    String   @default("UNKNOWN")
   mime    String
   name    String
   ext     String

@@ -12,10 +12,6 @@ import cors from 'cors';
 import Auth from './lib/auth';
 
 Dotenv.config();
-Dotenv.config({
-  path: '.env.local',
-  override: true,
-});
 
 const rateLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,

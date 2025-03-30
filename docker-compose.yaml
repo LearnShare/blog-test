@@ -1,19 +1,8 @@
+networks:
+  blog_network:
+    external: true
+
 services:
-  postgres:
-    image: postgres
-    restart: always
-    shm_size: 128mb
-    ports:
-      - 5435:5432
-    environment:
-      POSTGRES_DB: blog
-      POSTGRES_USER: blog
-      POSTGRES_PASSWORD: blog1234
-  redis:
-    image: redis
-    restart: always
-    ports:
-      - 6379:6379
   prod-web:
     container_name: blog-web
     build:
@@ -25,3 +14,40 @@ services:
       - "80:3000"
     environment:
       - NODE_ENV=production
+    networks:
+      - blog_network
+
+  prod-api:
+    container_name: blog-api
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+      platforms:
+        - linux/arm64
+    ports:
+      - "8080:3030"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - blog_network
+
+  postgres:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_DB: blog
+      POSTGRES_USER: blog
+      POSTGRES_PASSWORD: blog1234
+    networks:
+      - blog_network
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - blog_network

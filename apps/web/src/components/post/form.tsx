@@ -144,6 +144,7 @@ function PostForm({
     const postData = {
       ...formData,
       published,
+      format: 'MARKDOWN',
       cover: cover?.id,
       coverUrl: cover?.url || '',
     };

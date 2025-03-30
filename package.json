@@ -25,8 +25,10 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "lint": "turbo run lint",
+    "start": "turbo run start",
     "generate": "turbo run generate",
-    "docker:prod:web": "docker-compose up prod-web"
+    "docker:prod:web": "docker-compose up prod-web",
+    "docker:prod:api": "docker-compose up prod-api"
   },
   "dependencies": {
     "@packages/database": "workspace:*",
@@ -35,5 +37,9 @@
   "devDependencies": {
     "turbo": "^2.4.2"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "packageManager": "pnpm@9.13.2"
 }
