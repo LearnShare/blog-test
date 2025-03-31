@@ -56,7 +56,7 @@ function EditView({
       {
         !loading && data && (
           <PostForm
-              { ...data } />
+              data={ data } />
         )
       }
     </>
