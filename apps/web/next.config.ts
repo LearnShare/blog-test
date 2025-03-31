@@ -21,7 +21,13 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3000',
+        port: '3030',
+        pathname: '/api/file/hash/**',
+        search: '',
+      },
+      {
+        protocol: 'https',
+        hostname: process.env.PROD_HOST,
         pathname: '/api/file/hash/**',
         search: '',
       },
