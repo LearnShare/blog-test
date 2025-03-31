@@ -12,7 +12,7 @@ import '@/lib/dotenv';
 import log from '@/lib/log';
 import router from '@/router';
 import error from '@/lib/error';
-import Auth from './lib/auth';
+import Auth from '@/lib/auth';
 import Redis from '@/lib/redis';
 
 const rateLimiter = rateLimit({

@@ -4,6 +4,8 @@ import type {
 } from 'next';
 import createMDX from '@next/mdx';
 
+type imageRemoteProtocol = 'http' | 'https';
+
 const nextConfig: NextConfig = {
   output: 'standalone',
   outputFileTracingRoot: path.join(__dirname, '../../'),
@@ -19,15 +21,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3030',
-        pathname: '/api/file/hash/**',
-        search: '',
-      },
-      {
-        protocol: 'https',
+        protocol: process.env.PROD_PROTOCOL as imageRemoteProtocol,
         hostname: process.env.PROD_HOST as string,
+        port: process.env.PROD_PORT as string,
         pathname: '/api/file/hash/**',
         search: '',
       },

@@ -9,3 +9,5 @@ uploads/
 dist/
 out/
 prod/
+/.envs/
+/.data/

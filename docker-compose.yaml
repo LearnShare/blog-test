@@ -18,6 +18,8 @@ services:
       - "3030:3030"
     environment:
       - NODE_ENV=production
+    volumes:
+      - ./.data/uploads/:/app/apps/api/uploads/
 
   postgres:
     image: postgres

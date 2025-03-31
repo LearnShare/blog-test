@@ -4,6 +4,7 @@ packages/database/client/
 .turbo/
 uploads/
 .envs/local/
+.envs/build/
 .envs/prod/
 /apps/*/.env
 /packages/*/.env
@@ -11,3 +12,4 @@ uploads/
 out/
 prod/
 dist/
+/.data/
