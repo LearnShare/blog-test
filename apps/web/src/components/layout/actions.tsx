@@ -21,16 +21,12 @@ import {
   buttonVariants,
 } from '@/components/ui/button';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  Command,
-  CommandList,
-  CommandItem,
-  CommandSeparator,
-} from '@/components/ui/command';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 import AccountContext from '@/components/provider/account-context';
 import Avatar from '@/components/avatar';
@@ -59,18 +55,7 @@ function HeaderActions() {
   const author = info
       && AuthorRoles.includes(info.role);
 
-  // const [
-  //   menuOpen,
-  //   setMenuOpen,
-  // ] = useState(false);
-  // const toggleMenu = () => {
-  //   setMenuOpen((oldValue) => !oldValue);
-  // };
   const itemOnSelect = (action: string) => {
-    // setMenuOpen(false);
-
-    // TODO hide menu
-    // switch to dropdown menu
     switch (action) {
       case 'write':
         router.push('/write');
@@ -113,71 +98,65 @@ function HeaderActions() {
       }
       {
         info && (
-          <Popover
-              /* open={ menuOpen } */>
-            <PopoverTrigger>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
               <Avatar
                   url={ info.avatarUrl }
                   name={ info.name }
-                  round
-                  /* onClick={ () => toggleMenu() } */ />
-            </PopoverTrigger>
-            <PopoverContent
+                  round />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
                 align="end"
-                className="px-1 py-1.5 w-[160px]">
+                className="px-1 py-1.5">
               <div className="px-3 py-2">
                 <div>{ info.name }</div>
                 <div className="text-sm text-slate-500">@{ info.uid }</div>
               </div>
-              <Command>
-                <CommandList>
-                  {
-                    (author) && (
-                      <CommandItem
-                          onSelect={ () => itemOnSelect('write') }>
-                        <IconPencilLine />
-                        <span>编写文章</span>
-                      </CommandItem>
-                    )
-                  }
-                  {
-                    (!author) && (
-                      <CommandItem>
-                        <IconHandshake />
-                        <span>成为作者</span>
-                      </CommandItem>
-                    )
-                  }
-                  <CommandSeparator className="my-1.5" />
-                  <CommandItem
-                      onSelect={ () => itemOnSelect('home') }>
-                    <IconHouse />
-                    <span>个人主页</span>
-                  </CommandItem>
-                  {
-                    (author) && (
-                      <CommandItem
-                          onSelect={ () => itemOnSelect('posts') }>
-                        <IconUserPen />
-                        <span>我的文章</span>
-                      </CommandItem>
-                    )
-                  }
-                  <CommandItem
-                      onSelect={ () => itemOnSelect('bookmark') }>
-                    <IconBookMarked />
-                    <span>我的收藏</span>
-                  </CommandItem>
-                  <CommandSeparator className="my-1.5" />
-                  <CommandItem
-                      onSelect={ () => itemOnSelect('logout') }>
-                    <IconLogOut />
-                    <span>退出登录</span>
-                  </CommandItem>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+              {
+                (author) && (
+                  <DropdownMenuItem
+                      onSelect={ () => itemOnSelect('write') }>
+                    <IconPencilLine />
+                    <span>编写文章</span>
+                  </DropdownMenuItem>
+                )
+              }
+              {
+                (!author) && (
+                  <DropdownMenuItem>
+                    <IconHandshake />
+                    <span>成为作者</span>
+                  </DropdownMenuItem>
+                )
+              }
+              <DropdownMenuSeparator className="my-1" />
+              <DropdownMenuItem
+                  onSelect={ () => itemOnSelect('home') }>
+                <IconHouse />
+                <span>个人主页</span>
+              </DropdownMenuItem>
+              {
+                (author) && (
+                  <DropdownMenuItem
+                      onSelect={ () => itemOnSelect('posts') }>
+                    <IconUserPen />
+                    <span>我的文章</span>
+                  </DropdownMenuItem>
+                )
+              }
+              <DropdownMenuItem
+                  onSelect={ () => itemOnSelect('bookmark') }>
+                <IconBookMarked />
+                <span>我的收藏</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="my-1" />
+              <DropdownMenuItem
+                  onSelect={ () => itemOnSelect('logout') }>
+                <IconLogOut />
+                <span>退出登录</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )
       }
     </div>

@@ -283,7 +283,7 @@ function PostForm({
           className="flex-1"
           label="内容（Markdown 格式）"
           name="content">
-        <Textarea className="flex-1 min-h-[600px]" />
+        <Textarea className="flex-1 min-h-[600px] text-base!" />
       </FormItem>
 
       <CoverDialog

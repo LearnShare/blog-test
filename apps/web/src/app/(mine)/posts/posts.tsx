@@ -33,7 +33,7 @@ function Posts() {
     filters,
     setFilters,
   ] = useState<Record<string, any>>({
-    published: 1,
+    published: '1',
   });
 
   const [
