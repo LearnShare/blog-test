@@ -27,7 +27,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: process.env.PROD_HOST,
+        hostname: process.env.PROD_HOST as string,
         pathname: '/api/file/hash/**',
         search: '',
       },
