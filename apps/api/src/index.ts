@@ -17,14 +17,14 @@ import Redis from '@/lib/redis';
 
 const rateLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  limit: 100,
+  limit: 300,
 });
 
 
 const app: Express = express();
 
 app.use(cors());
-// rate-limit: 100 req in 5min
+// rate-limit: 300 req in 5min
 app.use(rateLimiter);
 // JSON body parser
 app.use(express.json());
