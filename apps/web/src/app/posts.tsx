@@ -44,7 +44,7 @@ function Posts() {
   } = useRequest(() => post.getPosts({
     page,
     size,
-    account: true,
+    account: 1,
   }), {
     refreshDeps: [
       page,

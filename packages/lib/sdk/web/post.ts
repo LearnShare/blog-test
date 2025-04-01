@@ -15,7 +15,7 @@ function get(uid: string) {
 export interface PostsQuery {
   search?: string;
   author?: number;
-  account?: boolean;
+  account?: number;
   sort?: string;
   page?: number;
   size?: number;
