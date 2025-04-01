@@ -9,6 +9,9 @@ import React, {
 import {
   useRequest,
 } from 'ahooks'
+import {
+  useForm,
+} from 'react-hook-form';
 
 import {
   Button,
@@ -31,6 +34,12 @@ import {
   auth,
 } from '@packages/lib/sdk/web';
 
+interface FormData {
+  name: string;
+  uid: string;
+  intro: string;
+}
+
 interface ProfileFormProps {
   action?: string;
   onSuccess?: (data: any) => void;
@@ -45,97 +54,37 @@ function ProfileForm({
     setInfo,
   } = useContext(AccountContext);
 
-  const [
-    formData,
-    setFormData,
-  ] = useState<Record<string, any>>({});
-  const [
-    formDirty,
-    setFormDirty,
-  ] = useState<Record<string, boolean>>({});
-  const [
-    errors,
-    setErrors,
-  ] = useState<Record<string, string>>({});
-
-  const formOnChange = (data: Record<string, any>, dirty: Record<string, any>) => {
-    setFormData(data);
-    setFormDirty(dirty);
-  };
-
-  const validateName = (value: string) => {
-    if (!value) {
-      return '名字不能为空';
-    }
-
-    return '';
-  };
-
-  // TODO validate in form-item props
-  const validate = useCallback((name: string, value: any) => {
-    let result = '';
-
-    switch (name) {
-      case 'name':
-        result = validateName(value);
-        break;
-      case 'uid':
-        result = validateUid(value);
-        break;
-      default:
-    }
-
-    setErrors((oldValue) => ({
-      ...oldValue,
-      [name]: result,
-    }));
-  }, []);
-
-  const validateForm = useCallback((
-    data: Record<string, any>,
-    dirty: Record<string, boolean>
-  ) => {
-    for (const name in data) {
-      if (dirty?.[name]) {
-        validate(name, data[name]);
-      }
-    }
-  }, [
-    validate,
-  ]);
-
-  useEffect(() => {
-    validateForm(formData, formDirty);
-  }, [
-    validateForm,
-    formData,
-    formDirty,
-  ]);
-
-  const validateAndSubmit = async () => {
-    for (const name in formData) {
-      validate(name, formData[name]);
-    }
-
-    for (const name in errors) {
-      if (errors[name]) {
-        return;
-      }
-    }
-
-    return auth.updateInfo(formData);
-  };
-
   const {
     run: updateInfo,
     loading,
     error,
-  } = useRequest(validateAndSubmit, {
-    manual: true,
-    onSuccess: (res) => {
-      setInfo(res);
+  } = useRequest((data: FormData) =>
+      auth.updateInfo(data),
+    {
+      manual: true,
+      onSuccess: (res) => {
+        setInfo(res);
 
-      onSuccess?.(res);
+        onSuccess?.(res);
+      },
+    },
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: {
+      errors,
+    },
+  } = useForm<FormData>({
+    mode: 'all',
+    defaultValues: {
+      name: info?.name
+          || '',
+      uid: info?.uid
+          || '',
+      intro: info?.intro
+          || '',
     },
   });
 
@@ -146,38 +95,46 @@ function ProfileForm({
   return (
     <Form
         layout="vertical"
-        initialValue={ {
-          name: info.name,
-          uid: info.uid,
-          intro: info.intro,
-        } }
-        errors={ errors }
-        onChange={ (
-          data: Record<string, any>,
-          dirty: Record<string, boolean>
-        ) => formOnChange(data, dirty) }>
+        onSubmit={ handleSubmit(updateInfo) }>
       <FormItem
-          label="名字"
-          name="name">
-        <Input />
+          label="用户名称"
+          error={ errors?.name?.message }>
+        <Input
+            {
+              ...register('name', {
+                required: '请填写用户名称',
+              })
+            }
+            disabled={ loading } />
       </FormItem>
       <FormItem
-          label="ID"
-          name="uid">
-        <Input />
+          label="用户 ID"
+          error={ errors?.uid?.message }>
+        <Input
+            {
+              ...register('uid', {
+                required: '请填写用户 ID',
+                validate: validateUid,
+              })
+            }
+            disabled={ loading } />
       </FormItem>
       <FormItem
-          label="介绍"
-          name="intro">
-        <Textarea maxLength={ 120 } />
+          label="个人介绍"
+          error={ errors?.intro?.message }>
+        <Textarea
+            maxLength={ 120 }
+            {
+              ...register('intro')
+            }
+            disabled={ loading } />
       </FormItem>
       <Button
           className="mt-3"
           size="lg"
-          disabled={ loading }
-          onClick={ () => updateInfo() }>{ action || '保存' }</Button>
+          disabled={ loading }>{ action || '保存' }</Button>
       {
-        error && (
+        !loading && error && (
           <FormError>{ error.message }</FormError>
         )
       }

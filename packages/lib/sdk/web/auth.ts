@@ -51,6 +51,7 @@ function accountStats() {
 function updateInfo(data: {
   name?: string;
   uid?: string;
+  intro?: string;
 }) {
   return HTTP.put('/auth/info', data);
 }

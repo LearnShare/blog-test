@@ -1,14 +1,13 @@
 'use client';
 
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+import React from 'react';
 import Link from 'next/link';
 import {
   useRequest,
-} from 'ahooks'
+} from 'ahooks';
+import {
+  useForm,
+} from 'react-hook-form';
 
 import {
   Button,
@@ -31,6 +30,10 @@ const KnownErrors: Record<string, string> = {
   'Account not found': '账号不存在',
 };
 
+interface FormData {
+  email: string;
+}
+
 interface ForgotFormProps {
   onSuccess?: () => void;
 }
@@ -38,119 +41,62 @@ interface ForgotFormProps {
 function ForgotForm({
   onSuccess,
 }: ForgotFormProps) {
-  const [
-    formData,
-    setFormData,
-  ] = useState<Record<string, any>>({});
-  const [
-    formDirty,
-    setFormDirty,
-  ] = useState<Record<string, boolean>>({});
-  const [
-    errors,
-    setErrors,
-  ] = useState<Record<string, string>>({});
-
-  const formOnChange = (data: Record<string, any>, dirty: Record<string, any>) => {
-    setFormData(data);
-    setFormDirty(dirty);
-  };
-
-  // TODO validate in form-item props
-  const validate = (name: string, value: any) => {
-    let result = '';
-
-    switch (name) {
-      case 'email':
-        result = validateEmail(value);
-        break;
-      default:
-    }
-
-    setErrors((oldValue) => ({
-      ...oldValue,
-      [name]: result,
-    }));
-  };
-
-  const validateForm = useCallback((
-    data: Record<string, any>,
-    dirty: Record<string, boolean>
-  ) => {
-    for (const name in data) {
-      if (dirty?.[name]) {
-        validate(name, data[name]);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    validateForm(formData, formDirty);
-  }, [
-    validateForm,
-    formData,
-    formDirty,
-  ]);
-
-  const validateAndSubmit = async () => {
-    for (const name in formData) {
-      validate(name, formData[name]);
-    }
-
-    for (const name in errors) {
-      if (errors[name]) {
-        return;
-      }
-    }
-
-    const {
-      email,
-    } = formData;
-
-    return auth.forgotPassword(email);
-  };
-
   const {
     run: send,
     loading,
     error,
-  } = useRequest(validateAndSubmit, {
-    manual: true,
-    onSuccess: () => {
-      onSuccess?.();
+  } = useRequest((data: FormData) =>
+        auth.forgotPassword(data.email),
+    {
+      manual: true,
+      onSuccess: () => {
+        onSuccess?.();
+      },
+    },
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: {
+      errors,
+    },
+  } = useForm<FormData>({
+    mode: 'all',
+    defaultValues: {
+      email: '',
     },
   });
 
   return (
     <Form
         layout="vertical"
-        initialValue={ {
-          email: '',
-        } }
-        errors={ errors }
-        onChange={ (
-          data: Record<string, any>,
-          dirty: Record<string, boolean>
-        ) => formOnChange(data, dirty) }>
+        onSubmit={ handleSubmit(send) }>
       <FormItem
           label="邮箱"
-          name="email">
-        <Input />
+          error={ errors?.email?.message }>
+        <Input
+            {
+              ...register('email', {
+                required: '请填写邮箱',
+                validate: validateEmail,
+              })
+            }
+            disabled={ loading } />
       </FormItem>
       <Button
           className="mt-3"
           size="lg"
-          disabled={ loading }
-          onClick={ () => send() }>继续</Button>
+          disabled={ loading }>继续</Button>
       {
-        error && (
+        !loading && error && (
           <FormError>{ KnownErrors[error.message] || error.message }</FormError>
         )
       }
       <div className="mt-4 text-right text-sm text-slate-500">
         <span>忘记账号，</span>
         <Link
-            href="/hi"
+            href="/about"
             className="underline text-slate-600">联系管理员</Link>
       </div>
     </Form>

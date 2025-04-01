@@ -53,13 +53,10 @@ export async function getAccountInfo(id: number, res: Response) {
 }
 
 export async function updateAccount(id: number, data: Record<string, any>, res: Response) {
-  const {
-    uid,
-  } = data;
-
-  if (uid) {
+  if (data
+      && data.uid) {
     // 1. validate uid
-    const result = Validator.validateUid(uid);
+    const result = Validator.validateUid(data.uid);
     if (!result.success) {
       res.status(400)
           .json({
@@ -73,7 +70,7 @@ export async function updateAccount(id: number, data: Record<string, any>, res: 
     const {
       data: account,
       error,
-    } = await DB.account.getAccountByUid(uid);
+    } = await DB.account.getAccountByUid(data.uid);
     if (error) {
       res.status(500)
         .json({

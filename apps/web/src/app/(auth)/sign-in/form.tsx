@@ -1,9 +1,6 @@
 'use client';
 
 import React, {
-  useEffect,
-  useState,
-  useCallback,
   useContext,
 } from 'react';
 import Link from 'next/link';
@@ -15,6 +12,9 @@ import Cookies from 'js-cookie';
 import {
   useRequest,
 } from 'ahooks'
+import {
+  useForm,
+} from 'react-hook-form';
 
 import {
   Button,
@@ -30,16 +30,21 @@ import {
   validatePassword,
 } from '@/components/form';
 import InputPassword from '@/components/form/controls/input-password';
-import AccountContext from '@/components/provider/account-context';
 
 import {
   auth,
 } from '@packages/lib/sdk/web';
 import Store from '@/lib/store';
+import AccountContext from '@/components/provider/account-context';
 
 const KnownErrors: Record<string, string> = {
   'Account or Password error': '账号或密码错误',
 };
+
+interface FormData {
+  email: string;
+  password: string;
+}
 
 function SignInForm() {
   const router = useRouter();
@@ -49,135 +54,76 @@ function SignInForm() {
     setInfo,
   } = useContext(AccountContext);
 
-  const [
-    formData,
-    setFormData,
-  ] = useState<Record<string, any>>({});
-  const [
-    formDirty,
-    setFormDirty,
-  ] = useState<Record<string, boolean>>({});
-  const [
-    errors,
-    setErrors,
-  ] = useState<Record<string, string>>({});
-
-  const formOnChange = (data: Record<string, any>, dirty: Record<string, any>) => {
-    setFormData(data);
-    setFormDirty(dirty);
-  };
-
-  // TODO validate in form-item props
-  const validate = (name: string, value: any) => {
-    let result = '';
-
-    switch (name) {
-      case 'email':
-        result = validateEmail(value);
-        break;
-      case 'password':
-        result = validatePassword(value);
-        break;
-      default:
-    }
-
-    setErrors((oldValue) => ({
-      ...oldValue,
-      [name]: result,
-    }));
-  };
-
-  const validateForm = useCallback((
-    data: Record<string, any>,
-    dirty: Record<string, boolean>
-  ) => {
-    for (const name in data) {
-      if (dirty?.[name]) {
-        validate(name, data[name]);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    validateForm(formData, formDirty);
-  }, [
-    validateForm,
-    formData,
-    formDirty,
-  ]);
-
-  const validateAndSubmit = async () => {
-    for (const name in formData) {
-      validate(name, formData[name]);
-    }
-
-    for (const name in errors) {
-      if (errors[name]) {
-        return;
-      }
-    }
-
-    const {
-      email,
-      password,
-    } = formData;
-
-    return auth.signIn(email, password);
-  };
-
   const {
     run: signIn,
     loading,
     error,
-  } = useRequest(validateAndSubmit, {
-    manual: true,
-    onSuccess: (res) => {
-      const {
-        token,
-        data,
-      } = res;
+  } = useRequest((data: FormData) =>
+      auth.signIn(data.email, data.password),
+    {
+      manual: true,
+      onSuccess: (res) => {
+        const {
+          token,
+          data,
+        } = res;
 
-      const {
-        verified,
-      } = data;
+        const {
+          verified,
+        } = data;
 
-      Store.setToken(token);
-      setInfo(data);
+        Store.setToken(token);
+        setInfo(data);
 
-      Cookies.set('BLOG_TOKEN', token);
+        Cookies.set('BLOG_TOKEN', token);
 
-      if (!verified) {
-        router.push('/welcome');
-      } else {
-        const redirect = searchParams.get('redirect');
+        if (!verified) {
+          router.push('/welcome');
+        } else {
+          const redirect = searchParams.get('redirect');
 
-        router.push(redirect
-            ? window.decodeURIComponent(redirect)
-            : '/home');
-      }
+          router.push(redirect
+              ? window.decodeURIComponent(redirect)
+              : '/home');
+        }
+      },
     },
-  });
+  );
+
+    const {
+      register,
+      handleSubmit,
+      formState: {
+        errors,
+      },
+    } = useForm<FormData>({
+      mode: 'all',
+      defaultValues: {
+        email: '',
+        password: '',
+      },
+    });
 
   return (
     <Form
         layout="vertical"
-        initialValue={ {
-          email: '',
-          password: '',
-        } }
-        errors={ errors }
-        onChange={ (
-          data: Record<string, any>,
-          dirty: Record<string, boolean>
-        ) => formOnChange(data, dirty) }>
+        onSubmit={ handleSubmit(signIn) }>
       <FormItem
           label="邮箱"
-          name="email">
-        <Input />
+          error={ errors?.email?.message }>
+        <Input
+            {
+              ...register('email', {
+                required: '请填写邮箱',
+                validate: validateEmail,
+              })
+            }
+            disabled={ loading } />
       </FormItem>
       <FormItem
           label="密码"
           name="password"
+          error={ errors?.password?.message }
           hint={ (
             <div className="mt-2 text-right text-sm text-slate-500">
               <span>忘记密码，</span>
@@ -186,15 +132,21 @@ function SignInForm() {
                   className="underline text-slate-600">找回</Link>
             </div>
           ) }>
-        <InputPassword />
+        <InputPassword
+            {
+              ...register('password', {
+                required: '请填写密码',
+                validate: validatePassword,
+              })
+            }
+            disabled={ loading } />
       </FormItem>
       <Button
           className="mt-3"
           size="lg"
-          disabled={ loading }
-          onClick={ () => signIn() }>登录</Button>
+          disabled={ loading }>登录</Button>
       {
-        error && (
+        !loading && error && (
           <FormError>{ KnownErrors[error.message] || error.message }</FormError>
         )
       }

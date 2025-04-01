@@ -1,13 +1,15 @@
 'use client';
 
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import React from 'react';
 import {
   useRequest,
 } from 'ahooks';
+import {
+  useForm,
+} from 'react-hook-form';
+// import {
+//   REGEXP_ONLY_DIGITS,
+// } from 'input-otp';
 
 import {
   Button,
@@ -15,6 +17,12 @@ import {
 import {
   Input,
 } from '@/components/ui/input';
+// import {
+//   InputOTP,
+//   InputOTPGroup,
+//   InputOTPSlot,
+// } from '@/components/ui/input-opt';
+// 🤷 not work with react-hook-form
 import {
   Form,
   FormItem,
@@ -32,6 +40,18 @@ const KnownErrors: Record<string, string> = {
   'Invalid verification code': '无效的激活代码',
 };
 
+const validateCode = (value: string) => {
+  if (value.length !== 6) {
+    return '激活代码格式错误';
+  }
+
+  return true;
+};
+
+interface FormData {
+  code: string;
+}
+
 interface VerifyFormProps {
   onSuccess?: () => void;
 }
@@ -39,102 +59,30 @@ interface VerifyFormProps {
 function VerifyForm({
   onSuccess,
 }: VerifyFormProps) {
-  const [
-    formData,
-    setFormData,
-  ] = useState<Record<string, any>>({});
-  const [
-    formDirty,
-    setFormDirty,
-  ] = useState<Record<string, boolean>>({});
-  const [
-    errors,
-    setErrors,
-  ] = useState<Record<string, string>>({});
-
-  const formOnChange = (data: Record<string, any>, dirty: Record<string, any>) => {
-    setFormData(data);
-    setFormDirty(dirty);
-  };
-
-  const validateCode = (value: string) => {
-    if (!value) {
-      return '请输入激活代码';
-    }
-
-    return '';
-  };
-
-  const validate = useCallback((name: string, value: any) => {
-    let result = '';
-
-    switch (name) {
-      case 'code':
-        result = validateCode(value);
-        break;
-      default:
-    }
-
-    setErrors((oldValue) => ({
-      ...oldValue,
-      [name]: result,
-    }));
-  }, []);
-
-  const validateForm = useCallback((
-    data: Record<string, any>,
-    dirty: Record<string, boolean>
-  ) => {
-    for (const name in data) {
-      if (dirty?.[name]) {
-        validate(name, data[name]);
-      }
-    }
-  }, [
-    validate,
-  ]);
-
-  useEffect(() => {
-    validateForm(formData, formDirty);
-  }, [
-    validateForm,
-    formData,
-    formDirty,
-  ]);
-
-  const validateAndSubmit = async () => {
-    if (loading) {
-      return;
-    }
-
-    for (const name in formData) {
-      validate(name, formData[name]);
-    }
-
-    for (const name in errors) {
-      if (errors[name]) {
-        return;
-      }
-    }
-
-    // BUG: empty code, but no error (setErrors not finished)
-    console.log(formData, errors);
-
-    const {
-      code,
-    } = formData;
-
-    return auth.verifyAccount(code);
-  };
-
   const {
     run: verify,
     loading,
     error,
-  } = useRequest(validateAndSubmit, {
-    manual: true,
-    onSuccess: () => {
-      onSuccess?.();
+  } = useRequest((data: FormData) =>
+      auth.verifyAccount(data.code),
+    {
+      manual: true,
+      onSuccess: () => {
+        onSuccess?.();
+      },
+    },
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: {
+      errors,
+    },
+  } = useForm<FormData>({
+    mode: 'all',
+    defaultValues: {
+      code: '',
     },
   });
 
@@ -162,25 +110,45 @@ function VerifyForm({
     <>
       <Form
           layout="vertical"
-          initialValue={ {
-            code: '',
-          } }
-          errors={ errors }
-          onChange={ (
-            data: Record<string, any>,
-            dirty: Record<string, boolean>
-          ) => formOnChange(data, dirty) }>
+          onSubmit={ handleSubmit(verify) }>
         <FormItem
             label="激活代码"
-            name="code">
-          <Input />
+            error={ errors?.code?.message }>
+          <Input
+              type="number"
+              {
+                ...register('code', {
+                  required: '请填写激活代码',
+                  validate: validateCode,
+                })
+              }
+              name="code"
+              disabled={ loading } />
+          {/* <InputOTP
+              pattern={ REGEXP_ONLY_DIGITS }
+              maxLength={ 6 }
+              {
+                ...register('code', {
+                  required: '请填写激活代码',
+                  validate: validateCode,
+                })
+              }
+              disabled={ loading }>
+            <InputOTPGroup>
+              <InputOTPSlot index={ 0 } />
+              <InputOTPSlot index={ 1 } />
+              <InputOTPSlot index={ 2 } />
+              <InputOTPSlot index={ 3 } />
+              <InputOTPSlot index={ 4 } />
+              <InputOTPSlot index={ 5 } />
+            </InputOTPGroup>
+          </InputOTP> */}
         </FormItem>
         <Button
             size="lg"
-            disabled={ loading }
-            onClick={ () => verify() }>继续</Button>
+            disabled={ loading }>继续</Button>
         {
-          error && (
+          !loading && error && (
             <FormError>{ KnownErrors[error.message] || error.message }</FormError>
           )
         }
@@ -193,7 +161,7 @@ function VerifyForm({
             disabled={ sending || ticking }
             onClick={ () => send() }>{ ticking ? `${countdownValue}s 后重试` : '重新发送' }</Button>
         {
-          sendError && (
+          !sending && sendError && (
             <FormError>{ KnownErrors[sendError.message] || sendError.message }</FormError>
           )
         }

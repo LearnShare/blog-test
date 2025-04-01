@@ -1,70 +1,50 @@
 'use client';
 
-import React, {
-  useContext,
-} from 'react';
+import React from 'react';
 
 import {
   cn,
 } from '@/lib/utils';
-import FormContext from './context';
 import FormError from './error';
 
 interface FormItemProps {
   className?: string;
   label: string;
-  name: string;
   hint?: React.ReactNode;
+  error?: string;
   children: React.ReactElement;
 }
 
 function FormItem({
   className,
   label,
-  name,
   hint,
+  error,
   children,
 }: FormItemProps) {
-  const {
-    value,
-    errors,
-    itemOnChange,
-    itemOnInput,
-  } = useContext(FormContext);
-
-  const childrenClone = React.cloneElement(children, {
-    // @ts-expect-error: should work
-    name,
-    id: name,
-    value: value[name],
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => itemOnChange(name, event.currentTarget.value),
-    onInput: () => itemOnInput(name),
-  });
-
   return (
     <div>
-      <div
+      <label
           className={ cn(
             'flex gap-2 items-center',
             'group-data-[layout=vertical]:flex-col',
             {
-              '[&_input]:border-red-500': errors?.[name],
-              '[&_textarea]:border-red-500': errors?.[name],
+              '[&_input]:border-red-500': !!error,
+              '[&_textarea]:border-red-500': !!error,
             },
             className
           ) }>
-        <label
-            htmlFor={ name }
+        <div
             className="
               text-sm w-[20%] text-right
               group-data-[layout=vertical]:w-full
               group-data-[layout=vertical]:text-left
-            ">{ label }</label>
-        { childrenClone }
-      </div>
+            ">{ label }</div>
+        { children }
+      </label>
       {
-        errors?.[name] && (
-          <FormError>{ errors?.[name] }</FormError>
+        error && (
+          <FormError>{ error }</FormError>
         )
       }
       {

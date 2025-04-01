@@ -1,8 +1,6 @@
 'use client';
 
 import React, {
-  useEffect,
-  useState,
   useCallback,
 } from 'react';
 import {
@@ -10,7 +8,10 @@ import {
 } from 'next/navigation';
 import {
   useRequest,
-} from 'ahooks'
+} from 'ahooks';
+import {
+  useForm,
+} from 'react-hook-form';
 
 import {
   Button,
@@ -31,6 +32,11 @@ const KnownErrors: Record<string, string> = {
   'Invalid reset token': '无效的 token',
 };
 
+interface FormData {
+  password: string;
+  repest: string;
+}
+
 interface ResetFormProps {
   onSuccess?: () => void;
 }
@@ -39,133 +45,89 @@ function ResetForm({
   onSuccess,
 }: ResetFormProps) {
   const searchParams = useSearchParams();
-
-  const [
-    formData,
-    setFormData,
-  ] = useState<Record<string, any>>({});
-  const [
-    formDirty,
-    setFormDirty,
-  ] = useState<Record<string, boolean>>({});
-  const [
-    errors,
-    setErrors,
-  ] = useState<Record<string, string>>({});
-
-  const formOnChange = (data: Record<string, any>, dirty: Record<string, any>) => {
-    setFormData(data);
-    setFormDirty(dirty);
-  };
-
-  // TODO validate in form-item props
-  const validate = (name: string, value: any) => {
-    let result = '';
-
-    switch (name) {
-      case 'password':
-        result = validatePassword(value);
-        break;
-      case 'repeat':
-        result = validatePassword(value);
-        break;
-      default:
-    }
-
-    setErrors((oldValue) => ({
-      ...oldValue,
-      [name]: result,
-    }));
-  };
-
-  const validateForm = useCallback((
-    data: Record<string, any>,
-    dirty: Record<string, boolean>
-  ) => {
-    for (const name in data) {
-      if (dirty?.[name]) {
-        validate(name, data[name]);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    validateForm(formData, formDirty);
-  }, [
-    validateForm,
-    formData,
-    formDirty,
-  ]);
-
-  const validateAndSubmit = async () => {
-    for (const name in formData) {
-      validate(name, formData[name]);
-    }
-
-    for (const name in errors) {
-      if (errors[name]) {
-        return;
-      }
-    }
-
-    const {
-      password,
-      repeat,
-    } = formData;
-    if (repeat !== password) {
-      setErrors((oldValue) => ({
-        ...oldValue,
-        repeat: '两次输入的密码不同',
-      }));
-      return Promise.reject();
-    }
-
-    const token = searchParams.get('token')
-        || '';
-
-    return auth.resetPassword(token, password);
-  };
+  const token = searchParams.get('token')
+      || '';
 
   const {
     run: updatePassword,
     loading,
     error,
-  } = useRequest(validateAndSubmit, {
-    manual: true,
-    onSuccess: () => {
-      onSuccess?.();
+  } = useRequest((data: FormData) =>
+      auth.resetPassword(token, data.password),
+    {
+      manual: true,
+      onSuccess: () => {
+        onSuccess?.();
+      },
+    },
+  );
+
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: {
+      errors,
+    },
+  } = useForm<FormData>({
+    mode: 'all',
+    defaultValues: {
+      password: '',
+      repest: '',
     },
   });
+
+  const password = watch('password');
+
+  const validateRepeat = useCallback((value: string) => {
+    const result = validatePassword(value);
+    if (typeof result === 'string') {
+      return result;
+    }
+
+    if (value !== password) {
+      return '两次输入的密码不一致';
+    }
+
+    return true;
+  }, [
+    password,
+  ]);
 
   return (
     <Form
         layout="vertical"
-        initialValue={ {
-          password: '',
-          repeat: '',
-        } }
-        errors={ errors }
-        onChange={ (
-          data: Record<string, any>,
-          dirty: Record<string, boolean>
-        ) => formOnChange(data, dirty) }>
+        onSubmit={ handleSubmit(updatePassword) }>
       <FormItem
           label="新密码"
-          name="password">
-        <InputPassword />
+          error={ errors?.password?.message }>
+        <InputPassword
+            {
+              ...register('password', {
+                required: '请填写新密码',
+                validate: validatePassword,
+              })
+            }
+            disabled={ loading } />
       </FormItem>
       <FormItem
           label="确认新密码"
-          name="repeat">
-        <InputPassword />
+          error={ errors?.repeat?.message }>
+        <InputPassword
+            {
+              ...register('repeat', {
+                required: '请再次输入新密码',
+                validate: validateRepeat,
+              })
+            }
+            disabled={ loading } />
       </FormItem>
       <Button
           className="mt-3"
           size="lg"
-          disabled={ loading }
-          onClick={ () => updatePassword() }>更新密码</Button>
+          disabled={ loading }>更新密码</Button>
       {
-        error && (
+        !loading && error && (
           <FormError>{ KnownErrors[error.message] || error.message }</FormError>
         )
       }

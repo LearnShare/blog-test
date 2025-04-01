@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 
 import Provider from '@/components/provider';
 
-import './globals.css';
+import '@/css/globals.css';
+import '@/css/reset.scss';
 
 export const metadata: Metadata = {
   title: 'Blog',
