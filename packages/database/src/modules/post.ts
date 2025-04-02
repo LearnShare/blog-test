@@ -21,6 +21,7 @@ async function createPost(accountId: number, postData: PostCreateData) {
     const post = await prisma.post.create({
       data: {
         ...postData,
+        utime: new Date(),
         author: {
           connect: {
             id: accountId,

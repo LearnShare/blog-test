@@ -42,6 +42,7 @@ async function createAccount({
         uid: Hash.nanoid(),
         role,
         verified,
+        utime: new Date(),
       },
       select: AccountPublicFields,
     });

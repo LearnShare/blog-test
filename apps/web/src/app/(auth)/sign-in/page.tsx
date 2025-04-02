@@ -2,12 +2,12 @@ import React, {
   Suspense,
 } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+// import Image from 'next/image';
 
-import {
-  buttonVariants,
-} from '@/components/ui/button';
-import Divider from '@/components/divider';
+// import {
+//   buttonVariants,
+// } from '@/components/ui/button';
+// import Divider from '@/components/divider';
 import SignInForm from './form';
 import Loading from '@/components/loading';
 
@@ -16,7 +16,7 @@ export default function PageSignIn() {
     <div className="flex flex-col gap-2">
       <h2 className="text-3xl text-center">登录</h2>
       <p className="text-sm text-gray-500 text-center">开始撰写和分享</p>
-      <div className="mt-6 flex flex-col gap-3">
+      {/* <div className="mt-6 flex flex-col gap-3">
         <Link
             href="/sign-up"
             className={ buttonVariants({
@@ -44,7 +44,7 @@ export default function PageSignIn() {
           <span className="w-[146px]">使用 Apple 账号登录</span>
         </Link>
       </div>
-      <Divider className="my-4">OR</Divider>
+      <Divider className="my-4">OR</Divider> */}
       <Suspense
           fallback={
             <Loading loading />

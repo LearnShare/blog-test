@@ -168,7 +168,7 @@ export default function PostDetail({
           <div className="border border-gray-200 p-4 bg-gray-50">{ intro }</div>
         )
       }
-      <Divider className="my-3">
+      <Divider>
         <IconBookOpenText />
       </Divider>
       <div>
