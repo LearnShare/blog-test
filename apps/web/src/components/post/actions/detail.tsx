@@ -114,7 +114,7 @@ function DetailActions({
         <DropdownMenuTrigger asChild>
           <Button
               className={ className }
-              variant="outline"
+              variant="ghost"
               size="icon">
             <IconEllipsisVertical />
           </Button>
