@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 
 import AuthorCheck from '../author-check';
 import {
@@ -10,6 +11,11 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import PostForm from '@/components/post/form';
+
+export const metadata: Metadata = {
+  title: '编写文章',
+  description: '编写新文章',
+};
 
 export default function PageWrite() {
   return (

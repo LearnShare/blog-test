@@ -9,7 +9,10 @@ import '@/css/globals.css';
 import '@/css/reset.scss';
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: {
+    template: '%s | Blog',
+    default: 'Blog',
+  },
   description: 'Just another blog system',
 };
 

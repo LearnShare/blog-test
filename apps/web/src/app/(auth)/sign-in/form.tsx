@@ -8,7 +8,6 @@ import {
   useRouter,
   useSearchParams,
 } from 'next/navigation';
-import Cookies from 'js-cookie';
 import {
   useRequest,
 } from 'ahooks'
@@ -74,8 +73,6 @@ function SignInForm() {
 
         Store.setToken(token);
         setInfo(data);
-
-        Cookies.set('BLOG_TOKEN', token);
 
         if (!verified) {
           router.push('/welcome');
