@@ -2,17 +2,17 @@ import React from 'react';
 
 import DataProfile from './profile';
 import DataPosts from './posts';
-import DataStats from './stats';
+// import DataStats from './stats';
 
 function DataBlocks() {
   return (
     <>
-      <div className="mt-6">
+      <div className="mt-6 max-xs:mt-3">
         <DataProfile />
       </div>
       <div className="mt-6 flex gap-6 flex-wrap">
         <DataPosts />
-        <DataStats />
+        {/* <DataStats /> */}
       </div>
     </>
   );

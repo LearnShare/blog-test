@@ -1,9 +1,7 @@
 'use client';
 
 import React, {
-  useEffect,
   useState,
-  useCallback,
 } from 'react';
 import {
   useRouter,
@@ -11,10 +9,6 @@ import {
 import {
   useRequest,
 } from 'ahooks'
-import {
-  ImageUp as IconImageUp,
-  Trash2 as IconTrash2,
-} from 'lucide-react';
 import {
   useForm,
 } from 'react-hook-form';
@@ -33,6 +27,7 @@ import {
   FormItem,
   FormError,
 } from '@/components/form';
+import FormActions from '@/components/post/actions/form';
 
 import Validator from '@packages/lib/validator';
 import {
@@ -152,28 +147,11 @@ function PostForm({
       <div className="flex flex-col gap-3 mb-3">
         <div className="flex gap-4 items-center">
           <h2 className="text-xl flex-1">{ data?.id ? '修改' : '编写' }文章</h2>
-          {
-            cover && cover.url && (
-              <Button
-                  variant="outline"
-                  disabled={ loading }
-                  onClick={ () => setCover(null) }>
-                <IconTrash2 />
-                <span>删除封面</span>
-              </Button>
-            )
-          }
-          <Button
-              variant="outline"
-              disabled={ loading }
-              onClick={ () => setCoverDialogOpen(true) }>
-            <IconImageUp />
-            <span>上传封面</span>
-          </Button>
-          <Button
-              variant="outline"
-              disabled={ loading }
-              onClick={ handleSubmit((formData: FormData) => save(formData, false)) }>保存为草稿</Button>
+          <FormActions
+              cover={ cover }
+              save={ handleSubmit((formData: FormData) => save(formData, false)) }
+              upload={ () => setCoverDialogOpen(true) }
+              remove={ () => setCover(null) } />
           <Button
               disabled={ loading }
               onClick={ handleSubmit((formData: FormData) => save(formData, true)) }>保存并发布</Button>

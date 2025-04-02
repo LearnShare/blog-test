@@ -23,7 +23,7 @@ model Account {
   posts     Post[]
   bookmarks Bookmark[]
   ctime     DateTime   @default(now())
-  utime     DateTime   @updatedAt
+  utime     DateTime?
 }
 
 model Post {
@@ -42,7 +42,7 @@ model Post {
   views     Int        @default(0)
   bookmarks Bookmark[]
   ctime     DateTime   @default(now())
-  utime     DateTime   @updatedAt
+  utime     DateTime?
 }
 
 model File {
@@ -74,14 +74,6 @@ model Code {
 
 enum TargetType {
   POST
-}
-
-model RequestLog {
-  id     Int        @id @default(autoincrement())
-  time   DateTime   @default(now())
-  ip     String
-  type   TargetType
-  target Int
 }
 
 model Bookmark {

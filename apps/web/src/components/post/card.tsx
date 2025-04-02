@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import PostActions from './actions';
+import PostActions from './actions/detail';
 import AuthorCard from '@/components/author';
 import PostStats from './stats';
 
@@ -78,6 +78,7 @@ export default function PostCard({
         {
           author && (
             <AuthorCard
+                className="max-w-[50%]"
                 { ...author } />
           )
         }

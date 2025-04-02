@@ -8,12 +8,14 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 bg-white/40 backdrop-blur-sm border-b border-b-slate-200 z-40">
-      <div className="flex gap-10 h-[56px] px-4 py-2 items-center max-w-6xl mx-auto">
-        <Link
-            className="text-2xl font-semibold"
+      <div className="flex gap-10 h-[56px] px-4 py-2 items-center max-w-6xl mx-auto
+          max-xs:gap-3">
+        <Link className="text-2xl font-semibold
+            max-xs:text-lg"
             href="/">BLOG</Link>
         <nav className="flex-1">
-          <ul className="flex gap-6">
+          <ul className="flex gap-6
+              max-xs:gap-1.5">
             <li>
               <Link
                   href="/author"

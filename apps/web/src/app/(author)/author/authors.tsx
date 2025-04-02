@@ -63,7 +63,9 @@ function Authors() {
           authors.map((author) => (
             <Link
                 key={ author.id }
-                className="group border rounded-lg border-gray-200 p-4 flex flex-col flex-wrap gap-2 w-[calc((100%-48px)/3)]"
+                className="group border rounded-lg border-gray-200 p-4
+                    flex flex-col flex-wrap gap-2
+                    w-full sm:w-[calc((50%-12px))] lg:w-[calc((100%-48px)/3)]"
                 href={ `/author/@${author.uid}` }>
               <div className="flex items-center justify-between">
                 <AuthorCard

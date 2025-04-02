@@ -3,7 +3,6 @@ import {
   NotebookPen as IconNotebookPen,
   Send as IconSend,
   Share as IconShare,
-  CircleDollarSign as IconCircleDollarSign,
 } from 'lucide-react';
 
 interface AuthLayoutProps {
@@ -13,41 +12,42 @@ interface AuthLayoutProps {
 export default function AuthLayout({
   children,
 }: AuthLayoutProps) {
-  const liCns = 'flex gap-3 items-center';
+  const liCns = `flex gap-1 items-center
+      [&>svg]:hidden text-xs
+      md:gap-3 md:[&>svg]:block md:text-base`;
 
   return (
-    <div className="flex h-[100vh]">
-      <div className="flex-1 flex flex-col justify-center items-center min-w-[360px] bg-slate-100">
-        <div className="mb-20 text-2xl font-semibold text-slate-600">BLOG</div>
-        <ul className="flex flex-col gap-8 text-slate-600">
+    <div className="
+        flex flex-col h-[100vh]
+        md:flex-row">
+      <div className="
+          py-4 flex gap-4 justify-center items-baseline bg-slate-100
+          md:flex-1 md:flex-col md:items-center md:min-w-[300px]">
+        <h2 className="
+            text-2xl font-semibold text-slate-600
+            md:mb-15">BLOG</h2>
+        <ul className="
+            flex gap-1.5 text-slate-600
+            md:flex-col md:gap-8">
           <li className={ liCns }>
             <IconNotebookPen
-                size={ 24 }
                 strokeWidth={ 1.25 } />
             <h4>撰写</h4>
           </li>
           <li className={ liCns }>
             <IconSend
-                size={ 24 }
                 strokeWidth={ 1.25 } />
             <h4>发布</h4>
           </li>
           <li className={ liCns }>
             <IconShare
-                size={ 24 }
                 strokeWidth={ 1.25 } />
             <h4>分享</h4>
           </li>
-          <li className={ liCns }>
-            <IconCircleDollarSign
-                size={ 24 }
-                strokeWidth={ 1.25 } />
-            <h4>获利</h4>
-          </li>
         </ul>
       </div>
-      <main className="flex-2 flex justify-center items-center">
-        <div className="w-[360px]">
+      <main className="px-4 py-6 flex-2 flex justify-center items-center">
+        <div className="w-full max-w-[320px]">
           { children }
         </div>
       </main>

@@ -63,7 +63,8 @@ function Posts() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px] *:max-w-[calc(50%-12px)]">
+      <div className="flex flex-wrap gap-6
+          *:w-full md:*:max-w-[calc(50%-12px)]">
         {
           posts.map((post) => (
             <PostCard

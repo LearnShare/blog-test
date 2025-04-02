@@ -27,7 +27,7 @@ function AuthorCard({
           url={ avatarUrl }
           name={ name }
           round />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col truncate">
         <div className="text-slate-700">{ name }</div>
         <div className="text-sm text-slate-500 group-hover:underline">@{ uid }</div>
       </div>

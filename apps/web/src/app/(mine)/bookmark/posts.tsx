@@ -64,7 +64,8 @@ function Posts() {
     <section>
       <h2 className="text-xl my-4">我的收藏（{ data?.count || 0 }）</h2>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px] *:max-w-[calc(50%-12px)]">
+        <div className="flex flex-wrap gap-6
+            *:w-full md:*:max-w-[calc(50%-12px)]">
           {
             list.map((item) => (
               <PostCard

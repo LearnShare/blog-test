@@ -19,7 +19,7 @@ import {
   MarkdownRender,
 } from '@/components/render';
 import Divider from '@/components/divider';
-import PostActions from '@/components/post/actions';
+import DetailActions from '@/components/post/actions/detail';
 import Error from '@/components/error';
 import {
   Badge,
@@ -114,7 +114,7 @@ export default function PostDetail({
             <div className="flex items-center justify-between">
               <Badge
                   variant="outline">{ published ? '已发布' : '未发布' }</Badge>
-              <PostActions
+              <DetailActions
                   id={ id }
                   uid={ uid }
                   published={ published }
@@ -141,7 +141,8 @@ export default function PostDetail({
             group-data-[cover=true]:text-white
             group-data-[cover=true]:absolute">{ title }</h3>
       </div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center relative
+          max-sm:pb-8">
         {
           author && (
             <AuthorCard
@@ -152,7 +153,8 @@ export default function PostDetail({
           utime && (
             <time
                 dateTime={ time.format(utime) }
-                className="text-sm text-gray-500">{ time.format(utime) }</time>
+                className="text-sm text-gray-500
+                    max-sm:absolute max-sm:left-0 max-sm:bottom-1">{ time.format(utime) }</time>
           )
         }
         <PostStats

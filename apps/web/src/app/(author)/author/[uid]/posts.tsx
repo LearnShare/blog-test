@@ -50,7 +50,8 @@ function Posts({
         {
           !loading && data && (
             <>
-              <div className="flex flex-wrap gap-6 *:flex-1 *:min-w-[400px] *:max-w-[calc(50%-12px)]">
+              <div className="flex flex-wrap gap-6
+                  *:w-full md:*:max-w-[calc(50%-12px)]">
                 {
                   data.list.map((post: Post) => (
                     <PostCard

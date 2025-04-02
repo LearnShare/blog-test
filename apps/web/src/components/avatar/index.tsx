@@ -29,7 +29,7 @@ function Avatar({
   return (
     <div
         className={ cn(
-          'bg-gray-400 flex items-center justify-center',
+          'bg-gray-400 flex items-center justify-center shrink-0',
           className,
         ) }
         style={ {

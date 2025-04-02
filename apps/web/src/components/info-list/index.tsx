@@ -21,6 +21,7 @@ function InfoList({
   return (
     <ul className={ cn(
       'flex flex-col gap-2 w-[300px]',
+      'max-xs:w-full',
       className,
     ) }>
       {
@@ -28,7 +29,7 @@ function InfoList({
           <li
               key={ i }
               className="flex gap-3 items-top text-sm">
-            <span className="w-[30%] text-right text-gray-400">{ item.label }: </span>
+            <span className="w-[20%] text-right text-gray-400">{ item.label }: </span>
             <span className="flex-1">{ item.value }</span>
           </li>
         ))

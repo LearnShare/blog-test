@@ -50,7 +50,8 @@ function DataStats() {
         <span>个人资料</span>
         <ProfileActions />
       </h3>
-      <div className="flex gap-10 justify-center items-center">
+      <div className="flex gap-10 justify-center items-center
+          max-xs:flex-col max-xs:gap-4">
         <div className="flex flex-col gap-1 items-center">
           <Avatar
               url={ info?.avatarUrl }

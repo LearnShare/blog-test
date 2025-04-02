@@ -33,7 +33,7 @@ import {
   post,
 } from '@packages/lib/sdk/web';
 
-interface PostActionProps {
+interface DetailActionProps {
   id: number;
   uid: string;
   published: boolean;
@@ -41,13 +41,13 @@ interface PostActionProps {
   className?: string;
 }
 
-function PostActions({
+function DetailActions({
   id,
   uid,
   published,
   onActionDone,
   className,
-}: PostActionProps) {
+}: DetailActionProps) {
   const router = useRouter();
 
   const {
@@ -114,7 +114,7 @@ function PostActions({
         <DropdownMenuTrigger asChild>
           <Button
               className={ className }
-              variant="ghost"
+              variant="outline"
               size="icon">
             <IconEllipsisVertical />
           </Button>
@@ -164,4 +164,4 @@ function PostActions({
   );
 }
 
-export default PostActions;
+export default DetailActions;

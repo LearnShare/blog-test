@@ -1,4 +1,7 @@
-import type { Metadata } from 'next';
+import type {
+  Metadata,
+  Viewport,
+} from 'next';
 
 import Provider from '@/components/provider';
 
@@ -8,6 +11,12 @@ import '@/css/reset.scss';
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Just another blog system',
+};
+
+export const viewport: Viewport = {
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
