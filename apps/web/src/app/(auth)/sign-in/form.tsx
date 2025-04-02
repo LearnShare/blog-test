@@ -122,7 +122,6 @@ function SignInForm() {
       </FormItem>
       <FormItem
           label="密码"
-          name="password"
           error={ errors?.password?.message }
           hint={ (
             <div className="mt-2 text-right text-sm text-slate-500">

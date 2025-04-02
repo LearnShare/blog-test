@@ -23,7 +23,7 @@ interface FormActionProps {
   cover?: {
     id: number;
     url: string;
-  }
+  } | null;
   save?: () => void;
   upload?: () => void;
   remove?: () => void;

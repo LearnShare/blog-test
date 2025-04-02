@@ -28,7 +28,7 @@ import {
 interface FormData {
   old: string;
   password: string;
-  repest: string;
+  repeat: string;
 }
 
 interface PasswordFormProps {
@@ -68,7 +68,7 @@ function PasswordForm({
     defaultValues: {
       old: '',
       password: '',
-      repest: '',
+      repeat: '',
     },
   });
 

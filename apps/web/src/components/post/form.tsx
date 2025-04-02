@@ -45,6 +45,7 @@ const KnownErrors: Record<string, string> = {
 interface FormData {
   title: string;
   uid: string;
+  intro: string;
   content: string;
 }
 

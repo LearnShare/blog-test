@@ -34,7 +34,7 @@ const KnownErrors: Record<string, string> = {
 
 interface FormData {
   password: string;
-  repest: string;
+  repeat: string;
 }
 
 interface ResetFormProps {
@@ -73,7 +73,7 @@ function ResetForm({
     mode: 'all',
     defaultValues: {
       password: '',
-      repest: '',
+      repeat: '',
     },
   });
 

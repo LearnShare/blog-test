@@ -14,7 +14,7 @@ export interface PostData {
   uid?: string;
   cover?: number;
   coverUrl?: string;
-  content?: PostContentFormat;
+  content?: string;
   format?: string;
   published?: boolean;
 }
@@ -25,7 +25,7 @@ export interface PostCreateData {
   uid: string;
   cover: number;
   coverUrl: string;
-  content: PostContentFormat;
+  content: string;
   format: string;
   published: boolean;
 }
