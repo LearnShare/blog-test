@@ -49,7 +49,7 @@ export default function PostCard({
           <div className="text-xs text-gray-500">
             <time
                 dateTime={ time.format(utime) }
-                className="text-sm text-gray-500">{ time.format(utime) }</time>
+                className="text-sm text-gray-500">{ time.formatRelative(utime) }</time>
           </div>
         )
       }

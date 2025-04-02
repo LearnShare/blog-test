@@ -74,7 +74,7 @@ function DataPosts() {
                                 href={ `/${post.published ? 'post' : 'draft'}/${post.uid}` }
                                 target="_blank">{ post.title }</Link>
                           </TableCell>
-                          <TableCell>{ time.format(post.utime) }</TableCell>
+                          <TableCell>{ time.formatRelative(post.utime) }</TableCell>
                           <TableCell>{ post.published ? '已发布' : '未发布' }</TableCell>
                           <TableCell>{ post.views }</TableCell>
                         </TableRow>

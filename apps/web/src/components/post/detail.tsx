@@ -154,7 +154,7 @@ export default function PostDetail({
             <time
                 dateTime={ time.format(utime) }
                 className="text-sm text-gray-500
-                    max-sm:absolute max-sm:left-0 max-sm:bottom-1">{ time.format(utime) }</time>
+                    max-sm:absolute max-sm:left-0 max-sm:bottom-1">{ time.formatRelative(utime) }</time>
           )
         }
         <PostStats
