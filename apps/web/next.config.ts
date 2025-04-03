@@ -1,3 +1,4 @@
+import {withSentryConfig} from '@sentry/nextjs';
 import path from 'node:path';
 import type {
   NextConfig,
@@ -42,4 +43,12 @@ const withMDX = createMDX({
   //
 });
 
-export default withMDX(nextConfig);
+export default withSentryConfig(withMDX(nextConfig), {
+  org: "h-labs",
+  project: "blog-dev",
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+  disableLogger: true,
+  automaticVercelMonitors: true,
+});
