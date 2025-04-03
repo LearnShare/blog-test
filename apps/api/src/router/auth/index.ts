@@ -424,7 +424,7 @@ authRouter.post('/forgot', async (req: Request, res: Response) => {
 
   const {
     data,
-  } = await DB.code.countCodeByAccountId(accountId);
+  } = await DB.code.countCodeByAccountId(account.id);
 
   if (data
       && data.count <= MAIL_LIMITS) {
