@@ -25,6 +25,8 @@ import Redis from '@/lib/redis';
 
 const authRouter = Router();
 
+const MAIL_LIMITS = 3;
+
 async function generateCodeAndSendEmail(accountId: number, email: string, res: Response) {
   const code = Hash.generateRandomNumber(6);
   const {
@@ -47,12 +49,19 @@ async function generateCodeAndSendEmail(accountId: number, email: string, res: R
     return;
   }
 
-  // 6. send email
-  await Mail.send(
-    email,
-    '欢迎来到 Blog，请激活您的账号',
-    `账号激活代码: ${code}`,
-  );
+  const {
+    data,
+  } = await DB.code.countCodeByAccountId(accountId);
+
+  if (data
+      && data.count <= MAIL_LIMITS) {
+    // 6. send email
+    await Mail.send(
+      email,
+      '欢迎来到 Blog，请激活您的账号',
+      `账号激活代码: ${code}`,
+    );
+  }
 }
 
 /**
@@ -413,12 +422,19 @@ authRouter.post('/forgot', async (req: Request, res: Response) => {
     return;
   }
 
-  // 6. send email
-  await Mail.send(
-    email,
-    '重置 Blog 账号的密码',
-    `访问链接，然后设置新的密码 ${process.env.WEB_HOST}/reset?token=${code}`,
-  );
+  const {
+    data,
+  } = await DB.code.countCodeByAccountId(accountId);
+
+  if (data
+      && data.count <= MAIL_LIMITS) {
+    // 6. send email
+    await Mail.send(
+      email,
+      '重置 Blog 账号的密码',
+      `访问链接，然后设置新的密码 ${process.env.WEB_HOST}/reset?token=${code}`,
+    );
+  }
 
   res.status(200)
       .json({

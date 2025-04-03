@@ -66,6 +66,7 @@ function useCountdown(config: CountdownConfig = {}) {
   ]);
 
   const run = () => {
+    setValue(from);
     setStart(true);
   };
 

@@ -72,8 +72,31 @@ async function updateCode(id: number, data: UpdateData) {
   }
 }
 
+// count code by accountId
+async function countCodeByAccountId(accountId: number) {
+  try {
+    const count = await prisma.code.count({
+      where: {
+        account: accountId,
+      },
+    });
+
+    return {
+      data: {
+        count,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
 export default {
   createCode,
   searchCode,
   updateCode,
+  countCodeByAccountId,
 };
