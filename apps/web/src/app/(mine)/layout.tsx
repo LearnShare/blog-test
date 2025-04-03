@@ -1,4 +1,5 @@
 import HomeLayout from '@/components/page/home';
+import AuthCheck from './auth-check';
 
 export default function MineLayout({
   children,
@@ -7,7 +8,9 @@ export default function MineLayout({
 }>) {
   return (
     <HomeLayout>
-      { children }
+      <AuthCheck>
+        { children }
+      </AuthCheck>
     </HomeLayout>
   );
 }

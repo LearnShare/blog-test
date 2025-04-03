@@ -328,9 +328,6 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
     id,
   });
 
-  res.cookie('BLOG_TOKEN', token, {
-    maxAge: process.env.COOKIE_MAXAGE,
-  });
   res.json({
     token,
     data: rest,

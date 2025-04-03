@@ -15,7 +15,6 @@ import {
   House as IconHouse,
   BookMarked as IconBookMarked,
 } from 'lucide-react';
-import Cookies from 'js-cookie';
 
 import {
   buttonVariants,
@@ -46,8 +45,6 @@ function HeaderActions() {
   const logout = () => {
     Store.setToken('');
     setInfo(null);
-
-    Cookies.remove('BLOG_TOKEN');
 
     router.push('/');
   };
