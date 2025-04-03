@@ -17,7 +17,8 @@
     "express-rate-limit": "^7.5.0",
     "multer": "1.4.5-lts.1",
     "nodemailer": "^6.10.0",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "resend": "^4.2.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

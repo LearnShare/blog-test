@@ -50,8 +50,8 @@ async function generateCodeAndSendEmail(accountId: number, email: string, res: R
   // 6. send email
   await Mail.send(
     email,
-    'Welcome to Blog, please verify your account',
-    `Account verification code: ${code}`,
+    '欢迎来到 Blog，请激活您的账号',
+    `账号激活代码: ${code}`,
   );
 }
 
@@ -416,8 +416,8 @@ authRouter.post('/forgot', async (req: Request, res: Response) => {
   // 6. send email
   await Mail.send(
     email,
-    'Reset password for your Blog account',
-    `Reset password: http://blog.dev/reset?token=${code}`,
+    '重置 Blog 账号的密码',
+    `访问链接，然后设置新的密码 ${process.env.WEB_HOST}/reset?token=${code}`,
   );
 
   res.status(200)
