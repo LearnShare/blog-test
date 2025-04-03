@@ -29,7 +29,7 @@ function Avatar({
   return (
     <div
         className={ cn(
-          'bg-gray-400 flex items-center justify-center shrink-0',
+          'bg-gray-400 flex items-center justify-center shrink-0 relative',
           className,
         ) }
         style={ {
@@ -43,10 +43,9 @@ function Avatar({
       {
         url && (
           <Image
-              className="rounded-[50%]"
+              className="rounded-[50%] object-cover"
               src={ url }
-              width={ width }
-              height={ height }
+              fill
               alt={ name || '' } />
         )
       }
