@@ -7,8 +7,11 @@ import {
   rateLimit,
 } from 'express-rate-limit';
 import cors from 'cors';
+import Sentry from '@sentry/node';
 
 import '@/lib/dotenv';
+import './instrument';
+
 import log from '@/lib/log';
 import router from '@/router';
 import error from '@/lib/error';
@@ -19,7 +22,6 @@ const rateLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   limit: 300,
 });
-
 
 const app: Express = express();
 
@@ -32,8 +34,15 @@ app.use(express.json());
 app.use(log);
 // token
 app.use(Auth.auto);
+
+// Sentry
+if (process.env.SENTRY_DSN) {
+  Sentry.setupExpressErrorHandler(app);
+}
+
 // router modules
 app.use(router);
+
 // error
 app.use(error);
 
