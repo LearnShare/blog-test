@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import React, {
   cache,
 } from 'react';
@@ -17,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{
     uid: string;
   }>
-}): Metadata {
+}): Promise<Metadata> {
   const {
     uid,
   } = await params;

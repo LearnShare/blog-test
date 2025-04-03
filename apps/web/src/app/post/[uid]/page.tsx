@@ -18,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{
     uid: string;
   }>
-}): Metadata {
+}): Promise<Metadata> {
   const {
     uid,
   } = await params;
