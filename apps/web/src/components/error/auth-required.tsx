@@ -1,8 +1,6 @@
 'use client';
 
-import React, {
-  useContext,
-} from 'react';
+import React from 'react';
 import Link from 'next/link';
 import {
   ShieldAlert as IconShieldAlert,
@@ -11,39 +9,32 @@ import {
 import {
   buttonVariants,
 } from '@/components/ui/button';
+import HomeLayout from '@/components/page/home';
 
-import AccountContext from '@/components/provider/account-context';
-
-function AuthCheck({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AuthRequired() {
   const {
-    info,
-  } = useContext(AccountContext);
+    pathname,
+    search,
+  } = window.location;
 
-  if (info) {
-    return children;
-  }
+  const redirect = encodeURIComponent(`${pathname}${search}`);
 
-  if (!info) {
-    return (
+  return (
+    <HomeLayout>
       <div className="mt-10 flex flex-col gap-6 items-center">
         <IconShieldAlert
             className="text-slate-300"
             size={ 64 }
             strokeWidth={ 1 } />
-        <span className="text-sm text-gray-500">该页面需要登录后访问</span>
+        <span className="text-sm text-gray-500">该页面需要您登录后访问</span>
         <Link
-            href="/sign-in"
+            href={ `/sign-in?redirect=${redirect}` }
             className={ buttonVariants({
-              variant: 'outline',
               size: 'lg'
             }) }>登录</Link>
       </div>
-    );
-  }
+    </HomeLayout>
+  );
 }
 
-export default AuthCheck;
+export default AuthRequired;

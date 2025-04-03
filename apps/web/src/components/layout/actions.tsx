@@ -38,6 +38,7 @@ function HeaderActions() {
   const router = useRouter();
 
   const {
+    notLogin,
     info,
     setInfo,
   } = useContext(AccountContext);
@@ -54,6 +55,9 @@ function HeaderActions() {
 
   const itemOnSelect = (action: string) => {
     switch (action) {
+      case 'apply':
+        router.push('/about');
+        break;
       case 'write':
         router.push('/write');
         break;
@@ -76,7 +80,7 @@ function HeaderActions() {
   return (
     <div className="flex gap-2 items-center">
       {
-        !info && (
+        notLogin && (
           <>
             <Link
                 href="/sign-up"
@@ -94,7 +98,7 @@ function HeaderActions() {
         )
       }
       {
-        info && (
+        !notLogin && info && (
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar
@@ -120,7 +124,8 @@ function HeaderActions() {
               }
               {
                 (!author) && (
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                      onSelect={ () => itemOnSelect('apply') }>
                     <IconHandshake />
                     <span>成为作者</span>
                   </DropdownMenuItem>

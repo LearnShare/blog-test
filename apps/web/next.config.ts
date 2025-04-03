@@ -51,4 +51,7 @@ export default withSentryConfig(withMDX(nextConfig), {
   tunnelRoute: "/monitoring",
   disableLogger: true,
   automaticVercelMonitors: true,
+  sourcemaps: {
+    disable: true,
+  },
 });
