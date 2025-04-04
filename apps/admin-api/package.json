@@ -1,0 +1,29 @@
+{
+  "name": "admin-api",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch ./src/index.ts",
+    "build": "tsc",
+    "start": "node -r esbuild-register ./src/index.ts"
+  },
+  "dependencies": {
+    "@packages/database": "workspace:*",
+    "@packages/lib": "workspace:*",
+    "@sentry/node": "^9.10.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1",
+    "express-rate-limit": "^7.5.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.14",
+    "@types/nodemailer": "^6.4.17",
+    "esbuild": "^0.25.1",
+    "esbuild-register": "^3.6.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
