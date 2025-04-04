@@ -11,8 +11,12 @@ function getToken() {
   return token;
 }
 
+const baseURL = import.meta.env.VITE_API_URL
+    ? import.meta.env.VITE_API_URL
+    : process.env.NEXT_PUBLIC_API_URL;
+
 const HTTP = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL,
   timeout: 10 * 1000, // 10s
 });
 

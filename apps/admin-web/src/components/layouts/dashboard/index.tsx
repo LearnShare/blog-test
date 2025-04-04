@@ -7,9 +7,9 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import { SideNav } from "./sidebar"
+} from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { SideNav } from "./sidebar";
 
 export default function DashboardLayout() {
   return (
