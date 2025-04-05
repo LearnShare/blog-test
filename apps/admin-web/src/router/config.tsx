@@ -7,6 +7,8 @@ import {
 import {
   PageHome,
   PageSignIn,
+  PageAccount,
+
   Page404,
 } from '@/pages';
 
@@ -41,6 +43,11 @@ const routes: RouteConfig[] = [
         name: 'home',
         path: '/',
         element: PageHome,
+      },
+      {
+        name: 'account',
+        path: '/account',
+        element: PageAccount,
       },
     ],
   },
