@@ -49,6 +49,7 @@ async function getPosts(postQuery: PostsQuery) {
     account,
     bookmarkBy,
     published,
+    content: withContent,
     sort,
     page,
     size,
@@ -77,6 +78,11 @@ async function getPosts(postQuery: PostsQuery) {
         OR: [
           {
             title: {
+              contains: search,
+            },
+          },
+          {
+            intro: {
               contains: search,
             },
           },
@@ -114,10 +120,6 @@ async function getPosts(postQuery: PostsQuery) {
           },
         },
       },
-      // no content in list
-      // omit: {
-      //   content: true,
-      // },
     });
 
     const bookmarkedPosts: Record<number, boolean> = {};
@@ -148,6 +150,9 @@ async function getPosts(postQuery: PostsQuery) {
 
         return {
           ...rest,
+          content: withContent
+              ? content
+              : '',
           bookmarks: _count?.bookmarks
               || 0,
           bookmarked: bookmarkBy

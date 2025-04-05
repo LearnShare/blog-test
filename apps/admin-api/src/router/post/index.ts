@@ -22,7 +22,7 @@ const postRouter = Router();
  * query:
  * - search: title/content
  * - author: account.id
- * - account: 1|0
+ * - published: 1|0
  * - sort: [-]ctime
  * - page
  * - size
@@ -32,6 +32,7 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
     search,
     author,
     account,
+    published,
     sort,
     page,
     size,
@@ -45,12 +46,11 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
     author: author
         ? Number(author)
         : null,
-    account: account
-        ? Boolean(Number(account))
-        : false,
-    bookmarkBy: req.user && req.user.id,
-    // only published visible
-    published: true,
+    account: true,
+    published: published
+        ? !!Number(published)
+        : null,
+    content: true,
     sort: (sort as string)
         || DB_SORT,
     page: page

@@ -42,7 +42,13 @@ function Avatar({
       {
         url && (
           <img
-              className="rounded-[50%] object-cover"
+              style={ {
+                width: `${width}px`,
+                height: `${height}px`,
+                borderRadius: round
+                    ? '50%'
+                    : '0px',
+              } }
               src={ url }
               alt={ name || '' } />
         )

@@ -11,24 +11,26 @@ import {
 import Loading from '@/components/loading';
 import Empty from '@/components/empty';
 import AccountCard from '@/components/account';
+import PostCard from '@/components/post';
 
 import {
-  Account
+  Post,
 } from '@/types';
-import Time from '@packages/lib/time';
 import {
-  roles,
+  publishedNames,
 } from './data';
+
+import Time from '@packages/lib/time';
 
 interface TableProps {
   loading: boolean;
   data?: {
     count: number;
-    list: Account[];
+    list: Post[];
   };
 }
 
-export default function AccountsTable({
+export default function PostsTable({
   loading,
   data,
 }: TableProps) {
@@ -41,12 +43,10 @@ export default function AccountsTable({
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>账号</TableHead>
-                  <TableHead>状态</TableHead>
-                  <TableHead>类型</TableHead>
-                  <TableHead>邮箱</TableHead>
-                  <TableHead>是否验证</TableHead>
+                  <TableHead>作者</TableHead>
                   <TableHead>文章</TableHead>
+                  <TableHead>格式</TableHead>
+                  <TableHead>状态</TableHead>
                   <TableHead>创建时间</TableHead>
                   <TableHead>更新时间</TableHead>
                   <TableHead
@@ -55,21 +55,22 @@ export default function AccountsTable({
               </TableHeader>
               <TableBody>
                 {
-                  data?.list.map((account: Account) => (
+                  data?.list.map((post: Post) => (
                     <TableRow
-                        key={ account.id }>
-                      <TableCell>{ account.id }</TableCell>
+                        key={ post.id }>
+                      <TableCell>{ post.id }</TableCell>
                       <TableCell>
                         <AccountCard
-                            data={ account } />
+                            data={ post.author } />
                       </TableCell>
-                      <TableCell>{ account.disabled ? '已禁用' : '-' }</TableCell>
-                      <TableCell>{ roles[account.role] }</TableCell>
-                      <TableCell>{ account.email }</TableCell>
-                      <TableCell>{ account.verified ? '已验证' : '-' }</TableCell>
-                      <TableCell>{ account.postsCount || '-' }</TableCell>
-                      <TableCell>{ Time.format(account.ctime) }</TableCell>
-                      <TableCell>{ Time.format(account.utime) }</TableCell>
+                      <TableCell>
+                        <PostCard
+                            data={ post } />
+                      </TableCell>
+                      <TableCell>{ post.format }</TableCell>
+                      <TableCell>{ publishedNames[post.published] }</TableCell>
+                      <TableCell>{ Time.format(post.ctime) }</TableCell>
+                      <TableCell>{ Time.format(post.utime) }</TableCell>
                       <TableCell
                           className="w-[60px] text-right">-</TableCell>
                     </TableRow>

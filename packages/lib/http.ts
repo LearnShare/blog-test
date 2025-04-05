@@ -11,9 +11,24 @@ function getToken() {
   return token;
 }
 
-const baseURL = import.meta.env.VITE_API_URL
-    ? import.meta.env.VITE_API_URL
-    : process.env.NEXT_PUBLIC_API_URL;
+let baseURL = '';
+
+// Vite support
+try {
+  if (import.meta.env.VITE_API_URL) {
+    baseURL = import.meta.env.VITE_API_URL;
+  }
+} catch (error) {
+  // console.log(error);
+}
+// others
+try {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    baseURL = process.env.NEXT_PUBLIC_API_URL;
+  }
+} catch (error) {
+  // console.log(error);
+}
 
 const HTTP = axios.create({
   baseURL,

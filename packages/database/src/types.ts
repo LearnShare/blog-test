@@ -36,6 +36,7 @@ export interface PostsQuery {
   account?: boolean;    // 是否包含作者信息
   bookmarkBy?: number;  // account.id: 根据用户 ID 判断是否已被收藏
   published?: boolean;
+  content?: boolean;    // 是否包含内容
   sort: string;
   page: number;
   size: number;
