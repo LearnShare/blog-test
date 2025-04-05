@@ -9,7 +9,7 @@ export interface AccountsQuery {
 }
 
 function getAccounts(query: AccountsQuery) {
-  return HTTP.get('/account', {
+  return HTTP.get<any, any>('/account', {
     params: query,
   });
 }

@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
 } from 'react';
 import {
@@ -65,11 +65,10 @@ export default function PagePost() {
   const [
     data,
     setData,
-  ] = useState<DataType>(null);
+  ] = useState<DataType | undefined>(undefined);
 
   const {
     loading,
-    refresh,
   } = useRequest(() => post.getPosts({
     page,
     size,
@@ -109,8 +108,7 @@ export default function PagePost() {
         body={
           <PostsTable
               loading={ loading }
-              data={ data }
-              refresh={ refresh } />
+              data={ data } />
         }
         footer={ (
           <Pagination

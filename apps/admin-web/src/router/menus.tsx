@@ -28,19 +28,19 @@ const menus: MenuGroup[] = [
     menus: [
       {
         name: 'home',
-        icon: IconLayoutDashboard,
+        icon: <IconLayoutDashboard />,
         label: '首页',
         path: '/',
       },
       {
         name: 'account',
-        icon: IconUsers,
+        icon: <IconUsers />,
         label: '用户管理',
         path: '/account',
       },
       {
         name: 'post',
-        icon: IconBookOpen,
+        icon: <IconBookOpen />,
         label: '文章浏览',
         path: '/post',
       },
@@ -52,19 +52,19 @@ const menus: MenuGroup[] = [
     menus: [
       {
         name: 'ticket-profile',
-        icon: IconUserCheck,
+        icon: <IconUserCheck />,
         label: '用户审核',
         path: '/ticket/profile',
       },
       {
         name: 'ticket-post',
-        icon: IconBookOpenCheck,
+        icon: <IconBookOpenCheck />,
         label: '文章审核',
         path: '/ticket/post',
       },
       {
         name: 'ticket-author',
-        icon: IconHandshake,
+        icon: <IconHandshake />,
         label: '作者申请',
         path: '/ticket/author',
       },

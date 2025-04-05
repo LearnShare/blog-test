@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Table,
   TableHeader,
@@ -36,7 +34,7 @@ export default function AccountsTable({
     <div>
       <Loading loading={ loading } />
         {
-          !loading && data?.count > 0 && (
+          !loading && data && data.count > 0 && (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -80,7 +78,7 @@ export default function AccountsTable({
           )
         }
       {
-        !loading && !data?.count && (
+        !loading && (!data || !data.count) && (
           <Empty />
         )
       }

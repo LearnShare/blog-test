@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Frown as IconFrown,
 } from 'lucide-react';

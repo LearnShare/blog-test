@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
 } from 'react';
 import {
@@ -49,7 +49,7 @@ export default function PageAccount() {
   const {
     data,
     loading,
-    refresh,
+    // refresh,
   } = useRequest(() => account.getAccounts({
     page,
     size,
@@ -72,8 +72,7 @@ export default function PageAccount() {
         body={
           <AccountsTable
               loading={ loading }
-              data={ data }
-              refresh={ refresh } />
+              data={ data } />
         }
         footer={ (
           <Pagination

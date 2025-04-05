@@ -1,6 +1,3 @@
-'use client';
-
-import React from 'react';
 import {
   ChevronLeft as IconChevronLeft,
   ChevronRight as IconChevronRight,
@@ -12,9 +9,9 @@ import {
 import { cn } from '@/lib/utils';
 
 interface PaginationProps {
-  page: number;
+  page?: number;
   size?: number;
-  total: number;
+  total?: number;
   onPageChange?: (page: number) => void;
   className?: string;
 }

@@ -14,8 +14,6 @@ import Hash from '@packages/lib/hash';
 import Auth from '@/lib/auth';
 import {
   getAccountInfo,
-  updateAccount,
-  updatePassword,
 } from '@/lib/account';
 
 const accountRouter = Router();
@@ -44,7 +42,7 @@ accountRouter.get(
     } = await DB.account.getAccounts({
       search: search as string,
       role: role as AccountRole,
-      posts: 1,
+      posts: true,
       sort: (sort as string)
           || DB_SORT,
       page: page

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   BookOpenText as IconBookOpenText,
   BookCheck as IconBookCheck,

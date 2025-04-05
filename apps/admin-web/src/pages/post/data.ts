@@ -13,10 +13,10 @@ const publishedOptions = [
   },
 ];
 
-const publishedNames = {};
+const publishedNames: Record<string, string> = {};
 for (const option of publishedOptions) {
   if (option.value !== '*') {
-    publishedNames[!!Number(option.value)] = option.label;
+    publishedNames[option.value] = option.label;
   }
 }
 

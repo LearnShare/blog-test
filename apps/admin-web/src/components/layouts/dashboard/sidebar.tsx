@@ -1,5 +1,3 @@
-import * as React from "react"
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,9 +9,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
-import menus from '@/router/menus';;
+import menus from '@/router/menus';
 
 export function SideNav() {
   return (
@@ -44,11 +42,7 @@ export function SideNav() {
                           <a
                               className="cursor-pointer select-none h-auto hover:bg-white"
                               href={ menu.path }>
-                            {
-                              menu.icon && (
-                                <menu.icon />
-                              )
-                            }
+                            { menu.icon }
                             <span>{ menu.label }</span>
                           </a>
                         </SidebarMenuButton>

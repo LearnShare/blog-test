@@ -17,7 +17,7 @@ const roleOptions = [
   },
 ];
 
-const roles = {};
+const roles: Record<string, string> = {};
 for (const option of roleOptions) {
   if (option.value !== '*') {
     roles[option.value] = option.label;

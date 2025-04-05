@@ -2,7 +2,7 @@ import HTTP from '../../http';
 
 export interface PostsQuery {
   search?: string;
-  author?: number;
+  author?: string;
   account?: number;
   sort?: string;
   page?: number;
@@ -10,7 +10,7 @@ export interface PostsQuery {
 }
 
 function getPosts(query: PostsQuery) {
-  return HTTP.get('/post', {
+  return HTTP.get<any, any>('/post', {
     params: query,
   });
 }

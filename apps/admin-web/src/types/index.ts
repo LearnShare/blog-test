@@ -16,12 +16,15 @@ export interface Account {
 export interface Post {
   id: number;
   uid: string;
+  cover: number;
+  coverUrl: string;
   title: string;
   intro: string;
   content: string;
   format: string;
   authorId: number;
   author: Account;
+  published: boolean;
   ctime: string;
   utime: string;
 }

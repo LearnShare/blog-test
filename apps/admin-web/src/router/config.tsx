@@ -15,52 +15,44 @@ import {
 
 export interface RouteItem {
   name: string;
-  layout?: React.ReactElement;
-  path: string;
-  element: React.ReactElement;
-}
-
-export interface RouteGroup {
-  name: string;
-  layout?: React.ReactElement;
+  layout?: React.ReactNode;
   path?: string;
-  children: RouteItem[];
+  element?: React.ReactNode;
+  children?: RouteItem[];
 }
 
-export type RouteConfig = RouteItem | RouteGroup;
-
-const routes: RouteConfig[] = [
+const routes: RouteItem[] = [
   {
     name: 'sign-in',
-    layout: AuthLayout,
+    layout: <AuthLayout />,
     path: '/sign-in',
-    element: PageSignIn,
+    element: <PageSignIn />,
   },
   {
     name: 'dashboard',
-    layout: DashboardLayout,
+    layout: <DashboardLayout />,
     children: [
       {
         name: 'home',
         path: '/',
-        element: PageHome,
+        element: <PageHome />,
       },
       {
         name: 'account',
         path: '/account',
-        element: PageAccount,
+        element: <PageAccount />,
       },
       {
         name: 'post',
         path: '/post',
-        element: PagePost,
+        element: <PagePost />,
       },
     ],
   },
   {
     name: '404',
     path: '/*',
-    element: Page404,
+    element: <Page404 />,
   },
 ];
 

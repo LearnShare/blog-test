@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Table,
   TableHeader,
@@ -38,7 +36,7 @@ export default function PostsTable({
     <div>
       <Loading loading={ loading } />
         {
-          !loading && data?.count > 0 && (
+          !loading && data && data.count > 0 && (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -68,7 +66,7 @@ export default function PostsTable({
                             data={ post } />
                       </TableCell>
                       <TableCell>{ post.format }</TableCell>
-                      <TableCell>{ publishedNames[post.published] }</TableCell>
+                      <TableCell>{ publishedNames[post.published ? '1' : '0'] }</TableCell>
                       <TableCell>{ Time.format(post.ctime) }</TableCell>
                       <TableCell>{ Time.format(post.utime) }</TableCell>
                       <TableCell
@@ -81,7 +79,7 @@ export default function PostsTable({
           )
         }
       {
-        !loading && !data?.count && (
+        !loading && (!data || !data.count) && (
           <Empty />
         )
       }

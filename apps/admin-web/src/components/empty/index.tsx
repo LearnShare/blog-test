@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Bird as IconBird,
 } from 'lucide-react';

@@ -1,4 +1,4 @@
-import React, {
+import {
   useEffect,
 } from 'react';
 import {
@@ -9,18 +9,18 @@ import {
 } from 'react-router';
 
 import config, {
-  type RouteConfig,
+  type RouteItem,
 } from './config';
 import Store from '@/lib/store';
 
-function renderList(list: RouteConfig[]) {
-  return list.map((item: RouteConfig) => {
+function renderList(list: RouteItem[]) {
+  return list.map((item: RouteItem) => {
     // group with children
     if (item.children) {
       return (
         <Route
             path={ item.path }
-            element={ item.layout ? <item.layout /> : '' }>
+            element={ item?.layout }>
           { renderList(item.children) }
         </Route>
       );
@@ -29,14 +29,14 @@ function renderList(list: RouteConfig[]) {
     const route = (
       <Route
           index={ item.path === '/' }
-          path={ item.path !== '/' ? item.path : null }
-          element={ <item.element /> } />
+          path={ item.path !== '/' ? item.path : '' }
+          element={ item?.element } />
     );
 
     if (item.layout) { // item with layout
       return (
         <Route
-            element={ <item.layout /> }>
+            element={ item.layout }>
           { route }
         </Route>
       );
