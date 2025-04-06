@@ -45,7 +45,7 @@ function DataGrid() {
       <DataItem
           icon={ <IconNotebookText /> }
           label="公开文章"
-          value={ data?.post?.published || 0 } />
+          value={ data?.post?.publics || 0 } />
       <DataItem
           icon={ <IconChartNoAxesColumn /> }
           label="被阅读数"

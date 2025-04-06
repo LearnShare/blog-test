@@ -36,13 +36,14 @@ function DataPosts() {
   } = useRequest(() => auth.getPosts({
     page: 1,
     size: 6,
+    status: 'public',
   }));
 
   return (
     <div className="flex flex-col gap-3 flex-1 border rounded-lg border-gray-200 p-4">
       <AuthorCheck>
         <h3 className="text-sm text-slate-600 flex justify-between items-center">
-          <span>最近更新</span>
+          <span>最近发布</span>
           <Link
               href="/posts"
               className={ buttonVariants({

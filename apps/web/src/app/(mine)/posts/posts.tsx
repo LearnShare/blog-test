@@ -33,7 +33,7 @@ function Posts() {
     filters,
     setFilters,
   ] = useState<Record<string, any>>({
-    published: '1',
+    status: 'public',
   });
 
   const [
@@ -93,6 +93,7 @@ function Posts() {
                       key={ post.id }
                       { ...post }
                       actions
+                      message={ data?.tickets[post.ticket]?.message }
                       onActionDone={ () => onActionDone() } />
                 ))
               }

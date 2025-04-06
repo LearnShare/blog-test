@@ -5,6 +5,7 @@ import Image from 'next/image';
 import PostActions from './actions/detail';
 import AuthorCard from '@/components/author';
 import PostStats from './stats';
+import Divider from '@/components/divider';
 
 import time from '@packages/lib/time';
 import type {
@@ -14,6 +15,7 @@ import type {
 interface PostCardProps
     extends Post {
   actions?: boolean;
+  message?: string;
   onActionDone?: (action: string) => void;
 }
 
@@ -30,6 +32,7 @@ export default function PostCard({
   bookmarks,
   bookmarked,
   actions = false,
+  message,
   onActionDone,
 }: PostCardProps) {
   return (
@@ -88,6 +91,14 @@ export default function PostCard({
             bookmarks={ bookmarks }
             bookmarked={ bookmarked } />
       </div>
+      {
+        message && (
+          <>
+            <Divider>审核意见</Divider>
+            <p className="text-sm text-slate-800">{ message }</p>
+          </>
+        )
+      }
     </div>
   );
 }

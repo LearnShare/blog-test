@@ -25,11 +25,13 @@ interface TableProps {
     count: number;
     list: Ticket[];
   };
+  refresh?: () => void;
 }
 
 export default function TicketsTable({
   loading,
   data,
+  refresh,
 }: TableProps) {
   return (
     <div>
@@ -56,7 +58,9 @@ export default function TicketsTable({
                       <TableCell>{ ticket.id }</TableCell>
                       <TableCell>
                         <PostCard
-                            data={ ticket.post } />
+                            data={ ticket.post }
+                            ticket={ ticket }
+                            refresh={ refresh } />
                       </TableCell>
                       <TableCell>{ statusNames[ticket.status] }</TableCell>
                       <TableCell>{ Time.format(ticket.ctime) }</TableCell>

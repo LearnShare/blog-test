@@ -14,6 +14,18 @@ function getTickets(query: TicketsQuery) {
   });
 }
 
+interface ReviewData {
+  type: string;
+  postId: number;
+  action: string;
+  message?: string;
+}
+
+function reviewPost(id: number, reviewData: ReviewData) {
+  return HTTP.put<any, any>(`/ticket/${id}`, reviewData);
+}
+
 export default {
   getTickets,
+  reviewPost,
 };

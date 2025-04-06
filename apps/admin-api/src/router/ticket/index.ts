@@ -58,4 +58,51 @@ ticketRouter.get('/', async (req: CustomRequest, res: Response) => {
   res.json(data);
 });
 
+/**
+ * review post
+ */
+ticketRouter.put('/:id', async (req: CustomRequest, res: Response) => {
+  const {
+    id,
+  } = req.params;
+
+  const {
+    type,
+    postId,
+    action,
+    message,
+  } = req.body;
+
+  console.log(req.body);
+
+  if (type !== 'post-review') {
+    res.status(400)
+        .json({
+           status: 400,
+           message: 'Invalid action'
+        });
+    return;
+  }
+
+  const {
+    data,
+    error,
+  } = await DB.ticket.reviewPost(Number(id), {
+    postId,
+    action,
+    message,
+  });
+
+  if (error) {
+    res.status(500)
+      .json({
+        status: 500,
+        message: error,
+      });
+    return;
+  }
+
+  res.json(data);
+});
+
 export default ticketRouter;

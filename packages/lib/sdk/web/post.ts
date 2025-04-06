@@ -16,6 +16,7 @@ export interface PostsQuery {
   search?: string;
   author?: number;
   account?: number;
+  status?: string;
   sort?: string;
   page?: number;
   size?: number;

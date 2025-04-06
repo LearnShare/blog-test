@@ -11,7 +11,22 @@ interface TicketData {
 
 // create ticket
 async function createTicket(ticketData: TicketData) {
+  const {
+    type,
+    ref,
+    from,
+  } = ticketData;
+
   try {
+    // delete old tickets
+    await prisma.ticket.deleteMany({
+      where: {
+        type,
+        ref,
+        from,
+      },
+    });
+
     const ticket = await prisma.ticket.create({
       data: ticketData,
     });
@@ -69,7 +84,6 @@ async function getTickets(ticketsQuery: TicketsQuery) {
     ...statusQuery,
   };
 
-  // todo skip same type+ref
   try {
     const count = await prisma.ticket.count({
       where: query,
@@ -124,7 +138,100 @@ async function getTickets(ticketsQuery: TicketsQuery) {
   }
 }
 
+interface UpdateData {
+  status: string;
+  message?: string;
+}
+
+async function updateTicket(ticketId: number, updateData: UpdateData) {
+  try {
+    const ticket = await prisma.ticket.update({
+      where: {
+        id: ticketId,
+      },
+      data: {
+        ...updateData,
+        utime: new Date(),
+      },
+    });
+
+    return {
+      data: ticket,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
+interface ReviewData {
+  postId: number;
+  action: 'approve' | 'reject',
+  message?: string;
+}
+
+async function reviewPost(ticketId: number, reviewData: ReviewData) {
+  const {
+    postId,
+    action,
+    message,
+  } = reviewData;
+
+  const ticketStatusList = {
+    approve: 'approved',
+    reject: 'rejected',
+  };
+  const postStatusList = {
+    approve: 'public',
+    reject: 'rejected',
+  };
+
+  try {
+    await updateTicket(ticketId, {
+      status: ticketStatusList[action],
+      message,
+    });
+    await postModule.updatePost(postId, {
+      status: postStatusList[action],
+    });
+
+    return {};
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
+// get tickets by ids
+async function getTicketsByIds(ids: number[]) {
+  try {
+    const tickets = await prisma.ticket.findMany({
+      where: {
+        OR: ids.map((id) => ({
+          id,
+        })),
+      },
+    });
+
+    return {
+      data: tickets,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
 export default {
   createTicket,
   getTickets,
+  updateTicket,
+  reviewPost,
+  getTicketsByIds,
 };

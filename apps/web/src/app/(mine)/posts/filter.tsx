@@ -19,16 +19,18 @@ interface FilterProps {
   onChange: (data: Record<string, any>) => void;
 }
 
-const publishedOptions = [
+const statusOptions = [
   {
     label: '已发布',
-    key: 'published',
-    value: '1',
+    value: 'public',
   },
   {
-    label: '未发布',
-    key: 'unpublished',
-    value: '0',
+    label: '待审核',
+    value: 'draft',
+  },
+  {
+    label: '已拒绝',
+    value: 'rejected',
   },
 ];
 
@@ -47,14 +49,14 @@ function Filter({
   return (
     <div className="flex gap-4 items-center justify-between">
       <Tabs
-          defaultValue={ values.published }
-          onValueChange={ (value: string) => itemOnChange('published', Number(value)) }>
+          defaultValue={ values.status }
+          onValueChange={ (value: string) => itemOnChange('status', value) }>
         <TabsList>
           {
-            publishedOptions.map((option) => (
+            statusOptions.map((option) => (
               <TabsTrigger
                   key={ option.value }
-                  value={ option.value }>{ option.label } { stats?.[option.key] }</TabsTrigger>
+                  value={ option.value }>{ option.label } { stats?.[option.value] }</TabsTrigger>
             ))
           }
         </TabsList>
@@ -65,7 +67,7 @@ function Filter({
             variant: 'outline',
           }) }>
         <IconPencilLine />
-        <span>编写文章</span>
+        <span>编写</span>
       </Link>
     </div>
   );

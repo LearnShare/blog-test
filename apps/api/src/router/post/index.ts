@@ -182,8 +182,6 @@ postRouter.post(
       return;
     }
 
-    console.log(ticket, ticketError);
-
     // 5. update post
     const {
       data: updatedPost,
@@ -371,7 +369,7 @@ postRouter.put(
     const {
       data: ticket,
       error: ticketError,
-    } = DB.ticket.createTicket({
+    } = await DB.ticket.createTicket({
       type: 'post',
       ref: String(post.id),
       from: userId,

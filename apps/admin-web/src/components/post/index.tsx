@@ -9,21 +9,34 @@ import {
 } from '@/lib/utils';
 import type {
   Post,
+  Ticket,
 } from '@/types';
 
 interface PostCardProps {
   data: Post;
+  ticket?: Ticket;
+  refresh?: () => void;
   className?: string;
 }
 
 function PostCard({
   data,
+  ticket,
+  refresh,
   className,
 }: PostCardProps) {
   const [
     dialogOpen,
     setDialogOpen,
   ] = useState(false);
+
+  const dialogOnClose = (updated: boolean) => {
+    if (updated) {
+      refresh?.();
+    }
+
+    setDialogOpen(false);
+  };
 
   return (
     <>
@@ -40,7 +53,8 @@ function PostCard({
       <PostDialog
           open={ dialogOpen }
           data={ data }
-          onClose={ () => setDialogOpen(false) } />
+          ticket={ ticket }
+          onClose={ (updated: boolean) => dialogOnClose(updated) } />
     </>
   );
 }

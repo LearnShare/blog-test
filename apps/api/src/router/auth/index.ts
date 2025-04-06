@@ -629,8 +629,8 @@ authRouter.get(
 
     const {
       search,
-      published,
       account,
+      status,
       sort,
       page,
       size,
@@ -645,9 +645,7 @@ authRouter.get(
       account: account
           ? Boolean(Number(account))
           : false,
-      published: published
-          ? Boolean(Number(published))
-          : null,
+      status,
       sort: (sort as string)
           || DB_SORT,
       page: page

@@ -1,7 +1,11 @@
 import {
+  Send as IconSend,
   BookOpenText as IconBookOpenText,
   BookCheck as IconBookCheck,
 } from 'lucide-react';
+import {
+  useRequest,
+} from 'ahooks';
 
 import {
   Dialog,
@@ -19,20 +23,30 @@ import {
   MarkdownRender,
 } from '@/components/render';
 import Divider from '@/components/divider';
+import Actions from './actions';
 
 import type {
   Post,
+  Ticket,
 } from '@/types';
+import {
+  cn,
+} from '@/lib/utils';
+import {
+  ticket as ticketAPI,
+} from '@packages/lib/sdk/admin';
 
 interface PostDialogProps {
   open?: boolean;
   data: Post;
-  onClose?: () => void;
+  ticket?: Ticket;
+  onClose?: (updated?: boolean) => void;
 }
 
 function PostDialog({
   open,
   data,
+  ticket,
   onClose,
 }: PostDialogProps) {
   const onOpenChange = (isOpen: boolean) => {
@@ -41,19 +55,37 @@ function PostDialog({
     }
   };
 
+  const {
+    run: review,
+    loading,
+  } = useRequest((action: string, message?: string) =>
+      ticketAPI.reviewPost(ticket?.id, {
+        postId: data?.id,
+        action,
+        message,
+        type: 'post-review',
+      }),
+    {
+      manual: true,
+      onSuccess: () => {
+        onClose?.(true);
+      },
+    },
+  );
+
   return (
     <Dialog
         open={ open }
         onOpenChange={ (isOpen: boolean) => onOpenChange(isOpen) }>
       <DialogContent
-          className="w-[calc(100%-2rem)] sm:max-w-[1000px]">
+          className="flex flex-col w-[calc(100%-2rem)] sm:max-w-[1000px] max-h-[calc(100%-2rem)]">
         <DialogHeader>
           <DialogTitle>文章详情</DialogTitle>
           <DialogDescription
               className="hidden"
               aria-hidden>文章详情</DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-4">
+        <div className="flex-1 flex flex-col gap-4 overflow-auto">
           <div className="text-sm text-slate-500 group-hover:underline">{ data.uid }</div>
           <div
               data-cover={ !!data.coverUrl }
@@ -93,9 +125,30 @@ function PostDialog({
             </Divider>
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className={ cn(
+          'flex! flex-row! gap-2 justify-end!',
+          {
+            'justify-between!': !!ticket,
+          },
+        ) }>
+          {
+            ticket && (
+              <div className="flex gap-2">
+                <Button
+                    disabled={ loading }
+                    onClick={ () => review('approve') }>
+                  <IconSend />
+                  <span>发布</span>
+                </Button>
+                <Actions
+                    disabled={ loading }
+                    onAction={ (message: string) => review('reject', message) } />
+              </div>
+            )
+          }
           <DialogClose asChild>
             <Button
+                disabled={ loading }
                 variant="outline">关闭</Button>
           </DialogClose>
         </DialogFooter>

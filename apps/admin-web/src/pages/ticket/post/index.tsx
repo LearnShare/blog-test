@@ -67,6 +67,7 @@ export default function PageTicketPost() {
 
   const {
     loading,
+    refresh,
   } = useRequest(() => ticket.getTickets({
     page,
     size,
@@ -107,7 +108,8 @@ export default function PageTicketPost() {
         body={
           <TicketsTable
               loading={ loading }
-              data={ data } />
+              data={ data }
+              refresh={ refresh } />
         }
         footer={ (
           <Pagination

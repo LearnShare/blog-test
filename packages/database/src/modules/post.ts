@@ -7,6 +7,7 @@ import prisma from '../prisma';
 import accountModule, {
   AccountPublicFields,
 } from './account';
+import ticketModule from './ticket';
 import Bookmark from './bookmark';
 
 import {
@@ -187,6 +188,32 @@ async function getPosts(postQuery: PostsQuery) {
       data.accounts = accounts;
     }
 
+    // with tickets
+    if (status === 'rejected') {
+      const ids: Record<number, boolean> = {};
+      for (const item of list) {
+        if (!ids[item.ticket]) {
+          ids[item.ticket] = true;
+        }
+      }
+
+      const ticketsData = await ticketModule.getTicketsByIds(
+        Object.keys(ids)
+            .map((id) => Number(id))
+      );
+      const tickets: Record<number, any> = {};
+      if (ticketsData
+          && ticketsData.data) {
+        for (const ticket of ticketsData.data) {
+          if (!tickets[ticket.id]) {
+            tickets[ticket.id] = ticket;
+          }
+        }
+      }
+
+      data.tickets = tickets;
+    }
+
     return {
       data,
     };
@@ -343,23 +370,29 @@ async function getStats(id?: number) {
         ...authorQuery,
       },
     });
-    const published = await prisma.post.count({
+    const publics = await prisma.post.count({
       where: {
         ...authorQuery,
-        published: true,
+        status: 'public',
       },
     });
-    const unpublished = await prisma.post.count({
+    const drafts = await prisma.post.count({
       where: {
         ...authorQuery,
-        published: false,
+        status: 'draft',
+      },
+    });
+    const rejecteds = await prisma.post.count({
+      where: {
+        ...authorQuery,
+        status: 'rejected',
       },
     });
 
     const viewsSum = await prisma.post.aggregate({
       where: {
         ...authorQuery,
-        published: true,
+        status: 'public',
       },
       _sum: {
         views: true,
@@ -384,8 +417,9 @@ async function getStats(id?: number) {
     return {
       data: {
         total,
-        published,
-        unpublished,
+        public: publics,
+        draft: drafts,
+        rejected: rejecteds,
         views,
         bookmarks,
       },
