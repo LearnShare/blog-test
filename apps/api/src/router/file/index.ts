@@ -8,6 +8,7 @@ import {
 } from 'express';
 import multer from 'multer';
 
+import BlogError from '@packages/lib/error';
 import DB, {
   DB_PAGE,
   DB_SIZE,
@@ -53,7 +54,6 @@ fileRouter.get(
 
     const {
       data,
-      error,
     } = await DB.file.getFiles({
       creator: creator
           ? Number(creator)
@@ -67,15 +67,6 @@ fileRouter.get(
           ? Number(size)
           : DB_SIZE,
     });
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     res.json(data);
   },
@@ -116,11 +107,10 @@ async function continueUpload(
       });
       break;
     default:
-      res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid data',
-        });
+      throw new BlogError({
+        status: 400,
+        message: 'Invalid action',
+      });
   }
 }
 
@@ -150,12 +140,10 @@ fileRouter.post(
     // 1. check mime and type
     if (!acceptMimeTypes.includes(mimetype)
         || !acceptUploadTypes.includes(type)) {
-      res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid data',
-        });
-      return;
+      throw new BlogError({
+        status: 400,
+        message: 'Invalid data',
+      });
     }
 
     // 2. hash data
@@ -164,16 +152,7 @@ fileRouter.post(
     // 3. check exists
     const {
       data: existingFile,
-      error,
     } = await DB.file.getFileByHash(hash);
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     if (!existingFile) {
       // 4. write data to file
@@ -189,18 +168,15 @@ fileRouter.post(
           flag: 'a',
         });
       } catch (error) {
-        res.status(500)
-          .json({
-            status: 500,
-            message: error,
-          });
-        return;
+        throw new BlogError({
+          status: 500,
+          message: error,
+        });
       }
 
       // 5. create file
       const {
         data: file,
-        error: createError,
       } = await DB.file.createFile(id, {
         hash,
         type: 'IMAGE',
@@ -209,14 +185,6 @@ fileRouter.post(
         ext,
         size,
       });
-      if (createError) {
-        res.status(500)
-          .json({
-            status: 500,
-            message: createError,
-          });
-        return;
-      }
 
       continueUpload(id, file, type, res);
     } else {
@@ -242,12 +210,10 @@ async function returnFile(file: FileData, res: Response) {
 
   const exist = fs.existsSync(fullPath);
   if (!exist) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'File not found',
-        });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'File not found',
+    });
   }
 
   res.set('Content-Type', mime)
@@ -264,24 +230,13 @@ fileRouter.get('/hash/:hash', async (req: Request, res: Response) => {
 
   const {
     data: file,
-    error,
   } = await DB.file.getFileByHash(hash);
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   if (!file) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'File not found',
-        });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'File not found',
+    });
   }
 
   returnFile(file, res);
@@ -297,24 +252,13 @@ fileRouter.get('/:id', async (req: Request, res: Response) => {
 
   const {
     data: file,
-    error,
   } = await DB.file.getFileById(Number(id));
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   if (!file) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'File not found',
-        });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'File not found',
+    });
   }
 
   returnFile(file, res);

@@ -4,6 +4,7 @@ import {
   Response,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import DB, {
   type PostContentFormat,
   DB_PAGE,
@@ -39,7 +40,6 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
 
   const {
     data,
-    error,
   } = await DB.post.getPosts({
     search: search as string,
     author: author
@@ -60,15 +60,6 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
         ? Number(size)
         : DB_SIZE,
   });
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   res.json(data);
 });
@@ -102,44 +93,29 @@ postRouter.post(
     // 1. check title and content
     if (!title
         || !content) {
-      res.status(400)
-          .json({
-            status: 400,
-            message: 'Title and Content required',
-          });
-      return;
+      throw new BlogError({
+        status: 400,
+        message: 'Title and Content required',
+      });
     }
 
     if (uid) {
       // 2. check is uid exist
       const {
         data: post,
-        error,
       } = await DB.post.getPostByUid(uid);
 
-      if (error) {
-        res.status(500)
-          .json({
-            status: 500,
-            message: error,
-          });
-        return;
-      }
-
       if (post) {
-        res.status(400)
-            .json({
-              status: 400,
-              message: 'UID exists',
-            });
-        return;
+        throw new BlogError({
+          status: 400,
+          message: 'UID exists',
+        });
       }
     }
 
     // 3. create post
     const {
       data: post,
-      error,
     } = await DB.post.createPost(id, {
       title,
       intro,
@@ -153,19 +129,9 @@ postRouter.post(
       status: 'draft',
     });
 
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
-
     // 4. create ticket
     const {
       data: ticket,
-      error: ticketError,
     } = await DB.ticket.createTicket({
       type: 'post',
       ref: String(post.id),
@@ -173,19 +139,9 @@ postRouter.post(
       status: 'pending',
     });
 
-    if (ticketError) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: ticketError,
-        });
-      return;
-    }
-
     // 5. update post
     const {
       data: updatedPost,
-      error: updateError,
     } = await DB.post.updatePost(post.id, {
       ticket: ticket.id,
     });
@@ -204,26 +160,14 @@ postRouter.get('/uid/:uid', async (req: Request, res: Response) => {
 
   const {
     data: post,
-    error,
   } = await DB.post.getPostByUid(uid);
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   if (!post
       || post.status !== 'public') {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'Post not found',
-        });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'Post not found',
+    });
   }
 
   DB.post.updatePostViews(post.id);
@@ -241,26 +185,14 @@ postRouter.get('/:id', async (req: Request, res: Response) => {
 
   const {
     data: post,
-    error,
   } = await DB.post.getPostById(Number(id));
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   if (!post
       || post.status !== 'public') {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'Post not found',
-        });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'Post not found',
+    });
   }
 
   res.json(post);
@@ -296,79 +228,50 @@ postRouter.put(
     // 1. check title and content
     if (!title
         || !content) {
-      res.status(400)
-          .json({
-            status: 400,
-            message: 'Title and Content required',
-          });
-      return;
+      throw new BlogError({
+        status: 400,
+        message: 'Title and Content required',
+      });
     }
 
     // 2. check is post exist
     const {
       data: post,
-      error,
     } = await DB.post.getPostById(postId);
 
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
-
     if (!post) {
-      res.status(404)
-          .json({
-            status: 404,
-            message: 'Post not found',
-          });
-      return;
+      throw new BlogError({
+        status: 404,
+        message: 'Post not found',
+      });
     }
 
     // 3. check author
     if (post.authorId !== userId) {
-      res.status(403)
-          .json({
-            status: 403,
-            message: 'Action not allowed',
-          });
-      return;
+      throw new BlogError({
+        status: 403,
+        message: 'Action not allowed',
+      });
     }
 
     if (uid) {
       // 4. check is uid exist
       const {
         data: post,
-        error,
       } = await DB.post.getPostByUid(uid);
-
-      if (error) {
-        res.status(500)
-          .json({
-            status: 500,
-            message: error,
-          });
-        return;
-      }
 
       if (post
           && post.id !== postId) {
-        res.status(400)
-            .json({
-              status: 400,
-              message: 'UID exists',
-            });
-        return;
+        throw new BlogError({
+          status: 400,
+          message: 'UID exists',
+        });
       }
     }
 
     // 5. create ticket
     const {
       data: ticket,
-      error: ticketError,
     } = await DB.ticket.createTicket({
       type: 'post',
       ref: String(post.id),
@@ -376,19 +279,9 @@ postRouter.put(
       status: 'pending',
     });
 
-    if (ticketError) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: ticketError,
-        });
-      return;
-    }
-
     // 6. update post
     const {
       data: updatedPost,
-      error: updateError,
     } = await DB.post.updatePost(postId, {
       title,
       intro,
@@ -402,15 +295,6 @@ postRouter.put(
       status: 'draft',
       ticket: ticket.id,
     });
-
-    if (updateError) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: updateError,
-        });
-      return;
-    }
 
     res.json(updatedPost);
   },
@@ -426,39 +310,16 @@ postRouter.delete('/:id', async (req: Request, res: Response) => {
 
   const {
     data: post,
-    error,
   } = await DB.post.getPostById(Number(id));
 
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
-
   if (!post) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'Post not found',
-        });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'Post not found',
+    });
   }
 
-  const {
-    error: deleteError,
-  } = await DB.post.deletePost(Number(id));
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
+  await DB.post.deletePost(Number(id));
 
   res.end();
 });

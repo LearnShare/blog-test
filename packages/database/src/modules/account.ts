@@ -33,115 +33,80 @@ async function createAccount({
   role = 'AUTHOR',
   verified = false,
 }: AccountData) {
-  try {
-    const account = await prisma.account.create({
-      data: {
-        email,
-        name: email.substring(0, email.indexOf('@')),
-        password,
-        uid: Hash.nanoid(),
-        role,
-        verified,
-        utime: new Date(),
-      },
-      select: AccountPublicFields,
-    });
+  const account = await prisma.account.create({
+    data: {
+      email,
+      name: email.substring(0, email.indexOf('@')),
+      password,
+      uid: Hash.nanoid(),
+      role,
+      verified,
+      utime: new Date(),
+    },
+    select: AccountPublicFields,
+  });
 
-    return {
-      data: account,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: account,
+  };
 }
 
 // get account info by email
 async function getAccountByEmail(email: string) {
-  try {
-    const account = await prisma.account.findUnique({
-      where: {
-        email,
-      },
-      // select: AccountPublicFields,
-    });
+  const account = await prisma.account.findUnique({
+    where: {
+      email,
+    },
+    // select: AccountPublicFields,
+  });
 
-    return {
-      data: account,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: account,
+  };
 }
 
 // get account info by id
 async function getAccountById(id: number) {
-  try {
-    const account = await prisma.account.findUnique({
-      where: {
-        id,
-      },
-      // select: AccountPublicFields,
-    });
+  const account = await prisma.account.findUnique({
+    where: {
+      id,
+    },
+    // select: AccountPublicFields,
+  });
 
-    return {
-      data: account,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: account,
+  };
 }
 
 // get account info by uid
 async function getAccountByUid(uid: string) {
-  try {
-    const account = await prisma.account.findUnique({
-      where: {
-        uid,
-      },
-      select: AccountPublicFields,
-    });
+  const account = await prisma.account.findUnique({
+    where: {
+      uid,
+    },
+    select: AccountPublicFields,
+  });
 
-    return {
-      data: account,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: account,
+  };
 }
 
 // get accounts by ids
 async function getAccountsByIds(ids: number[]) {
-  try {
-    const accounts = await prisma.account.findMany({
-      where: {
-        OR: ids.map((id) => ({
-          id,
-        })),
-      },
-      select: AccountPublicFields,
-    });
+  const accounts = await prisma.account.findMany({
+    where: {
+      OR: ids.map((id) => ({
+        id,
+      })),
+    },
+    select: AccountPublicFields,
+  });
 
-    return {
-      data: accounts,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: accounts,
+  };
 }
 
 export interface AccountsQuery {
@@ -212,51 +177,44 @@ async function getAccounts(accountQuery: AccountsQuery) {
     ...roleQuery,
   };
 
-  try {
-    const count = await prisma.account.count({
-      where: query,
-    });
+  const count = await prisma.account.count({
+    where: query,
+  });
 
-    const list = await prisma.account.findMany({
-      where: query,
-      orderBy: {
-        [name]: direction,
-      },
-      include: countQuery,
-      omit: {
-        password: true,
-      },
-      skip: (page - 1) * size,
-      take: size,
-    });
+  const list = await prisma.account.findMany({
+    where: query,
+    orderBy: {
+      [name]: direction,
+    },
+    include: countQuery,
+    omit: {
+      password: true,
+    },
+    skip: (page - 1) * size,
+    take: size,
+  });
 
-    return {
-      data: {
-        count,
-        page,
-        size,
-        list: posts
-            ? list.map((item) => {
-              const {
-                _count,
-                ...rest
-              } = item;
+  return {
+    data: {
+      count,
+      page,
+      size,
+      list: posts
+          ? list.map((item) => {
+            const {
+              _count,
+              ...rest
+            } = item;
 
-              return {
-                ...rest,
-                postsCount: _count?.posts
-                    || 0,
-              };
-            })
-            : list,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+            return {
+              ...rest,
+              postsCount: _count?.posts
+                  || 0,
+            };
+          })
+          : list,
+    },
+  };
 }
 
 export interface AuthorsQuery {
@@ -277,7 +235,6 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
     role: 'AUTHOR',
   };
 
-  try {
     const count = await prisma.account.count({
       where: query,
     });
@@ -324,37 +281,24 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
         }),
       },
     };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
 }
 
 // update account
 async function updateAccount(id: number, data: Record<string, any>) {
-  try {
-    const account = await prisma.account.update({
-      where: {
-        id,
-      },
-      data: {
-        ...data,
-        utime: new Date(),
-      },
-      select: AccountPublicFields,
-    });
+  const account = await prisma.account.update({
+    where: {
+      id,
+    },
+    data: {
+      ...data,
+      utime: new Date(),
+    },
+    select: AccountPublicFields,
+  });
 
-    return {
-      data: account,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: account,
+  };
 }
 
 export default {

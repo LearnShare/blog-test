@@ -32,36 +32,29 @@ async function getFiles(fileQuery: FilesQuery) {
       }
       : {};
 
-  try {
-    const count = await prisma.file.count({
-      where: query,
-    });
+  const count = await prisma.file.count({
+    where: query,
+  });
 
-    const list = await prisma.file.findMany({
-      where: query,
-      orderBy: {
-        [name]: direction,
-      },
-      skip: (page - 1) * size,
-      take: size,
-    });
+  const list = await prisma.file.findMany({
+    where: query,
+    orderBy: {
+      [name]: direction,
+    },
+    skip: (page - 1) * size,
+    take: size,
+  });
 
-    const data = {
-      count,
-      page,
-      size,
-      list,
-    };
+  const data = {
+    count,
+    page,
+    size,
+    list,
+  };
 
-    return {
-      data,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data,
+  };
 }
 
 interface FileData {
@@ -75,63 +68,42 @@ interface FileData {
 
 // create file
 async function createFile(accountId: number, fileData: FileData) {
-  try {
-    const file = await prisma.file.create({
-      data: {
-        ...fileData,
-        creator: accountId,
-      },
-    });
+  const file = await prisma.file.create({
+    data: {
+      ...fileData,
+      creator: accountId,
+    },
+  });
 
-    return {
-      data: file,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: file,
+  };
 }
 
 // get file info by id
 async function getFileById(id: number) {
-  try {
-    const file = await prisma.file.findUnique({
-      where: {
-        id,
-      },
-    });
+  const file = await prisma.file.findUnique({
+    where: {
+      id,
+    },
+  });
 
-    return {
-      data: file,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: file,
+  };
 }
 
 // get file info by hash
 async function getFileByHash(hash: string) {
-  try {
-    const file = await prisma.file.findUnique({
-      where: {
-        hash,
-      },
-    });
+  const file = await prisma.file.findUnique({
+    where: {
+      hash,
+    },
+  });
 
-    return {
-      data: file,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: file,
+  };
 }
 
 // get file stats
@@ -142,35 +114,29 @@ async function getStats(creator?: number) {
       }
       : {};
 
-  try {
-    const total = await prisma.file.count({
-      where: {
-        ...creatorQuery,
-      },
-    });
-    const sizeSum = await prisma.file.aggregate({
-      where: {
-        ...creatorQuery,
-      },
-      _sum: {
-        size: true,
-      },
-    });
+  const total = await prisma.file.count({
+    where: {
+      ...creatorQuery,
+    },
+  });
+  const sizeSum = await prisma.file.aggregate({
+    where: {
+      ...creatorQuery,
+    },
+    _sum: {
+      size: true,
+    },
+  });
 
-    const totalSize = sizeSum._sum.size
-        || 0;
+  const totalSize = sizeSum._sum.size
+      || 0;
 
-    return {
-      data: {
-        total,
-        totalSize,
-      },
-    };
-  } catch (error) {
-    return {
-      error,
-    };
-  }
+  return {
+    data: {
+      total,
+      totalSize,
+    },
+  };
 }
 
 export default {

@@ -17,29 +17,22 @@ async function createTicket(ticketData: TicketData) {
     from,
   } = ticketData;
 
-  try {
-    // delete old tickets
-    await prisma.ticket.deleteMany({
-      where: {
-        type,
-        ref,
-        from,
-      },
-    });
+  // delete old tickets
+  await prisma.ticket.deleteMany({
+    where: {
+      type,
+      ref,
+      from,
+    },
+  });
 
-    const ticket = await prisma.ticket.create({
-      data: ticketData,
-    });
+  const ticket = await prisma.ticket.create({
+    data: ticketData,
+  });
 
-    return {
-      data: ticket,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: ticket,
+  };
 }
 
 interface TicketsQuery {
@@ -84,59 +77,52 @@ async function getTickets(ticketsQuery: TicketsQuery) {
     ...statusQuery,
   };
 
-  try {
-    const count = await prisma.ticket.count({
-      where: query,
-    });
+  const count = await prisma.ticket.count({
+    where: query,
+  });
 
-    const list = await prisma.ticket.findMany({
-      where: query,
-      orderBy: {
-        [name]: direction,
-      },
-      skip: (page - 1) * size,
-      take: size,
-    });
+  const list = await prisma.ticket.findMany({
+    where: query,
+    orderBy: {
+      [name]: direction,
+    },
+    skip: (page - 1) * size,
+    take: size,
+  });
 
-    const data: Record<string, any> = {
-      count,
-      list,
-    };
+  const data: Record<string, any> = {
+    count,
+    list,
+  };
 
-    // get post info
-    const ids: Record<string, boolean> = {};
-    for (const item of list) {
-      if (item.ref
-          && !ids[item.ref]) {
-        ids[item.ref] = true;
-      }
+  // get post info
+  const ids: Record<string, boolean> = {};
+  for (const item of list) {
+    if (item.ref
+        && !ids[item.ref]) {
+      ids[item.ref] = true;
     }
-
-    const postsData = await postModule.getPostsByIds(
-      Object.keys(ids)
-          .map((id) => Number(id))
-    );
-    const posts: Record<number, any> = {};
-    if (postsData
-        && postsData.data) {
-      for (const post of postsData.data) {
-        if (!posts[post.id]) {
-          posts[post.id] = post;
-        }
-      }
-    }
-
-    data.posts = posts;
-
-    return {
-      data,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
   }
+
+  const postsData = await postModule.getPostsByIds(
+    Object.keys(ids)
+        .map((id) => Number(id))
+  );
+  const posts: Record<number, any> = {};
+  if (postsData
+      && postsData.data) {
+    for (const post of postsData.data) {
+      if (!posts[post.id]) {
+        posts[post.id] = post;
+      }
+    }
+  }
+
+  data.posts = posts;
+
+  return {
+    data,
+  };
 }
 
 interface UpdateData {
@@ -145,26 +131,19 @@ interface UpdateData {
 }
 
 async function updateTicket(ticketId: number, updateData: UpdateData) {
-  try {
-    const ticket = await prisma.ticket.update({
-      where: {
-        id: ticketId,
-      },
-      data: {
-        ...updateData,
-        utime: new Date(),
-      },
-    });
+  const ticket = await prisma.ticket.update({
+    where: {
+      id: ticketId,
+    },
+    data: {
+      ...updateData,
+      utime: new Date(),
+    },
+  });
 
-    return {
-      data: ticket,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: ticket,
+  };
 }
 
 interface ReviewData {
@@ -189,44 +168,30 @@ async function reviewPost(ticketId: number, reviewData: ReviewData) {
     reject: 'rejected',
   };
 
-  try {
-    await updateTicket(ticketId, {
-      status: ticketStatusList[action],
-      message,
-    });
-    await postModule.updatePost(postId, {
-      status: postStatusList[action],
-    });
+  await updateTicket(ticketId, {
+    status: ticketStatusList[action],
+    message,
+  });
+  await postModule.updatePost(postId, {
+    status: postStatusList[action],
+  });
 
-    return {};
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {};
 }
 
 // get tickets by ids
 async function getTicketsByIds(ids: number[]) {
-  try {
-    const tickets = await prisma.ticket.findMany({
-      where: {
-        OR: ids.map((id) => ({
-          id,
-        })),
-      },
-    });
+  const tickets = await prisma.ticket.findMany({
+    where: {
+      OR: ids.map((id) => ({
+        id,
+      })),
+    },
+  });
 
-    return {
-      data: tickets,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: tickets,
+  };
 }
 
 export default {

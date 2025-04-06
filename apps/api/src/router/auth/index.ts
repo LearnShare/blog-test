@@ -4,6 +4,7 @@ import {
   Response,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import Validator from '@packages/lib/validator';
 import Hash from '@packages/lib/hash';
 import JWT from '@packages/lib/jwt';
@@ -31,7 +32,6 @@ async function generateCodeAndSendEmail(accountId: number, email: string, res: R
   const code = Hash.generateRandomNumber(6);
   const {
     data: activationCode,
-    error: codeError,
   } = await DB.code.createCode(accountId, {
     type: 'ACCOUNT_VERIFICATION',
     code,
@@ -40,14 +40,6 @@ async function generateCodeAndSendEmail(accountId: number, email: string, res: R
       + Number(process.env.ACCOUNT_VERIFICATION_CODE_EXPIRES)
     ),
   });
-  if (codeError) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: codeError,
-      });
-    return;
-  }
 
   const {
     data,
@@ -79,47 +71,31 @@ authRouter.post('/sign-up', async (req: Request, res: Response) => {
   // 1. validate email
   const emailResult = Validator.validateEmail(email);
   if (!emailResult.success) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid email',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid email',
+    });
   }
 
   // 2. validate password
   const passwordResult = Validator.validatePassword(password);
   if (!passwordResult.success) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid password',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid password',
+    });
   }
 
   // 3. check is account exist
   const {
     data: existingAccount,
-    error,
   } = await DB.account.getAccountByEmail(email);
 
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
-
   if (existingAccount) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Account already exists',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Account already exists',
+    });
   }
 
   // 4. create new account
@@ -127,20 +103,10 @@ authRouter.post('/sign-up', async (req: Request, res: Response) => {
 
   const {
     data: account,
-    error: createError,
   } = await DB.account.createAccount({
     email,
     password: hash,
   });
-
-  if (createError) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: createError,
-      });
-    return;
-  }
 
   // 5. generate and save verification code
   generateCodeAndSendEmail(account.id, email, res);
@@ -158,16 +124,7 @@ authRouter.get('/verify', Auth.check, async (req: CustomRequest, res: Response) 
 
   const {
     data,
-    error,
   } = await DB.account.getAccountById(id);
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   // 1. check verified
   const {
@@ -175,11 +132,7 @@ authRouter.get('/verify', Auth.check, async (req: CustomRequest, res: Response) 
     verified,
   } = data;
   if (verified) {
-    res.status(200)
-        .json({
-          status: 200,
-          message: 'Account verified',
-        });
+    res.end();
     return;
   }
 
@@ -207,27 +160,16 @@ authRouter.post('/verify', Auth.check, async (req: CustomRequest, res: Response)
   // 1. search code data
   const {
     data,
-    error,
   } = await DB.code.searchCode({
     account: id,
     code,
   });
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   if (!data) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid verification code',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid verification code',
+    });
   }
 
   // 2. check code data
@@ -238,28 +180,16 @@ authRouter.post('/verify', Auth.check, async (req: CustomRequest, res: Response)
 
   if (used
       || etime < new Date()) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid verification code',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid verification code',
+    });
   }
 
   // 3. set code used
-  const {
-    error: updateError,
-  } = await DB.code.updateCode(data.id, {
+  await DB.code.updateCode(data.id, {
     used: true,
   });
-  if (updateError) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: updateError,
-      });
-    return;
-  }
 
   // 4. update account.verified
   updateAccount(id, {
@@ -282,28 +212,16 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
   // 1. validate email
   const emailResult = Validator.validateEmail(email);
   if (!emailResult.success) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid email',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid email',
+    });
   }
 
   // 2. check is account exist
   const {
     data: account,
-    error,
   } = await DB.account.getAccountByEmail(email);
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   // 3. check password
   let passwordMatch = false;
@@ -313,12 +231,10 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
 
   if (!account
       || !passwordMatch) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Account or Password error',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Account or Password error',
+    });
   }
 
   // 4. JWT token
@@ -381,30 +297,19 @@ authRouter.post('/forgot', async (req: Request, res: Response) => {
   // 1. check account
   const {
     data: account,
-    error,
   } = await DB.account.getAccountByEmail(email);
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
+
   if (!account) {
-    res.status(404)
-      .json({
-        status: 404,
-        message: 'Account not found',
-      });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'Account not found',
+    });
   }
 
   // 2. generate token and send email
   const code = Hash.uuid();
   const {
     data: activationCode,
-    error: codeError,
   } = await DB.code.createCode(account.id, {
     type: 'RESET_PASSWORD',
     code,
@@ -413,14 +318,6 @@ authRouter.post('/forgot', async (req: Request, res: Response) => {
       + Number(process.env.ACCOUNT_VERIFICATION_CODE_EXPIRES)
     ),
   });
-  if (codeError) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: codeError,
-      });
-    return;
-  }
 
   const {
     data,
@@ -455,25 +352,15 @@ authRouter.post('/reset', async (req: Request, res: Response) => {
   // 1. search code data
   const {
     data,
-    error,
   } = await DB.code.searchCode({
     code: token,
   });
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
+
   if (!data) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid reset token',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid reset token',
+    });
   }
 
   // 2. check code data
@@ -484,60 +371,36 @@ authRouter.post('/reset', async (req: Request, res: Response) => {
 
   if (used
       || etime < new Date()) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid reset token',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid reset token',
+    });
   }
 
   // 3. set code used
-  const {
-    error: updateError,
-  } = await DB.code.updateCode(data.id, {
+  await DB.code.updateCode(data.id, {
     used: true,
   });
-  if (updateError) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: updateError,
-      });
-    return;
-  }
 
   // 4. check account
   const {
     data: account,
-    error: accountError,
   } = await DB.account.getAccountById(data.account);
-  if (accountError) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: accountError,
-      });
-    return;
-  }
+
   if (!account) {
-    res.status(404)
-      .json({
-        status: 404,
-        message: 'Account not found',
-      });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'Account not found',
+    });
   }
 
   // 5. validate password
   const passwordResult = Validator.validatePassword(password);
   if (!passwordResult.success) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid new password',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid new password',
+    });
   }
 
   // 6. update password
@@ -584,30 +447,12 @@ authRouter.get(
     // 1. post stats
     const {
       data: postStats,
-      error: postError,
     } = await DB.post.getStats(id);
-    if (postError) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: postError,
-        });
-      return;
-    }
 
     // 2. file stats
     const {
       data: fileStats,
-      error: fileError,
     } = await DB.file.getStats(id);
-    if (fileError) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: fileError,
-        });
-      return;
-    }
 
     res.json({
       post: postStats,
@@ -638,7 +483,6 @@ authRouter.get(
 
     const {
       data,
-      error,
     } = await DB.post.getPosts({
       search: search as string,
       author: id,
@@ -655,15 +499,6 @@ authRouter.get(
           ? Number(size)
           : DB_SIZE,
     });
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     res.json(data);
   },
@@ -685,37 +520,23 @@ authRouter.get(
 
     const {
       data: post,
-      error,
     } = await DB.post.getPostByUid(uid);
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     // 1. check post exist
     if (!post) {
-      res.status(404)
-          .json({
-            status: 404,
-            message: 'Post not found',
-          });
-      return;
+      throw new BlogError({
+        status: 404,
+        message: 'Post not found',
+      });
     }
 
     // 2. check post.author is me
     if (post.authorId
         !== id) {
-      res.status(403)
-          .json({
-            status: 403,
-            message: 'Action not allowed',
-          });
-      return;
+      throw new BlogError({
+        status: 403,
+        message: 'Action not allowed',
+      });
     }
 
     res.json(post);

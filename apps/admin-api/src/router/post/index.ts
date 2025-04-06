@@ -40,7 +40,6 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
 
   const {
     data,
-    error,
   } = await DB.post.getPosts({
     search: search as string,
     author: author
@@ -58,15 +57,6 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
         ? Number(size)
         : DB_SIZE,
   });
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   res.json(data);
 });

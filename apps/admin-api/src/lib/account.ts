@@ -2,6 +2,7 @@ import {
   Response,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import Validator from '@packages/lib/validator';
 import Hash from '@packages/lib/hash';
 import DB from '@packages/database';
@@ -19,26 +20,14 @@ export async function getAccountInfo(id: number, res: Response) {
 
   const {
     data: account,
-    error,
   } = await DB.account.getAccountById(id);
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   // 2. check is account exist
   if (!account) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'Account not found',
-        });
-    return;
+    throw new BlogError({
+      status: 404,
+      message: 'Account not found',
+    });
   }
 
   const {

@@ -4,6 +4,7 @@ import {
   Response,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import DB, {
   DB_PAGE,
   DB_SIZE,
@@ -38,7 +39,6 @@ bookmarkRouter.get(
 
     const {
       data,
-      error,
     } = await DB.bookmark.getBookmarks({
       account: id,
       sort: sort as string,
@@ -49,15 +49,6 @@ bookmarkRouter.get(
           ? Number(size)
           : DB_SIZE,
     });
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     res.json(data);
   },
@@ -83,41 +74,19 @@ bookmarkRouter.post(
     // 1. check is exist
     const {
       data: existsBookmark,
-      error,
     } = await DB.bookmark.searchBookmark(id, postId);
 
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
-
     if (existsBookmark?.list?.length) {
-      res.status(400)
-          .json({
-            status: 400,
-            message: 'Bookmark exists',
-          });
-      return;
+      throw new BlogError({
+        status: 400,
+        message: 'Bookmark exists',
+      });
     }
 
     // 2. create bookmark
     const {
       data: bookmark,
-      error: createError,
     } = await DB.bookmark.createBookmark(id, postId);
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     res.json(bookmark);
   },
@@ -140,17 +109,7 @@ bookmarkRouter.get(
 
     const {
       data,
-      error,
     } = await DB.bookmark.searchBookmark(id, Number(postId));
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     res.json({
       bookmarked: !!data?.list?.length,
@@ -173,18 +132,7 @@ bookmarkRouter.delete(
       postId,
     } = req.params;
 
-    const {
-      error,
-    } = await DB.bookmark.deleteBookmark(id, Number(postId));
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
+    await DB.bookmark.deleteBookmark(id, Number(postId));
 
     res.end();
   },

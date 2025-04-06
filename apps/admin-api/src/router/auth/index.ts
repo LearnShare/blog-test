@@ -4,6 +4,7 @@ import {
   Response,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import Validator from '@packages/lib/validator';
 import Hash from '@packages/lib/hash';
 import JWT from '@packages/lib/jwt';
@@ -43,17 +44,7 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
   // 2. check is account exist
   const {
     data: account,
-    error,
   } = await DB.account.getAccountByEmail(email);
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   // 3. check password
   let passwordMatch = false;
@@ -63,32 +54,18 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
 
   if (!account
       || !passwordMatch) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Account or Password error',
-        });
-    return;
-  }
-
-  if (!account
-      || !passwordMatch) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Account or Password error',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Account or Password error',
+    });
   }
 
   // 4. check role
   if (account.role !== 'ADMIN') {
-    res.status(403)
-        .json({
-          status: 403,
-          message: 'Not allowed',
-        });
-    return;
+    throw new BlogError({
+      status: 403,
+      message: 'Not allowed',
+    });
   }
 
   // 5. JWT token

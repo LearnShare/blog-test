@@ -43,7 +43,6 @@ accountRouter.get(
 
     const {
       data,
-      error,
     } = await DB.account.getAccounts({
       search: search as string,
       role: role as AccountRole,
@@ -59,15 +58,6 @@ accountRouter.get(
           ? Number(size)
           : DB_SIZE,
     });
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     res.json(data);
   },

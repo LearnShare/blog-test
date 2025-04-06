@@ -4,6 +4,7 @@ import {
   NextFunction,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import JWT from '@packages/lib/jwt';
 import Redis from '@/lib/redis';
 import DB from '@packages/database';
@@ -66,12 +67,10 @@ async function check(
 
   if (!authHeader
       || !token) {
-    res.status(401)
-        .json({
-          code: 401,
-          message: 'You should login first',
-        });
-    return;
+    throw new BlogError({
+      status: 401,
+      message: 'You should login first',
+    });
   }
 
   try {
@@ -81,12 +80,10 @@ async function check(
 
     next();
   } catch (error) {
-    res.status(401)
-        .json({
-          code: 401,
-          message: 'Invalid authorization token',
-        });
-    return;
+    throw new BlogError({
+      status: 401,
+      message: 'Invalid authorization token',
+    });
   }
 }
 
@@ -102,12 +99,10 @@ async function checkVerified(
   const account = await Redis.getAccountInfo(id);
 
   if (!account.verified) {
-    res.status(403)
-        .json({
-          code: 403,
-          message: 'Account not verified',
-        });
-    return;
+    throw new BlogError({
+      status: 403,
+      message: 'Account not verified',
+    });
   }
 
   next();
@@ -126,12 +121,10 @@ function checkRole(roles: string[]) {
     const account = await Redis.getAccountInfo(id);
 
     if (!roles.includes(account.role)) {
-      res.status(403)
-          .json({
-            code: 403,
-            message: 'Action not allowed',
-          });
-      return;
+      throw new BlogError({
+        status: 403,
+        message: 'Action not allowed',
+      });
     }
 
     next();
@@ -149,7 +142,6 @@ async function checkFileLimits(
 
   const {
     data,
-    error,
   } = await DB.file.getStats(id);
 
   const {
@@ -162,12 +154,10 @@ async function checkFileLimits(
 
   if (total >= totalLimit
       || totalSize >= totalSizeLimit) {
-    res.status(403)
-        .json({
-          code: 403,
-          message: 'Upload limit exceeded',
-        });
-    return;
+    throw new BlogError({
+      status: 403,
+      message: 'Upload limit exceeded',
+    });
   }
 
   next();

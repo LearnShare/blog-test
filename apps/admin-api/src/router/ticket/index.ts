@@ -35,7 +35,6 @@ ticketRouter.get('/', async (req: CustomRequest, res: Response) => {
 
   const {
     data,
-    error,
   } = await DB.ticket.getTickets({
     type: type as string,
     status: status as string,
@@ -48,15 +47,6 @@ ticketRouter.get('/', async (req: CustomRequest, res: Response) => {
         ? Number(size)
         : DB_SIZE,
   });
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   res.json(data);
 });
@@ -85,22 +75,11 @@ ticketRouter.put('/:id', async (req: CustomRequest, res: Response) => {
     return;
   }
 
-  const {
-    error,
-  } = await DB.ticket.reviewPost(Number(id), {
+  await DB.ticket.reviewPost(Number(id), {
     postId,
     action,
     message,
   });
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
 
   res.json();
 });

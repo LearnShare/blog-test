@@ -4,6 +4,7 @@ import {
   NextFunction,
 } from 'express';
 
+// TODO handle errors
 export default function error(
   err: any,
   req: Request,

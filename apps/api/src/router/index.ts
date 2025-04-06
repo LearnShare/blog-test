@@ -26,7 +26,7 @@ router.use('/api/bookmark', bookmarkRouter);
 router.use((req: Request, res: Response) => {
   res.status(404)
     .json({
-      code: 404,
+      status: 404,
       message: `${ req.path } not found`,
     });
 });

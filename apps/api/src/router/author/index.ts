@@ -4,6 +4,7 @@ import {
   Response,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import DB, {
   DB_PAGE,
   DB_SIZE,
@@ -34,7 +35,6 @@ authorRouter.get(
 
     const {
       data,
-      error,
     } = await DB.account.getAuthors({
       posts: posts
           ? Boolean(Number(posts))
@@ -46,15 +46,6 @@ authorRouter.get(
           ? Number(size)
           : DB_SIZE,
     });
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     res.json(data);
   },
@@ -73,42 +64,20 @@ authorRouter.get(
     // 1. account info
     const {
       data: account,
-      error,
     } = await DB.account.getAccountByUid(uid);
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
 
     // 2. check is account exist
     if (!account) {
-      res.status(404)
-          .json({
-            status: 404,
-            message: 'Account not found',
-          });
-      return;
+      throw new BlogError({
+        status: 404,
+        message: 'Account not found',
+      });
     }
 
     // 3. post stats
     const {
       data: postStats,
-      error: postError,
     } = await DB.post.getStats(account.id);
-
-    if (postError) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: postError,
-        });
-      return;
-    }
 
     res.json({
       ...account,

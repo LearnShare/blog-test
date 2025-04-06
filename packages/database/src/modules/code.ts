@@ -10,41 +10,27 @@ interface CodeData {
 
 // create code
 async function createCode(accountId: number, codeData: CodeData) {
-  try {
-    const code = await prisma.code.create({
-      data: {
-        ...codeData,
-        account: accountId,
-      },
-    });
+  const code = await prisma.code.create({
+    data: {
+      ...codeData,
+      account: accountId,
+    },
+  });
 
-    return {
-      data: code,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: code,
+  };
 }
 
 // search with account and code
 async function searchCode(data: Record<string, any>) {
-  try {
-    const codeData = await prisma.code.findFirst({
-      where: data,
-    });
+  const codeData = await prisma.code.findFirst({
+    where: data,
+  });
 
-    return {
-      data: codeData,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: codeData,
+  };
 }
 
 interface UpdateData {
@@ -53,45 +39,31 @@ interface UpdateData {
 
 // update code
 async function updateCode(id: number, data: UpdateData) {
-  try {
-    const codeData = await prisma.code.update({
-      where: {
-        id,
-      },
-      data,
-    });
+  const codeData = await prisma.code.update({
+    where: {
+      id,
+    },
+    data,
+  });
 
-    return {
-      data: codeData,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: codeData,
+  };
 }
 
 // count code by accountId
 async function countCodeByAccountId(accountId: number) {
-  try {
-    const count = await prisma.code.count({
-      where: {
-        account: accountId,
-      },
-    });
+  const count = await prisma.code.count({
+    where: {
+      account: accountId,
+    },
+  });
 
-    return {
-      data: {
-        count,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error,
-    };
-  }
+  return {
+    data: {
+      count,
+    },
+  };
 }
 
 export default {

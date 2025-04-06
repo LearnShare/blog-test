@@ -46,9 +46,8 @@ async function getAccountInfo(id): Promise<any> {
   if (!value) {
     const {
       data: account,
-      error,
     } = await DB.account.getAccountById(id);
-    if (error) {
+    if (!account) {
       return null;
     }
 
