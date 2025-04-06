@@ -104,9 +104,10 @@ async function getTickets(ticketsQuery: TicketsQuery) {
     };
 
     // get post info
-    const ids: Record<number, boolean> = {};
+    const ids: Record<string, boolean> = {};
     for (const item of list) {
-      if (!ids[item.ref]) {
+      if (item.ref
+          && !ids[item.ref]) {
         ids[item.ref] = true;
       }
     }

@@ -21,6 +21,9 @@ import {
 import Loading from '@/components/loading';
 import Empty from '@/components/empty';
 
+import {
+  statusNames,
+} from '../../../posts/filter';
 import type {
   Post,
 } from '@/types/post';
@@ -72,11 +75,11 @@ function DataPosts() {
                           <TableCell>
                             <Link
                                 className="hover:underline"
-                                href={ `/${post.published ? 'post' : 'draft'}/${post.uid}` }
+                                href={ `/${post.status === 'public' ? 'post' : 'draft'}/${post.uid}` }
                                 target="_blank">{ post.title }</Link>
                           </TableCell>
                           <TableCell>{ time.formatRelative(post.utime) }</TableCell>
-                          <TableCell>{ post.published ? '已发布' : '未发布' }</TableCell>
+                          <TableCell>{ statusNames[post.status] }</TableCell>
                           <TableCell>{ post.views }</TableCell>
                         </TableRow>
                       ))

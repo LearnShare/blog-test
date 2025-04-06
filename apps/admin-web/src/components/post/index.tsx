@@ -13,7 +13,7 @@ import type {
 } from '@/types';
 
 interface PostCardProps {
-  data: Post;
+  data?: Post;
   ticket?: Ticket;
   refresh?: () => void;
   className?: string;
@@ -37,6 +37,10 @@ function PostCard({
 
     setDialogOpen(false);
   };
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <>

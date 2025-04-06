@@ -25,13 +25,13 @@ export default function PostCard({
   coverUrl,
   title,
   intro,
-  published,
   utime,
   author,
   views,
   bookmarks,
   bookmarked,
   actions = false,
+  status,
   message,
   onActionDone,
 }: PostCardProps) {
@@ -43,7 +43,6 @@ export default function PostCard({
               className="absolute right-1 top-1"
               id={ id }
               uid={ uid }
-              published={ published }
               onActionDone={ onActionDone } />
         )
       }
@@ -57,7 +56,7 @@ export default function PostCard({
         )
       }
       <Link
-          href={ `/${ published ? 'post' : 'draft' }/${uid}` }
+          href={ `/${ status === 'public' ? 'post' : 'draft' }/${uid}` }
           className="flex-1 group flex flex-col gap-2">
         {
           coverUrl && (

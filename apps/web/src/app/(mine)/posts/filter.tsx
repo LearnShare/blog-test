@@ -34,6 +34,15 @@ const statusOptions = [
   },
 ];
 
+const statusNames: Record<string, string> = {};
+for (const option of statusOptions) {
+  statusNames[option.value] = option.label;
+}
+
+export {
+  statusNames,
+};
+
 function Filter({
   stats,
   values,

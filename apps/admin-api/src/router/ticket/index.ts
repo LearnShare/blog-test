@@ -9,6 +9,9 @@ import DB, {
   DB_SIZE,
   DB_SORT,
 } from '@packages/database';
+import type {
+  CustomRequest,
+} from '@/lib/auth';
 
 const ticketRouter = Router();
 
@@ -34,8 +37,8 @@ ticketRouter.get('/', async (req: CustomRequest, res: Response) => {
     data,
     error,
   } = await DB.ticket.getTickets({
-    type,
-    status,
+    type: type as string,
+    status: status as string,
     sort: (sort as string)
         || DB_SORT,
     page: page
@@ -73,8 +76,6 @@ ticketRouter.put('/:id', async (req: CustomRequest, res: Response) => {
     message,
   } = req.body;
 
-  console.log(req.body);
-
   if (type !== 'post-review') {
     res.status(400)
         .json({
@@ -85,7 +86,6 @@ ticketRouter.put('/:id', async (req: CustomRequest, res: Response) => {
   }
 
   const {
-    data,
     error,
   } = await DB.ticket.reviewPost(Number(id), {
     postId,
@@ -102,7 +102,7 @@ ticketRouter.put('/:id', async (req: CustomRequest, res: Response) => {
     return;
   }
 
-  res.json(data);
+  res.json();
 });
 
 export default ticketRouter;

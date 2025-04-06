@@ -11,6 +11,7 @@ export interface Post {
   intro?: string;
   content: string;
   format?: string;
+  ticket?: any;
   authorId: number;
   author: Account;
   status: string;

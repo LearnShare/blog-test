@@ -16,6 +16,8 @@ export interface PostData {
   coverUrl?: string;
   content?: string;
   format?: string;
+  status?: string;
+  ticket?: any;
 }
 
 export interface PostCreateData {
@@ -26,6 +28,7 @@ export interface PostCreateData {
   coverUrl: string;
   content: string;
   format: string;
+  status: string;
 }
 
 export interface PostsQuery {

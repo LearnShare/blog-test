@@ -27,17 +27,6 @@ const defaultFilters = {
   status: 'pending',
 };
 
-function parseFilters(filterData: FilterData) {
-  const parsedData = {
-    ...filterData,
-    published: filterData.published === '*'
-      ? ''
-      : filterData.published,
-  };
-
-  return parsedData;
-}
-
 const size = 20;
 
 interface DataType {
@@ -58,7 +47,7 @@ export default function PageTicketPost() {
   const [
     filters,
     setFilters,
-  ] = useState<FilterData>(parseFilters(defaultFilters));
+  ] = useState<FilterData>(defaultFilters);
 
   const [
     data,
@@ -103,7 +92,7 @@ export default function PageTicketPost() {
           <Filter
               filters={ defaultFilters }
               onRun={ (filterData: FilterData) =>
-                  setFilters(parseFilters(filterData)) } />
+                  setFilters(filterData) } />
         ) }
         body={
           <TicketsTable

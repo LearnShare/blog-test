@@ -22,7 +22,7 @@ const postRouter = Router();
  * query:
  * - search: title/content
  * - author: account.id
- * - published: 1|0
+ * - status
  * - sort: [-]ctime
  * - page
  * - size
@@ -32,7 +32,7 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
     search,
     author,
     account,
-    published,
+    status,
     sort,
     page,
     size,
@@ -47,9 +47,7 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
         ? Number(author)
         : null,
     account: true,
-    published: published
-        ? !!Number(published)
-        : null,
+    status: status as string,
     content: true,
     sort: (sort as string)
         || DB_SORT,
@@ -71,125 +69,6 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
   }
 
   res.json(data);
-});
-
-/**
- * get post by uid
- */
-postRouter.get('/uid/:uid', async (req: Request, res: Response) => {
-  const {
-    uid,
-  } = req.params;
-
-  const {
-    data: post,
-    error,
-  } = await DB.post.getPostByUid(uid);
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
-
-  if (!post
-      || !post.published) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'Post not found',
-        });
-    return;
-  }
-
-  DB.post.updatePostViews(post.id);
-
-  res.json(post);
-});
-
-/**
- * get post by id
- */
-postRouter.get('/:id', async (req: Request, res: Response) => {
-  const {
-    id,
-  } = req.params;
-
-  const {
-    data: post,
-    error,
-  } = await DB.post.getPostById(Number(id));
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
-
-  if (!post
-      || !post.published) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'Post not found',
-        });
-    return;
-  }
-
-  res.json(post);
-});
-
-/**
- * delete post by id
- */
-postRouter.delete('/:id', async (req: Request, res: Response) => {
-  const {
-    id,
-  } = req.params;
-
-  const {
-    data: post,
-    error,
-  } = await DB.post.getPostById(Number(id));
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
-
-  if (!post) {
-    res.status(404)
-        .json({
-          status: 404,
-          message: 'Post not found',
-        });
-    return;
-  }
-
-  const {
-    error: deleteError,
-  } = await DB.post.deletePost(Number(id));
-
-  if (error) {
-    res.status(500)
-      .json({
-        status: 500,
-        message: error,
-      });
-    return;
-  }
-
-  res.end();
 });
 
 export default postRouter;

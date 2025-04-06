@@ -37,9 +37,9 @@ function Actions({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem
-              onSelect={ () => onAction('内容太短') }>内容太短</DropdownMenuItem>
+              onSelect={ () => onAction?.('内容太短') }>内容太短</DropdownMenuItem>
           <DropdownMenuItem
-              onSelect={ () => onAction('内容不适合公开') }>不适合公开</DropdownMenuItem>
+              onSelect={ () => onAction?.('内容不适合公开') }>不适合公开</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

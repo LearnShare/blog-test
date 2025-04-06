@@ -192,7 +192,8 @@ async function getPosts(postQuery: PostsQuery) {
     if (status === 'rejected') {
       const ids: Record<number, boolean> = {};
       for (const item of list) {
-        if (!ids[item.ticket]) {
+        if (item.ticket
+            && !ids[item.ticket]) {
           ids[item.ticket] = true;
         }
       }

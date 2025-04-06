@@ -645,7 +645,7 @@ authRouter.get(
       account: account
           ? Boolean(Number(account))
           : false,
-      status,
+      status: status as string,
       sort: (sort as string)
           || DB_SORT,
       page: page

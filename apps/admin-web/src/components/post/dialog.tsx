@@ -40,7 +40,7 @@ interface PostDialogProps {
   open?: boolean;
   data: Post;
   ticket?: Ticket;
-  onClose?: (updated?: boolean) => void;
+  onClose?: (updated: boolean) => void;
 }
 
 function PostDialog({
@@ -51,7 +51,7 @@ function PostDialog({
 }: PostDialogProps) {
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
-      onClose?.();
+      onClose?.(false);
     }
   };
 
@@ -59,7 +59,7 @@ function PostDialog({
     run: review,
     loading,
   } = useRequest((action: string, message?: string) =>
-      ticketAPI.reviewPost(ticket?.id, {
+      ticketAPI.reviewPost(ticket?.id as number, {
         postId: data?.id,
         action,
         message,

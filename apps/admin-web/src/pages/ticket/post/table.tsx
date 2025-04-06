@@ -52,7 +52,7 @@ export default function TicketsTable({
               </TableHeader>
               <TableBody>
                 {
-                  data?.list.map((ticket: Post) => (
+                  data?.list.map((ticket: Ticket) => (
                     <TableRow
                         key={ ticket.id }>
                       <TableCell>{ ticket.id }</TableCell>

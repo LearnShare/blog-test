@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
 } from 'react';
 
@@ -18,7 +18,7 @@ import {
 } from './data';
 
 export interface FilterData {
-  type?: string;
+  status?: string;
 };
 
 interface FilterProps {

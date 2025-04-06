@@ -3,9 +3,9 @@ import {
   LayoutDashboard as IconLayoutDashboard,
   Users as IconUsers,
   BookOpen as IconBookOpen,
-  UserCheck as IconUserCheck,
+  // UserCheck as IconUserCheck,
   BookOpenCheck as IconBookOpenCheck,
-  Handshake as IconHandshake,
+  // Handshake as IconHandshake,
 } from 'lucide-react';
 
 export interface MenuItem {

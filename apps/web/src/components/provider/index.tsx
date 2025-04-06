@@ -104,7 +104,10 @@ function Provider({
     loaded,
     info,
     setInfo: (data: any, tk?: string) => {
-      setToken(tk);
+      if (tk) {
+        setToken(tk);
+      }
+
       setLoaded(true);
       setInfo(data);
     },
