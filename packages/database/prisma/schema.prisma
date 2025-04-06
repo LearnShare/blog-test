@@ -37,8 +37,8 @@ model Post {
   intro     String
   content   String
   format    String     @default("TEXT")
-  images    Int[]
-  published Boolean    @default(false)
+  ticket    Int?
+  status    String
   views     Int        @default(0)
   bookmarks Bookmark[]
   ctime     DateTime   @default(now())
@@ -72,10 +72,6 @@ model Code {
   etime   DateTime
 }
 
-enum TargetType {
-  POST
-}
-
 model Bookmark {
   time      DateTime @default(now())
   account   Account  @relation(fields: [accountId], references: [id])
@@ -84,4 +80,16 @@ model Bookmark {
   postId    Int
 
   @@id([accountId, postId])
+}
+
+model Ticket {
+  id      Int      @id @default(autoincrement())
+  type    String
+  ref     String?
+  from    Int?
+  to      Int?
+  status  String
+  message String?
+  ctime   DateTime @default(now())
+  utime   DateTime?
 }

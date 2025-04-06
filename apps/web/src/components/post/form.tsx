@@ -28,6 +28,12 @@ import {
   FormError,
 } from '@/components/form';
 import FormActions from '@/components/post/actions/form';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 import Validator from '@packages/lib/validator';
 import {
@@ -65,10 +71,9 @@ function PostForm({
 }) {
   const router = useRouter();
 
-  const submit = (formData: FormData, published: boolean) => {
+  const submit = (formData: FormData) => {
     const postData = {
       ...formData,
-      published,
       format: 'MARKDOWN',
       cover: cover?.id,
       coverUrl: cover?.url || '',
@@ -108,17 +113,16 @@ function PostForm({
     run: save,
     loading,
     error,
-  } = useRequest((formData: FormData, published: boolean) =>
-      submit(formData, published),
+  } = useRequest((formData: FormData) =>
+      submit(formData),
     {
       manual: true,
       onSuccess: (res) => {
         const {
           uid,
-          published,
         } = res;
 
-        router.push(`/${published ? 'post' : 'draft'}/${uid}`);
+        router.push(`/draft/${uid}`);
       },
     },
   );
@@ -150,12 +154,18 @@ function PostForm({
           <h2 className="text-xl flex-1">{ data?.id ? '修改' : '编写' }文章</h2>
           <FormActions
               cover={ cover }
-              save={ handleSubmit((formData: FormData) => save(formData, false)) }
               upload={ () => setCoverDialogOpen(true) }
               remove={ () => setCover(null) } />
-          <Button
-              disabled={ loading }
-              onClick={ handleSubmit((formData: FormData) => save(formData, true)) }>保存并发布</Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                    disabled={ loading }
+                    onClick={ handleSubmit((formData: FormData) => save(formData)) }>保存</Button>
+              </TooltipTrigger>
+              <TooltipContent align="end">保存为草稿，并提交审核</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         {
           !loading && error && (

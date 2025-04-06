@@ -291,9 +291,13 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
       },
       select: {
         ...AccountPublicFields,
-        _count: {
+        _count: { // count public post
           select: {
-            posts: true,
+            posts: {
+              where: {
+                status: 'public',
+              },
+            },
           },
         },
       },

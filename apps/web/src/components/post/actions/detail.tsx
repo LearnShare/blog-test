@@ -6,8 +6,6 @@ import React, {
 import {
   EllipsisVertical as IconEllipsisVertical,
   PencilLine as IconPencilLine,
-  Send as IconSend,
-  Undo2 as IconUndo2,
   Trash2 as IconTrash2,
 } from 'lucide-react';
 import {
@@ -24,7 +22,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Alert from '@/components/dialog/alert';
@@ -36,7 +33,6 @@ import {
 interface DetailActionProps {
   id: number;
   uid: string;
-  published: boolean;
   onActionDone?: (action: string) => void;
   className?: string;
 }
@@ -44,33 +40,10 @@ interface DetailActionProps {
 function DetailActions({
   id,
   uid,
-  published,
   onActionDone,
   className,
 }: DetailActionProps) {
   const router = useRouter();
-
-  const {
-    run: publishPost,
-  } = useRequest(() => post.updatePublished(id, {
-    published: true,
-  }), {
-    manual: true,
-    onSuccess: () => {
-      onActionDone?.('publish');
-    },
-  });
-
-  const {
-    run: withdrawPost,
-  } = useRequest(() => post.updatePublished(id, {
-    published: false,
-  }), {
-    manual: true,
-    onSuccess: () => {
-      onActionDone?.('withdraw');
-    },
-  });
 
   const {
     run: deletePost,
@@ -94,12 +67,6 @@ function DetailActions({
     switch (action) {
       case 'edit':
         router.push(`/edit/${uid}`);
-        return;
-      case 'publish':
-        publishPost();
-        return;
-      case 'withdraw':
-        withdrawPost();
         return;
       case 'delete':
         setDeleteDialogOpen(true);
@@ -125,25 +92,6 @@ function DetailActions({
             <IconPencilLine />
             <span>修改</span>
           </DropdownMenuItem>
-          {
-            !published && (
-              <DropdownMenuItem
-                  onSelect={ () => menuOnSelect('publish') }>
-                <IconSend />
-                <span>发布</span>
-              </DropdownMenuItem>
-            )
-          }
-          {
-            published && (
-              <DropdownMenuItem
-                  onSelect={ () => menuOnSelect('withdraw') }>
-                <IconUndo2 />
-                <span>取消发布</span>
-              </DropdownMenuItem>
-            )
-          }
-          <DropdownMenuSeparator />
           <DropdownMenuItem
               onSelect={ () => menuOnSelect('delete') }>
             <IconTrash2 />

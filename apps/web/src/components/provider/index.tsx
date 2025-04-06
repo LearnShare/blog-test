@@ -90,15 +90,21 @@ function Provider({
     },
   });
 
-  const notLogin = (mounted && !token)
+  const endNotLogin = (mounted && !token)
       || (loaded && !info);
 
+  const notLogin = !mounted
+      || loading
+      || endNotLogin;
+
   const contextValue = {
+    endNotLogin,
     notLogin,
     loading,
     loaded,
     info,
-    setInfo: (data: any) => {
+    setInfo: (data: any, tk?: string) => {
+      setToken(tk);
       setLoaded(true);
       setInfo(data);
     },
@@ -107,7 +113,7 @@ function Provider({
   let content = children;
 
   // check is private path
-  if (notLogin
+  if (endNotLogin
       && isPrivate(pathname)) {
     content = (
         <AuthRequired />

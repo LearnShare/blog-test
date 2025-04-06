@@ -25,6 +25,7 @@ export interface MenuGroup {
 const menus: MenuGroup[] = [
   {
     name: 'default',
+    label: '浏览',
     menus: [
       {
         name: 'home',
@@ -50,24 +51,24 @@ const menus: MenuGroup[] = [
     name: 'ticket',
     label: '工单',
     menus: [
-      {
-        name: 'ticket-profile',
-        icon: <IconUserCheck />,
-        label: '用户审核',
-        path: '/ticket/profile',
-      },
+      // {
+      //   name: 'ticket-profile',
+      //   icon: <IconUserCheck />,
+      //   label: '用户审核',
+      //   path: '/ticket/profile',
+      // },
       {
         name: 'ticket-post',
         icon: <IconBookOpenCheck />,
         label: '文章审核',
         path: '/ticket/post',
       },
-      {
-        name: 'ticket-author',
-        icon: <IconHandshake />,
-        label: '作者申请',
-        path: '/ticket/author',
-      },
+      // {
+      //   name: 'ticket-author',
+      //   icon: <IconHandshake />,
+      //   label: '作者申请',
+      //   path: '/ticket/author',
+      // },
     ],
   },
 ];

@@ -72,7 +72,7 @@ function SignInForm() {
         } = data;
 
         Store.setToken(token);
-        setInfo(data);
+        setInfo(data, token);
 
         if (!verified) {
           router.push('/welcome');

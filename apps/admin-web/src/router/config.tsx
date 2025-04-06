@@ -9,6 +9,7 @@ import {
   PageSignIn,
   PageAccount,
   PagePost,
+  PageTicketPost,
 
   Page404,
 } from '@/pages';
@@ -46,6 +47,11 @@ const routes: RouteItem[] = [
         name: 'post',
         path: '/post',
         element: <PagePost />,
+      },
+      {
+        name: 'ticket-post',
+        path: '/ticket/post',
+        element: <PageTicketPost />,
       },
     ],
   },

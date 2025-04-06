@@ -28,3 +28,16 @@ export interface Post {
   ctime: string;
   utime: string;
 }
+
+export interface Ticket {
+  id: number;
+  type: string;
+  ref: string;
+  post?: Post;
+  from?: number;
+  to?: number;
+  status: string;
+  message?: string;
+  ctime: string;
+  utime: string;
+}

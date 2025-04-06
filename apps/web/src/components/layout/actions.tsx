@@ -38,7 +38,7 @@ function HeaderActions() {
   const router = useRouter();
 
   const {
-    notLogin,
+    endNotLogin,
     info,
     setInfo,
   } = useContext(AccountContext);
@@ -80,7 +80,7 @@ function HeaderActions() {
   return (
     <div className="flex gap-2 items-center">
       {
-        notLogin && (
+        endNotLogin && (
           <>
             <Link
                 href="/sign-up"
@@ -98,7 +98,7 @@ function HeaderActions() {
         )
       }
       {
-        !notLogin && info && (
+        !endNotLogin && info && (
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar

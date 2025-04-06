@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   EllipsisVertical as IconEllipsisVertical,
-  Save as IconSave,
   ImageUp as IconImageUp,
   Trash2 as IconTrash2,
 } from 'lucide-react';
@@ -15,7 +14,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
@@ -24,7 +22,6 @@ interface FormActionProps {
     id: number;
     url: string;
   } | null;
-  save?: () => void;
   upload?: () => void;
   remove?: () => void;
   className?: string;
@@ -32,7 +29,6 @@ interface FormActionProps {
 
 function FormActions({
   cover,
-  save,
   upload,
   remove,
   className,
@@ -40,9 +36,6 @@ function FormActions({
 
   const menuOnSelect = (action: string) => {
     switch (action) {
-      case 'save':
-        save?.();
-        return;
       case 'upload':
         upload?.();
         return;
@@ -65,12 +58,6 @@ function FormActions({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-              onSelect={ () => menuOnSelect('save') }>
-            <IconSave />
-            <span>保存为草稿</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem
               onSelect={ () => menuOnSelect('upload') }>
             <IconImageUp />

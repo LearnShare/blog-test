@@ -3,6 +3,7 @@ import post from './modules/post';
 import file from './modules/file';
 import code from './modules/code';
 import bookmark from './modules/bookmark';
+import ticket from './modules/ticket';
 
 export * from './config';
 export * from './types';
@@ -13,4 +14,5 @@ export default {
   file,
   code,
   bookmark,
+  ticket,
 };

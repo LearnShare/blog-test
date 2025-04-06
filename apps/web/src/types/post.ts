@@ -13,7 +13,7 @@ export interface Post {
   format?: string;
   authorId: number;
   author: Account;
-  published: boolean;
+  status: string;
   views: number;
   bookmarks: number;
   bookmarked?: boolean;

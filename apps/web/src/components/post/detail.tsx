@@ -51,7 +51,7 @@ export default function PostDetail({
   intro,
   content,
   format,
-  published,
+  status,
   author,
   views,
   bookmarks,
@@ -86,7 +86,7 @@ export default function PostDetail({
     }
   };
 
-  if (!published
+  if (status !== 'public'
       && info?.id !== author.id) {
     return (
       <Error message="没有访问该页面的权限" />
@@ -113,11 +113,10 @@ export default function PostDetail({
             </Breadcrumb>
             <div className="flex items-center justify-between">
               <Badge
-                  variant="outline">{ published ? '已发布' : '未发布' }</Badge>
+                  variant="outline">{ status === 'public' ? '已发布' : '未发布' }</Badge>
               <DetailActions
                   id={ id }
                   uid={ uid }
-                  published={ published }
                   onActionDone={ onActionDone } />
             </div>
           </>

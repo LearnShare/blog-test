@@ -48,7 +48,7 @@ async function getPosts(postQuery: PostsQuery) {
     author,
     account,
     bookmarkBy,
-    published,
+    status,
     content: withContent,
     sort,
     page,
@@ -68,9 +68,9 @@ async function getPosts(postQuery: PostsQuery) {
         id: author,
       }
       : {};
-  const publishedQuery = published !== null
+  const statusQuery = status
       ? {
-        published,
+        status,
       }
       : {};
   const searchQuery = search
@@ -97,7 +97,7 @@ async function getPosts(postQuery: PostsQuery) {
 
   const query = {
     author: authorQuery,
-    ...publishedQuery,
+    ...statusQuery,
     ...searchQuery,
   };
 
@@ -397,6 +397,28 @@ async function getStats(id?: number) {
   }
 }
 
+// get posts by ids
+async function getPostsByIds(ids: number[]) {
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        OR: ids.map((id) => ({
+          id,
+        })),
+      },
+    });
+
+    return {
+      data: posts,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+    };
+  }
+}
+
 export default {
   createPost,
   getPosts,
@@ -406,4 +428,5 @@ export default {
   updatePostViews,
   deletePost,
   getStats,
+  getPostsByIds,
 };

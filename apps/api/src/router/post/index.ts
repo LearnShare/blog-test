@@ -50,7 +50,7 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
         : false,
     bookmarkBy: req.user && req.user.id,
     // only published visible
-    published: true,
+    status: 'public',
     sort: (sort as string)
         || DB_SORT,
     page: page
@@ -97,7 +97,6 @@ postRouter.post(
       coverUrl,
       content,
       format,
-      published,
     } = req.body;
 
     // 1. check title and content
@@ -151,7 +150,7 @@ postRouter.post(
       coverUrl,
       content,
       format: format as PostContentFormat,
-      published,
+      status: 'draft',
     });
 
     if (error) {
@@ -163,7 +162,37 @@ postRouter.post(
       return;
     }
 
-    res.json(post);
+    // 4. create ticket
+    const {
+      data: ticket,
+      error: ticketError,
+    } = await DB.ticket.createTicket({
+      type: 'post',
+      ref: String(post.id),
+      from: id,
+      status: 'pending',
+    });
+
+    if (ticketError) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: ticketError,
+        });
+      return;
+    }
+
+    console.log(ticket, ticketError);
+
+    // 5. update post
+    const {
+      data: updatedPost,
+      error: updateError,
+    } = await DB.post.updatePost(post.id, {
+      ticket: ticket.id,
+    });
+
+    res.json(updatedPost);
   },
 );
 
@@ -190,7 +219,7 @@ postRouter.get('/uid/:uid', async (req: Request, res: Response) => {
   }
 
   if (!post
-      || !post.published) {
+      || post.status !== 'public') {
     res.status(404)
         .json({
           status: 404,
@@ -227,7 +256,7 @@ postRouter.get('/:id', async (req: Request, res: Response) => {
   }
 
   if (!post
-      || !post.published) {
+      || post.status !== 'public') {
     res.status(404)
         .json({
           status: 404,
@@ -264,7 +293,6 @@ postRouter.put(
       coverUrl,
       content,
       format,
-      published,
     } = req.body;
 
     // 1. check title and content
@@ -339,7 +367,27 @@ postRouter.put(
       }
     }
 
-    // 5. update post
+    // 5. create ticket
+    const {
+      data: ticket,
+      error: ticketError,
+    } = DB.ticket.createTicket({
+      type: 'post',
+      ref: String(post.id),
+      from: userId,
+      status: 'pending',
+    });
+
+    if (ticketError) {
+      res.status(500)
+        .json({
+          status: 500,
+          message: ticketError,
+        });
+      return;
+    }
+
+    // 6. update post
     const {
       data: updatedPost,
       error: updateError,
@@ -353,83 +401,8 @@ postRouter.put(
       coverUrl,
       content,
       format: format as PostContentFormat,
-      published,
-    });
-
-    if (updateError) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: updateError,
-        });
-      return;
-    }
-
-    res.json(updatedPost);
-  },
-);
-
-/**
- * update post published by id
- */
-postRouter.put(
-  '/:id/published',
-  Auth.check,
-  Auth.checkVerified,
-  Auth.checkRole(['ADMIN', 'AUTHOR']),
-  async (req: CustomRequest, res: Response) => {
-    const {
-      id: userId,
-    } = req.user;
-    const {
-      id,
-    } = req.params;
-    const postId = Number(id);
-
-    const {
-      published,
-    } = req.body;
-
-    // 1. check is post exist
-    const {
-      data: post,
-      error,
-    } = await DB.post.getPostById(postId);
-
-    if (error) {
-      res.status(500)
-        .json({
-          status: 500,
-          message: error,
-        });
-      return;
-    }
-
-    if (!post) {
-      res.status(404)
-          .json({
-            status: 404,
-            message: 'Post not found',
-          });
-      return;
-    }
-
-    // 2. check author
-    if (post.authorId !== userId) {
-      res.status(403)
-          .json({
-            status: 403,
-            message: 'Action not allowed',
-          });
-      return;
-    }
-
-    // 3. update post
-    const {
-      data: updatedPost,
-      error: updateError,
-    } = await DB.post.updatePost(postId, {
-      published,
+      status: 'draft',
+      ticket: ticket.id,
     });
 
     if (updateError) {

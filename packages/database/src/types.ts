@@ -16,7 +16,6 @@ export interface PostData {
   coverUrl?: string;
   content?: string;
   format?: string;
-  published?: boolean;
 }
 
 export interface PostCreateData {
@@ -27,7 +26,6 @@ export interface PostCreateData {
   coverUrl: string;
   content: string;
   format: string;
-  published: boolean;
 }
 
 export interface PostsQuery {
@@ -35,7 +33,7 @@ export interface PostsQuery {
   author?: number;      // account.id: 根据作者筛选
   account?: boolean;    // 是否包含作者信息
   bookmarkBy?: number;  // account.id: 根据用户 ID 判断是否已被收藏
-  published?: boolean;
+  status?: string;      // 文章状态
   content?: boolean;    // 是否包含内容
   sort: string;
   page: number;
