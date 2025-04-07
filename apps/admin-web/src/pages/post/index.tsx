@@ -26,15 +26,15 @@ import {
 const defaultFilters = {
   search: '',
   author: '',
-  published: '*',
+  status: '*',
 };
 
 function parseFilters(filterData: FilterData) {
   const parsedData = {
     ...filterData,
-    published: filterData.published === '*'
+    status: filterData.status === '*'
       ? ''
-      : filterData.published,
+      : filterData.status,
   };
 
   return parsedData;

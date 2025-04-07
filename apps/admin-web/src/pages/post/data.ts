@@ -1,26 +1,30 @@
-const publishedOptions = [
+const statusOptions = [
   {
     label: '全部',
     value: '*',
   },
   {
-    label: '公开',
-    value: '1',
+    label: '已发布',
+    value: 'public',
   },
   {
-    label: '草稿',
-    value: '0',
+    label: '待审核',
+    value: 'draft',
+  },
+  {
+    label: '已拒绝',
+    value: 'rejected',
   },
 ];
 
-const publishedNames: Record<string, string> = {};
-for (const option of publishedOptions) {
+const statusNames: Record<string, string> = {};
+for (const option of statusOptions) {
   if (option.value !== '*') {
-    publishedNames[option.value] = option.label;
+    statusNames[option.value] = option.label;
   }
 }
 
 export {
-  publishedOptions,
-  publishedNames,
+  statusOptions,
+  statusNames,
 };

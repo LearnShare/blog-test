@@ -17,13 +17,13 @@ import {
 } from '@/components/ui/button';
 
 import {
-  publishedOptions,
+  statusOptions,
 } from './data';
 
 export interface FilterData {
   search?: string;
   author?: string;
-  published?: string;
+  status?: string;
 };
 
 interface FilterProps {
@@ -75,14 +75,14 @@ export default function Filter({
             value={ values.author }
             onChange={ (event: React.ChangeEvent<HTMLInputElement>) => itemOnChange('author', event.currentTarget.value) } />
         <Select
-            value={ values.published }
-            onValueChange={ (value: string) => itemOnChange('published', value) }>
+            value={ values.status }
+            onValueChange={ (value: string) => itemOnChange('status', value) }>
           <SelectTrigger className="w-[240px]">
             <SelectValue placeholder="选择状态" />
           </SelectTrigger>
           <SelectContent>
             {
-              publishedOptions.map((option) => (
+              statusOptions.map((option) => (
                 <SelectItem
                     key={ option.value }
                     value={ option.value }>{ option.label }</SelectItem>

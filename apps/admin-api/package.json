@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "tsx watch ./src/index.ts",
+    "dev": "NODE_ENV=development tsx watch ./src/index.ts",
     "build": "tsc",
     "start": "node -r esbuild-register ./src/index.ts"
   },

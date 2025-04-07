@@ -1,26 +1,4 @@
 services:
-  prod-web:
-    container_name: blog-web
-    build:
-      context: .
-      dockerfile: ./apps/web/Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-
-  prod-api:
-    container_name: blog-api
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
-    ports:
-      - "3030:3030"
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - ./.data/uploads/:/app/apps/api/uploads/
-
   postgres:
     image: postgres
     restart: always

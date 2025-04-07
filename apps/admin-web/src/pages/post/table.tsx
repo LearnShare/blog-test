@@ -15,7 +15,7 @@ import {
   Post,
 } from '@/types';
 import {
-  publishedNames,
+  statusNames,
 } from './data';
 
 import Time from '@packages/lib/time';
@@ -66,7 +66,7 @@ export default function PostsTable({
                             data={ post } />
                       </TableCell>
                       <TableCell>{ post.format }</TableCell>
-                      <TableCell>{ publishedNames[post.published ? '1' : '0'] }</TableCell>
+                      <TableCell>{ statusNames[post.status] }</TableCell>
                       <TableCell>{ Time.format(post.ctime) }</TableCell>
                       <TableCell>{ Time.format(post.utime) }</TableCell>
                       <TableCell

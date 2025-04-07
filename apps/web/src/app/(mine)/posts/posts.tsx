@@ -93,7 +93,8 @@ function Posts() {
                       key={ post.id }
                       { ...post }
                       actions
-                      message={ data?.tickets[post.ticket]?.message }
+                      message={ data?.tickets
+                          && data?.tickets[post.ticket]?.message }
                       onActionDone={ () => onActionDone() } />
                 ))
               }

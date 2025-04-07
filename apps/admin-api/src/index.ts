@@ -24,7 +24,10 @@ const rateLimiter = rateLimit({
 
 const app: Express = express();
 
-app.use(cors());
+if (process.env.NODE_ENV === 'development') {
+  app.use(cors());
+}
+
 // rate-limit: 300 req in 5min
 app.use(rateLimiter);
 // JSON body parser
@@ -45,7 +48,7 @@ app.use('/admin/api', router);
 // error
 app.use(error);
 
-const port: number = Number(process.env.SERVER_PORT) || 3030;
+const port: number = Number(process.env.SERVER_PORT) || 3090;
 
 app.listen(port, () => {
   console.log(`[API]: ready, port: ${ port }`, '\n');
