@@ -25,6 +25,8 @@ export interface Post {
   authorId: number;
   author: Account;
   published: boolean;
+  status: string;
+  ticket: number;
   ctime: string;
   utime: string;
 }
