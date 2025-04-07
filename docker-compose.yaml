@@ -1,4 +1,14 @@
 services:
+  prod-web:
+    container_name: blog-web
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
   postgres:
     image: postgres
     restart: always

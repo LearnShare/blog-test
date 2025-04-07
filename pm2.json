@@ -1,0 +1,16 @@
+{
+  "apps": [
+    {
+      "name": "admin-api",
+      "cwd": "./apps/admin-api",
+      "script": "pnpm",
+      "args": "run start"
+    },
+    {
+      "name": "api",
+      "cwd": "./apps/api",
+      "script": "pnpm",
+      "args": "run start"
+    }
+  ]
+}
