@@ -1,64 +1,31 @@
-'use client';
-
-import React, {
-  useState,
-} from 'react';
-import {
-  useRequest,
-} from 'ahooks';
-
 import PostCard from '@/components/post/card';
-import LoadMore from '@/components/load-more';
+import Empty from '@/components/empty';
+import SimplePagination from '@/components/pagination/simple';
 
-import type {
-  Account,
-} from '@/types/account';
 import type {
   Post,
 } from '@/types/post';
 import {
   post,
 } from '@packages/lib/sdk/web';
-import Empty from '@/components/empty';
+import type { Account } from '@/types/account';
 
 const size = 12;
 
-function Posts() {
-  const [
-    posts,
-    setPosts,
-  ] = useState<Post[]>([]);
-  const [
-    authors,
-    setAuthors,
-  ] = useState<Record<number, Account>>({});
 
-  const [
-    page,
-    setPage,
-  ] = useState(1);
-
-  const {
-    data,
-    loading,
-  } = useRequest(() => post.getPosts({
-    page,
+async function Posts({
+  page = 1,
+}: {
+  page?: number;
+}) {
+  const data: {
+    count: number;
+    list: Post[];
+    accounts: Record<number, Account>;
+  } = await post.getPosts({
+    page: Number(page),
     size,
     account: 1,
-  }), {
-    refreshDeps: [
-      page,
-    ],
-    onSuccess: (data) => {
-      setPosts((oldList) => ([
-        ...oldList,
-        ...data.list,
-      ]));
-      setAuthors((oldValue) => ({
-        ...oldValue,
-        ...data.accounts,
-      }));
-    },
   });
 
   return (
@@ -66,22 +33,20 @@ function Posts() {
       <div className="flex flex-wrap gap-6
           *:w-full md:*:max-w-[calc(50%-12px)]">
         {
-          posts.map((post) => (
+          data?.list.map((post: Post) => (
             <PostCard
                 key={ post.id }
                 { ...post }
-                author={ authors[post.authorId] } />
+                author={ data?.accounts[post.authorId] } />
           ))
         }
       </div>
-      <LoadMore
+      <SimplePagination
           page={ page }
           size={ size }
-          total={ data?.count }
-          loading={ loading }
-          onPageChange={ (p: number) => setPage(p) } />
+          total={ data?.count } />
       {
-        !loading && !data?.count && (
+        !data?.count && (
           <Empty />
         )
       }
