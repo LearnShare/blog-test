@@ -43,12 +43,14 @@ function FormItem({
         { children }
       </label>
       {
-        error && (
-          <FormError>{ error }</FormError>
+        hint && (
+          <div className="text-sm text-gray-400 mt-1">{ hint }</div>
         )
       }
       {
-        hint
+        error && (
+          <FormError>{ error }</FormError>
+        )
       }
     </div>
   );

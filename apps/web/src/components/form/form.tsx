@@ -19,7 +19,7 @@ function Form({
 }: FormProps) {
   return (
     <form
-        className={ cn('group flex flex-col gap-3', className) }
+        className={ cn('group flex flex-col gap-4', className) }
         data-layout={ layout }
         onSubmit={ onSubmit }>
       { children }

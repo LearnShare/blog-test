@@ -3,6 +3,14 @@ import {
   Request,
   Response,
 } from 'express';
+import he from 'he';
+import DOMPurify from 'dompurify';
+import {
+  JSDOM,
+} from 'jsdom';
+
+const jsdomWindow = new JSDOM('').window;
+const purify = DOMPurify(jsdomWindow);
 
 import BlogError from '@packages/lib/error';
 import DB, {
@@ -91,8 +99,8 @@ postRouter.post(
     } = req.body;
 
     // 1. check title and content
-    if (!title
-        || !content) {
+    if (!title.trim()
+        || !content.trim()) {
       throw new BlogError({
         status: 400,
         message: 'Title and Content required',
@@ -113,21 +121,23 @@ postRouter.post(
       }
     }
 
-    // 3. create post
-    const {
-      data: post,
-    } = await DB.post.createPost(id, {
-      title,
-      intro,
+    const safeData = {
+      title: he.escape(title.trim()),
+      intro: he.escape(intro.trim()),
       uid: uid
           ? uid
           : Hash.uuid(),
       cover,
       coverUrl,
-      content,
+      content: purify.sanitize(content),
       format: format as PostContentFormat,
       status: 'draft',
-    });
+    };
+
+    // 3. create post
+    const {
+      data: post,
+    } = await DB.post.createPost(id, safeData);
 
     // 4. create ticket
     const {
@@ -226,8 +236,8 @@ postRouter.put(
     } = req.body;
 
     // 1. check title and content
-    if (!title
-        || !content) {
+    if (!title.trim()
+        || !content.trim()) {
       throw new BlogError({
         status: 400,
         message: 'Title and Content required',
@@ -279,22 +289,24 @@ postRouter.put(
       status: 'pending',
     });
 
-    // 6. update post
-    const {
-      data: updatedPost,
-    } = await DB.post.updatePost(postId, {
-      title,
-      intro,
+    const safeData = {
+      title: he.escape(title.trim()),
+      intro: he.escape(intro.trim()),
       uid: uid
           ? uid
           : Hash.uuid(),
       cover,
       coverUrl,
-      content,
+      content: purify.sanitize(content),
       format: format as PostContentFormat,
       status: 'draft',
       ticket: ticket.id,
-    });
+    };
+
+    // 6. update post
+    const {
+      data: updatedPost,
+    } = await DB.post.updatePost(postId, safeData);
 
     res.json(updatedPost);
   },

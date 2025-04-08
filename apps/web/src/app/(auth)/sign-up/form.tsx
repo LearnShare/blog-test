@@ -89,7 +89,8 @@ function SignUpForm({
       </FormItem>
       <FormItem
           label="密码"
-          error={ errors?.password?.message }>
+          error={ errors?.password?.message }
+          hint="8-20 位，可包含字母、数字和部分符号">
         <InputPassword
             {
               ...register('password', {

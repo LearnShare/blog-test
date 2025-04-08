@@ -100,13 +100,18 @@ function ProfileForm({
             {
               ...register('name', {
                 required: '请填写用户名称',
+                maxLength: {
+                  value: 20,
+                  message: '最长允许 20 个字符',
+                },
               })
             }
             disabled={ loading } />
       </FormItem>
       <FormItem
           label="用户 ID"
-          error={ errors?.uid?.message }>
+          error={ errors?.uid?.message }
+          hint="4-16 个字符，可以包含字母、数字 - _">
         <Input
             {
               ...register('uid', {
@@ -120,9 +125,13 @@ function ProfileForm({
           label="个人介绍"
           error={ errors?.intro?.message }>
         <Textarea
-            maxLength={ 120 }
             {
-              ...register('intro')
+              ...register('intro', {
+                maxLength: {
+                  value: 120,
+                  message: '最长允许 120 个字符',
+                },
+              })
             }
             disabled={ loading } />
       </FormItem>

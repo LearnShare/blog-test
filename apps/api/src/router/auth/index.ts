@@ -3,6 +3,7 @@ import {
   Request,
   Response,
 } from 'express';
+import he from 'he';
 
 import BlogError from '@packages/lib/error';
 import Validator from '@packages/lib/validator';
@@ -282,7 +283,23 @@ authRouter.put(
       id,
     } = req.user;
 
-    updateAccount(id, req.body, res);
+    // HTML.escape
+    const safeData = {};
+    for (const key in req.body) {
+      const str = req.body[key] as string;
+      const value = str.trim();
+
+      if (!value) {
+        throw new BlogError({
+          status: 400,
+          message: `Invalid data, ${key}: ${str}`,
+        });
+      }
+
+      safeData[key] = he.escape(value);
+    }
+
+    updateAccount(id, safeData, res);
   },
 );
 

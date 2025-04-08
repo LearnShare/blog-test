@@ -34,6 +34,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import Detail from '@/components/detail';
 
 import Validator from '@packages/lib/validator';
 import {
@@ -195,30 +196,44 @@ function PostForm({
               {
                 ...register('title', {
                   required: '请填写文章标题',
+                  maxLength: {
+                    value: 120,
+                    message: '最长允许 120 个字符',
+                  },
                 })
               }
               disabled={ loading } />
         </FormItem>
-        <FormItem
-            label="文章 ID"
-            error={ errors?.uid?.message }>
-          <Input
-              {
-                ...register('uid', {
-                  validate: validateUid,
-                })
-              }
-              disabled={ loading } />
-        </FormItem>
-        <FormItem
-            label="文章简介"
-            error={ errors?.intro?.message }>
-          <Input
-              {
-                ...register('intro')
-              }
-              disabled={ loading } />
-        </FormItem>
+        <Detail>
+          <FormItem
+              label="文章 ID"
+              error={ errors?.uid?.message }
+              hint="8-64 个字符，可以包含字母、数字 - _">
+            <Input
+                {
+                  ...register('uid', {
+                    validate: validateUid,
+                  })
+                }
+                placeholder="自动生成"
+                disabled={ loading } />
+          </FormItem>
+          <FormItem
+              className="mt-4"
+              label="文章简介"
+              error={ errors?.intro?.message }>
+            <Input
+                {
+                  ...register('intro', {
+                    maxLength: {
+                      value: 360,
+                      message: '最长允许 360 个字符',
+                    },
+                  })
+                }
+                disabled={ loading } />
+          </FormItem>
+        </Detail>
         <FormItem
             className="flex-1"
             label="文章内容（Markdown 格式）"
