@@ -235,11 +235,11 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
     role: 'AUTHOR',
   };
 
-    const count = await prisma.account.count({
+    const rawCount = await prisma.account.count({
       where: query,
     });
 
-    const list = await prisma.account.findMany({
+    const rawList = await prisma.account.findMany({
       where: query,
       orderBy: {
         posts: {
@@ -258,9 +258,13 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
           },
         },
       },
-      skip: (page - 1) * size,
-      take: size,
+      // skip: (page - 1) * size,
+      // take: size,
     });
+    const listWithPost = rawList.filter((item) => item._count.posts > 0);
+
+    const count = listWithPost.length;
+    const list = listWithPost.slice((page - 1) * size, page * size);
 
     return {
       data: {
