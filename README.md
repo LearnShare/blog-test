@@ -1,7 +1,5 @@
 # Blog
 
-A blog system.
+一个简单的多用户博客系统。
 
-## 开发
-
-## 部署
+在线体验: <https://blog-dev.hoarding.io/>
