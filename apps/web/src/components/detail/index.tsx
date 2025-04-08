@@ -53,7 +53,7 @@ export default function Detail({
         </Button>
       </div>
       <div className={ cn(
-        'overflow-hidden transition-all duration-700 ease-out',
+        '-m-2 p-2 overflow-hidden transition-all duration-700 ease-out',
         {
           'max-h-[200px] opacity-100': expand,
           'max-h-0 opacity-0': !expand,
