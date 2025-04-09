@@ -33,11 +33,11 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import PostStats from './stats';
+import Time from '@/components/time';
 
 import {
   Post,
 } from '@/types/post';
-import time from '@packages/lib/time';
 import AccountContext from '@/components/provider/account-context';
 import {
   bookmark,
@@ -150,10 +150,10 @@ export default function PostDetail({
         }
         {
           utime && (
-            <time
-                dateTime={ time.format(utime) }
-                className="text-sm text-gray-500
-                    max-sm:absolute max-sm:left-0 max-sm:bottom-1">{ time.formatRelative(utime) }</time>
+            <Time
+                value={ utime }
+                className="absolute top-[50%] left-[50%] translate-[-50%]
+                    max-sm:left-0 max-sm:bottom-1 max-sm:top-auto max-sm:translate-0" />
           )
         }
         <PostStats

@@ -6,8 +6,8 @@ import PostActions from './actions/detail';
 import AuthorCard from '@/components/author';
 import PostStats from './stats';
 import Divider from '@/components/divider';
+import Time from '@/components/time';
 
-import time from '@packages/lib/time';
 import type {
   Post,
 } from '@/types/post';
@@ -49,9 +49,7 @@ export default function PostCard({
       {
         utime && (
           <div className="text-xs text-gray-500">
-            <time
-                dateTime={ time.format(utime) }
-                className="text-sm text-gray-500">{ time.formatRelative(utime) }</time>
+            <Time value={ utime } />
           </div>
         )
       }
