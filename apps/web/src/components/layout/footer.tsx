@@ -5,7 +5,7 @@ export default function Footer() {
   const linkCns = 'underline hover:text-blue-400';
 
   return (
-    <div className="p-4 max-w-6xl mx-auto text-sm text-gray-400 text-center">
+    <div className="p-4 max-w-5xl mx-auto text-sm text-gray-400 text-center">
       <span>一个博客系统。作者 </span>
       <Link
           href="https://github.com/LearnShare"

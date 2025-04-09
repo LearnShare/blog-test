@@ -13,7 +13,7 @@ export default function HomeLayout({
   return (
     <div className="min-h-[100vh] relative flex flex-col">
       <Header />
-      <main className="p-4 w-full max-w-6xl mx-auto flex-1 flex flex-col">
+      <main className="p-4 w-full max-w-5xl mx-auto flex-1 flex flex-col">
         { children }
       </main>
       <Footer />

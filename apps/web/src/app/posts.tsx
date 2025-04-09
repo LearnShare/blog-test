@@ -31,7 +31,7 @@ async function Posts({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap gap-6
-          *:w-full md:*:max-w-[calc(50%-12px)]">
+          *:w-full">
         {
           data?.list.map((post: Post) => (
             <PostCard

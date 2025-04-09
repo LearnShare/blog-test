@@ -36,66 +36,72 @@ export default function PostCard({
   onActionDone,
 }: PostCardProps) {
   return (
-    <div className="relative border rounded-lg border-gray-200 p-4 flex flex-col gap-4">
+    <div className="border rounded-lg border-gray-200 flex flex-row-reverse overflow-hidden relative
+        max-md:flex-col">
       {
         actions && (
           <PostActions
-              className="absolute right-1 top-1"
+              className="absolute right-1 top-1 z-20 backdrop-blur-sm bg-white/40"
               id={ id }
               uid={ uid }
               onActionDone={ onActionDone } />
         )
       }
       {
-        utime && (
-          <div className="text-xs text-gray-500">
-            <Time value={ utime } />
-          </div>
+        coverUrl && (
+          <Link
+              className="h-full w-[50%] max-w-[300px] overflow-hidden relative
+                  max-md:h-[240px] max-md:w-full max-md:max-w-none  max-md:max-h-none"
+              href={ `/${ status === 'public' ? 'post' : 'draft' }/${uid}` }>
+            <Image
+                className="object-cover hover:scale-110 ease-out duration-500"
+                src={ coverUrl }
+                fill
+                alt={ title } />
+          </Link>
         )
       }
-      <Link
-          href={ `/${ status === 'public' ? 'post' : 'draft' }/${uid}` }
-          className="flex-1 group flex flex-col gap-2">
-        {
-          coverUrl && (
-            <div className="h-[160px] overflow-hidden flex justify-center relative">
-              <Image
-                  src={ coverUrl }
-                  fill
-                  objectFit="cover"
-                  alt={ title } />
-            </div>
-          )
-        }
-        <h3 className="group-hover:underline text-xl">{ title }</h3>
-        {
-          intro && (
-            <p className="text-sm text-gray-700">{ intro }</p>
-          )
-        }
-      </Link>
-      <div className="flex items-center justify-end has-[>a]:justify-between">
+      <div className="flex-1 p-4 flex flex-col gap-2">
+        <Link
+            href={ `/${ status === 'public' ? 'post' : 'draft' }/${uid}` }
+            className="flex-1 group flex flex-col gap-2">
+          <h3 className="flex-1 group-hover:underline text-xl">{ title }</h3>
+          {
+            intro && (
+              <p className="text-sm text-gray-700">{ intro }</p>
+            )
+          }
+        </Link>
         {
           author && (
             <AuthorCard
-                className="max-w-[50%]"
+                className="mt-6 max-w-[300px]"
                 { ...author } />
           )
         }
-        <PostStats
-            id={ id }
-            views={ views }
-            bookmarks={ bookmarks }
-            bookmarked={ bookmarked } />
+        <div className="flex items-center justify-between">
+          {
+            utime && (
+              <div className="text-xs text-gray-500">
+                <Time value={ utime } />
+              </div>
+            )
+          }
+          <PostStats
+              id={ id }
+              views={ views }
+              bookmarks={ bookmarks }
+              bookmarked={ bookmarked } />
+        </div>
+        {
+          message && (
+            <>
+              <Divider>审核意见</Divider>
+              <p className="text-sm text-slate-800">{ message }</p>
+            </>
+          )
+        }
       </div>
-      {
-        message && (
-          <>
-            <Divider>审核意见</Divider>
-            <p className="text-sm text-slate-800">{ message }</p>
-          </>
-        )
-      }
     </div>
   );
 }
