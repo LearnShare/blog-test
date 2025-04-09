@@ -12,16 +12,18 @@ export default function Time({
   value,
   className,
 }: {
-  value: Date;
+  value?: string;
   className?: string;
 }) {
   const [
     relativeTime,
     setRelativeTime,
-  ] = useState<string>(`${time.formatRelative(value)} UTC`);
+  ] = useState<string>(value ? `${time.formatRelative(value)} UTC` : '');
 
   useEffect(() => {
-    setRelativeTime(time.formatRelative(value));
+    if (value) {
+      setRelativeTime(time.formatRelative(value));
+    }
   }, [
     value,
   ]);

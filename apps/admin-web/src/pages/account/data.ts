@@ -39,10 +39,10 @@ const disabledOptions = [
   },
 ];
 
-const disabledNames: Record<boolean, string> = {};
+const disabledNames: Record<string, string> = {};
 for (const option of disabledOptions) {
   if (option.value !== '*') {
-    disabledNames[!!Number(option.value)] = option.label;
+    disabledNames[option.value] = option.label;
   }
 }
 

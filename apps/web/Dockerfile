@@ -10,7 +10,7 @@ COPY . .
 RUN corepack enable
 RUN pnpm i
 RUN pnpm run generate
-RUN export NODE_OPTIONS=--max_old_space_size=4096 && pnpm run build
+RUN export NODE_OPTIONS=--max_old_space_size=4096 && pnpm run build --filter=web
 
 
 FROM base AS runner

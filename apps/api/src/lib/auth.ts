@@ -75,7 +75,9 @@ async function check(
   }
 
   try {
-    const data = await JWT.decrypt(token);
+    const data = await JWT.decrypt(token) as {
+      id: number;
+    };
 
     const account = await Redis.getAccountInfo(data.id);
 
