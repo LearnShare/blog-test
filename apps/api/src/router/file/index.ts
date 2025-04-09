@@ -216,7 +216,9 @@ async function returnFile(file: FileData, res: Response) {
     });
   }
 
-  res.set('Content-Type', mime)
+  const maxAge = 60 * 60 * 24 * 31;
+  res.setHeader('Cache-Control', `public, max-age=${maxAge}`)
+      .set('Content-Type', mime)
       .sendFile(`${process.cwd()}/${fullPath}`);
 }
 
