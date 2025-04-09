@@ -238,7 +238,15 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
     });
   }
 
-  // 4. JWT token
+  // 4. check disabled status
+  if (account.disabled) {
+    throw new BlogError({
+      status: 403,
+      message: 'Account disabled',
+    });
+  }
+
+  // 5. JWT token
   const {
     id,
   } = account;

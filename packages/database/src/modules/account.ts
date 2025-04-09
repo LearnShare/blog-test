@@ -112,6 +112,7 @@ async function getAccountsByIds(ids: number[]) {
 export interface AccountsQuery {
   search?: string;
   role?: AccountRole;
+  disabled?: boolean;
   posts?: boolean;
   sort: string;
   page: number;
@@ -123,6 +124,7 @@ async function getAccounts(accountQuery: AccountsQuery) {
   const {
     search,
     role,
+    disabled,
     posts,
     sort,
     page,
@@ -162,6 +164,11 @@ async function getAccounts(accountQuery: AccountsQuery) {
         role,
       }
       : {};
+  const disabledQuery = disabled !== null
+      ? {
+        disabled,
+      }
+      : {};
   const countQuery = posts
       ? {
         _count: {
@@ -175,6 +182,7 @@ async function getAccounts(accountQuery: AccountsQuery) {
   const query = {
     ...searchQuery,
     ...roleQuery,
+    ...disabledQuery,
   };
 
   const count = await prisma.account.count({

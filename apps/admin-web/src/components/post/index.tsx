@@ -46,12 +46,12 @@ function PostCard({
     <>
       <div
           className={ cn(
-            'group flex flex-col cursor-pointer',
+            'group flex flex-col cursor-pointer max-w-[360px] overflow-hidden',
             className,
           ) }
           onClick={ () => setDialogOpen(true) }>
-        <div className="text-slate-700">{ data.title }</div>
-        <div className="text-sm text-slate-500 group-hover:underline">{ data.uid }</div>
+        <div className="text-slate-700 truncate">{ data.title }</div>
+        <div className="text-sm text-slate-500 truncate group-hover:underline">{ data.uid }</div>
       </div>
 
       <PostDialog

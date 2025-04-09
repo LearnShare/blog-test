@@ -35,7 +35,6 @@ HTTP.interceptors.request
       };
     });
 
-// TODO redirect to login when 401
 HTTP.interceptors.response
     .use(
       (res: any) => res.data,
@@ -45,6 +44,21 @@ HTTP.interceptors.response
           message,
           response,
         } = error;
+
+        if (status === 401) {
+          window.localStorage.removeItem(TOKEN_KEY);
+
+          const {
+            pathname,
+            search,
+          } = window.location;
+
+          if (!pathname.startsWith('/sign-in')) {
+            const redirect = encodeURI(`${pathname}${search}`);
+
+            window.location.href = `/sign-in?redirect=${redirect}`;
+          }
+        }
 
         const resData = response && response.data
             ? response.data

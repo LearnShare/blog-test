@@ -9,6 +9,7 @@ import {
 import Loading from '@/components/loading';
 import Empty from '@/components/empty';
 import AccountCard from '@/components/account';
+import AccountActions from '@/pages/account/actions';
 
 import {
   Account
@@ -20,6 +21,7 @@ import {
 
 interface TableProps {
   loading: boolean;
+  refresh?: () => void;
   data?: {
     count: number;
     list: Account[];
@@ -28,6 +30,7 @@ interface TableProps {
 
 export default function AccountsTable({
   loading,
+  refresh,
   data,
 }: TableProps) {
   return (
@@ -69,7 +72,11 @@ export default function AccountsTable({
                       <TableCell>{ Time.format(account.ctime) }</TableCell>
                       <TableCell>{ Time.format(account.utime) }</TableCell>
                       <TableCell
-                          className="w-[60px] text-right">-</TableCell>
+                          className="w-[60px] text-right">
+                        <AccountActions
+                            data={ account }
+                            refresh={ refresh } />
+                      </TableCell>
                     </TableRow>
                   ))
                 }

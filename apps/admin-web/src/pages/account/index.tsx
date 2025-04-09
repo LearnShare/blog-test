@@ -21,6 +21,7 @@ import {
 const defaultFilters = {
   search: '',
   role: '*',
+  disabled: '*',
 };
 
 function parseFilters(filterData: FilterData) {
@@ -29,6 +30,9 @@ function parseFilters(filterData: FilterData) {
     role: filterData.role === '*'
       ? ''
       : filterData.role,
+    disabled: filterData.disabled === '*'
+      ? ''
+      : filterData.disabled,
   };
 
   return parsedData;
@@ -49,7 +53,7 @@ export default function PageAccount() {
   const {
     data,
     loading,
-    // refresh,
+    refresh,
   } = useRequest(() => account.getAccounts({
     page,
     size,
@@ -72,6 +76,7 @@ export default function PageAccount() {
         body={
           <AccountsTable
               loading={ loading }
+              refresh={ refresh }
               data={ data } />
         }
         footer={ (

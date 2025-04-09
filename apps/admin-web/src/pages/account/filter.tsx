@@ -16,11 +16,13 @@ import {
 
 import {
   roleOptions,
+  disabledOptions,
 } from './data';
 
 export interface FilterData {
   search?: string;
   role?: string;
+  disabled?: string;
 };
 
 interface FilterProps {
@@ -66,6 +68,22 @@ export default function Filter({
             placeholder="邮箱、用户名、UID"
             value={ values.search }
             onChange={ (event: React.ChangeEvent<HTMLInputElement>) => itemOnChange('search', event.currentTarget.value) } />
+        <Select
+            value={ values.disabled }
+            onValueChange={ (value: string) => itemOnChange('disabled', value) }>
+          <SelectTrigger className="w-[240px]">
+            <SelectValue placeholder="选择状态" />
+          </SelectTrigger>
+          <SelectContent>
+            {
+              disabledOptions.map((option) => (
+                <SelectItem
+                    key={ option.value }
+                    value={ option.value }>{ option.label }</SelectItem>
+              ))
+            }
+          </SelectContent>
+        </Select>
         <Select
             value={ values.role }
             onValueChange={ (value: string) => itemOnChange('role', value) }>

@@ -55,6 +55,7 @@ async function auto(
  * check
  * 1. should login
  * 2. token valid
+ * 3. account !disabled
  */
 async function check(
   req: CustomRequest,
@@ -75,6 +76,15 @@ async function check(
 
   try {
     const data = await JWT.decrypt(token);
+
+    const account = await Redis.getAccountInfo(data.id);
+
+    if (account.disabled) {
+      throw new BlogError({
+        status: 403,
+        message: 'Account disabled',
+      });
+    }
 
     req.user = data;
 

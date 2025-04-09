@@ -37,3 +37,37 @@ export async function getAccountInfo(id: number, res: Response) {
 
   res.json(rest);
 }
+
+export async function updateAccount(id: number, data: Record<string, any>, res: Response) {
+  if (data
+      && data.uid) {
+    // 1. validate uid
+    const result = Validator.validateUid(data.uid);
+    if (!result.success) {
+      throw new BlogError({
+        status: 400,
+        message: 'Invalid uid',
+      });
+    }
+
+    // 2. check is uid exists
+    const {
+      data: account,
+    } = await DB.account.getAccountByUid(data.uid);
+
+    if (account
+        && account.id !== id) {
+      throw new BlogError({
+        status: 400,
+        message: 'ID exists',
+      });
+    }
+  }
+
+  // 3. update account
+  const {
+    data: account,
+  } = await DB.account.updateAccount(id, data);
+
+  res.json(account);
+}

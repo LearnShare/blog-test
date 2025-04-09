@@ -8,6 +8,8 @@ const toPath = './';
 const envFiles = [
   'apps/api/.env',
   'apps/web/.env',
+  'apps/admin-api/.env',
+  'apps/admin-web/.env',
   'packages/database/.env',
   ".env",
 ];

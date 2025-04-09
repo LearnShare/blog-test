@@ -38,6 +38,7 @@ import AccountContext from '@/components/provider/account-context';
 
 const KnownErrors: Record<string, string> = {
   'Account or Password error': '账号或密码错误',
+  'Account disabled': '您的账号已被禁用',
 };
 
 interface FormData {

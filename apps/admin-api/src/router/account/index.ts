@@ -14,6 +14,7 @@ import Hash from '@packages/lib/hash';
 import Auth from '@/lib/auth';
 import {
   getAccountInfo,
+  updateAccount,
 } from '@/lib/account';
 
 const accountRouter = Router();
@@ -22,6 +23,8 @@ const accountRouter = Router();
  * get accounts
  * query:
  * - search: email/name
+ * - role
+ * - disabled: 1|0
  * - posts: 1|0
  * - sort: [-]ctime
  */
@@ -31,6 +34,7 @@ accountRouter.get(
     const {
       search,
       role,
+      disabled,
       sort,
       page,
       size,
@@ -44,6 +48,9 @@ accountRouter.get(
       posts: true,
       sort: (sort as string)
           || DB_SORT,
+      disabled: disabled
+          ? !!Number(disabled)
+          : null,
       page: page
           ? Number(page)
           : DB_PAGE,
@@ -67,6 +74,25 @@ accountRouter.get(
     } = req.params;
 
     getAccountInfo(Number(id), res);
+  },
+);
+
+/**
+ * update account info by id
+ */
+accountRouter.put(
+  '/:id',
+  async (req: Request, res: Response) => {
+    const {
+      id,
+    } = req.params;
+    const {
+      disabled,
+    } = req.body;
+
+    updateAccount(Number(id), {
+      disabled,
+    }, res);
   },
 );
 

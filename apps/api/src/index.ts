@@ -31,6 +31,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // rate-limit: 300 req in 5min
 app.use(rateLimiter);
+app.set('trust proxy', 1);
 // JSON body parser
 app.use(express.json());
 // log request
