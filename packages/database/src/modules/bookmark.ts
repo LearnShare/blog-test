@@ -182,9 +182,31 @@ async function deleteBookmark(accountId: number, postId: number) {
   return {};
 }
 
+// get bookmarked status by post.id[]
+async function getBookmarked(id: number, ids: number[]) {
+  const list = await prisma.bookmark.findMany({
+    where: {
+      accountId: id,
+      postId: {
+        in: ids,
+      },
+    },
+  });
+
+  const bookmarked = {};
+  for (const bookmark of list) {
+    bookmarked[bookmark.postId] = true;
+  }
+
+  return {
+    data: bookmarked,
+  };
+}
+
 export default {
   getBookmarks,
   createBookmark,
   searchBookmark,
   deleteBookmark,
+  getBookmarked,
 };

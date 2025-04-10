@@ -53,6 +53,36 @@ bookmarkRouter.get(
     res.json(data);
   },
 );
+bookmarkRouter.get(
+  '/bookmarked',
+  Auth.check,
+  Auth.checkVerified,
+  async (req: CustomRequest, res: Response) => {
+    const {
+      id,
+    } = req.user;
+    const {
+      ids,
+    } = req.query;
+
+    if (!ids) {
+      new BlogError({
+        status: 400,
+        message: 'Invalid params',
+      });
+    }
+
+    const idList = (ids as string)
+        .split(',')
+        .forEach((id: string) => Number(id));
+
+    const {
+      data,
+    } = await DB.bookmark.getBookmarked(Number(id), idList);
+
+    res.json(data);
+  },
+);
 
 /**
  * create bookmark

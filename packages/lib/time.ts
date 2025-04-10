@@ -5,11 +5,14 @@ const timeRule = 'HH:mm:ss';
 
 const rules: Record<string, string> = {
   datetime: `${dateRule} ${timeRule}`,
+  'dt-short': `${dateRule} HH:mm`,
   date: dateRule,
   time: timeRule,
 };
 
-function format(time: Date | string, rule = 'datetime') {
+type RuleType = keyof rules;
+
+function format(time: Date | string, rule: RuleType = 'datetime') {
   return dayjs(time).format(rules[rule]);
 }
 

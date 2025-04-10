@@ -3,6 +3,7 @@
 import {
   useState,
   useEffect,
+  Suspense,
 } from 'react';
 
 import time from '@packages/lib/time';
@@ -16,24 +17,36 @@ export default function Time({
   className?: string;
 }) {
   const [
+    mounted,
+    setMounted,
+  ] = useState(false);
+  const [
     relativeTime,
     setRelativeTime,
-  ] = useState<string>(value ? `${time.formatRelative(value)} UTC` : '');
+  ] = useState<string>(value ? `${time.format(value, 'dt-short')}` : '');
 
   useEffect(() => {
+    if (!mounted) {
+      setMounted(true);
+    }
+
     if (value) {
       setRelativeTime(time.formatRelative(value));
     }
   }, [
+    mounted,
     value,
   ]);
 
   return (
-    <time
-        dateTime={ value }
-        className={ cn(
-          'text-sm text-gray-500',
-          className,
-        ) }>{ relativeTime }</time>
+    <Suspense key={ mounted ? 'local' : 'server' }>
+      <time
+          suppressHydrationWarning
+          dateTime={ value }
+          className={ cn(
+            'text-sm text-gray-500',
+            className,
+          ) }>{ relativeTime }</time>
+    </Suspense>
   );
 }

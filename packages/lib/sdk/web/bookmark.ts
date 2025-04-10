@@ -28,9 +28,22 @@ function check(postId: number) {
   return HTTP.get(`/bookmark/${postId}`);
 }
 
+function getBookmarkd({
+  ids,
+}: {
+  ids: number[];
+}) {
+  return HTTP.get('/bookmark/bookmarked', {
+    params: {
+      ids: ids.join(','),
+    },
+  });
+}
+
 export default {
   getBookmarks,
   save,
   remove,
   check,
+  getBookmarkd,
 };
