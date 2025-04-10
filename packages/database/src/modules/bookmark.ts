@@ -193,7 +193,7 @@ async function getBookmarked(id: number, ids: number[]) {
     },
   });
 
-  const bookmarked = {};
+  const bookmarked: Record<number, boolean> = {};
   for (const bookmark of list) {
     bookmarked[bookmark.postId] = true;
   }

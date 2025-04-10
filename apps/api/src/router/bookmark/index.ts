@@ -72,9 +72,8 @@ bookmarkRouter.get(
       });
     }
 
-    const idList = (ids as string)
-        .split(',')
-        .forEach((id: string) => Number(id));
+    const idList = (ids as string).split(',')
+        .map((value) => Number(value));
 
     const {
       data,

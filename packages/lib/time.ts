@@ -3,14 +3,14 @@ import dayjs from 'dayjs';
 const dateRule = 'YYYY-MM-DD';
 const timeRule = 'HH:mm:ss';
 
-const rules: Record<string, string> = {
+const rules = {
   datetime: `${dateRule} ${timeRule}`,
   'dt-short': `${dateRule} HH:mm`,
   date: dateRule,
   time: timeRule,
 };
 
-type RuleType = keyof rules;
+type RuleType = keyof (typeof rules);
 
 function format(time: Date | string, rule: RuleType = 'datetime') {
   return dayjs(time).format(rules[rule]);
