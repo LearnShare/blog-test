@@ -10,7 +10,7 @@ ADMIN_WEB_DIST="$PROJECT_ROOT/apps/admin-web/dist"
 # 定义 web 项目的 .next 静态资源目录
 WEB_NEXT_STATIC="$PROJECT_ROOT/apps/web/.next/static"
 # 定义 web 项目的 standalone .next 目录
-WEB_NEXT_STANDALONE_NEXT="$PROJECT_ROOT/apps/web/.next/standalone/.next"
+WEB_NEXT_STANDALONE_NEXT="$PROJECT_ROOT/apps/web/.next/standalone/apps/web/.next"
 # 定义 nginx 配置重载命令
 NGINX_RELOAD_COMMAND="sudo nginx -s reload"
 # 定义部署目标目录
@@ -67,7 +67,7 @@ echo "6. 将 $ADMIN_WEB_DIST 目录内的全部内容复制到 $DEPLOYMENT_DIR �
 sudo cp -r "$ADMIN_WEB_DIST"/* "$DEPLOYMENT_DIR"/ || { echo "复制文件到 $DEPLOYMENT_DIR 失败，请检查路径和权限。"; exit 1; }
 echo "文件已复制到 $DEPLOYMENT_DIR。"
 
-# 7. 复制 apps/web/.next/static 目录到 apps/web/.next/standalone/.next 目录下
+# 7. 复制 apps/web/.next/static 目录到 apps/web/.next/standalone/apps/web/.next 目录下
 echo "7. 复制 $WEB_NEXT_STATIC 目录到 $WEB_NEXT_STANDALONE_NEXT 目录下..."
 # mkdir -p "$WEB_NEXT_STANDALONE_NEXT" || { echo "创建目录 $WEB_NEXT_STANDALONE_NEXT 失败。"; exit 1; }
 cp -r "$WEB_NEXT_STATIC" "$WEB_NEXT_STANDALONE_NEXT" || { echo "复制静态资源失败，请检查路径。"; exit 1; }
