@@ -7,7 +7,11 @@ PROJECT_ROOT="."
 PM2_APP_NAME="all"
 # 定义 admin-web 构建输出目录
 ADMIN_WEB_DIST="$PROJECT_ROOT/apps/admin-web/dist"
-# 定义 web 项目的 .next 静态资源目录
+# 定义 web 项目的 .next PUBLIC 资源目录
+WEB_NEXT_PUBLIC="$PROJECT_ROOT/apps/web/public"
+# 定义 web 项目的 standalone 目录
+WEB_NEXT_STANDALONE="$PROJECT_ROOT/apps/web/.next/standalone/apps/web"
+# 定义 web 项目的 .next STATIC 资源目录
 WEB_NEXT_STATIC="$PROJECT_ROOT/apps/web/.next/static"
 # 定义 web 项目的 standalone .next 目录
 WEB_NEXT_STANDALONE_NEXT="$PROJECT_ROOT/apps/web/.next/standalone/apps/web/.next"
@@ -67,24 +71,28 @@ echo "6. 将 $ADMIN_WEB_DIST 目录内的全部内容复制到 $DEPLOYMENT_DIR �
 sudo cp -r "$ADMIN_WEB_DIST"/* "$DEPLOYMENT_DIR"/ || { echo "复制文件到 $DEPLOYMENT_DIR 失败，请检查路径和权限。"; exit 1; }
 echo "文件已复制到 $DEPLOYMENT_DIR。"
 
-# 7. 复制 apps/web/.next/static 目录到 apps/web/.next/standalone/apps/web/.next 目录下
-echo "7. 复制 $WEB_NEXT_STATIC 目录到 $WEB_NEXT_STANDALONE_NEXT 目录下..."
-# mkdir -p "$WEB_NEXT_STANDALONE_NEXT" || { echo "创建目录 $WEB_NEXT_STANDALONE_NEXT 失败。"; exit 1; }
-cp -r "$WEB_NEXT_STATIC" "$WEB_NEXT_STANDALONE_NEXT" || { echo "复制静态资源失败，请检查路径。"; exit 1; }
-echo "静态资源已复制到 $WEB_NEXT_STANDALONE_NEXT。"
+# 7. 复制 apps/web/public 目录到 apps/web/.next/standalone/apps/web 目录下
+echo "7. 复制 $WEB_NEXT_PUBLIC 目录到 $WEB_NEXT_STANDALONE 目录下..."
+cp -r "$WEB_NEXT_PUBLIC" "$WEB_NEXT_STANDALONE" || { echo "复制 PUBLIC 资源失败，请检查路径。"; exit 1; }
+echo "PUBLIC 资源已复制到 $WEB_NEXT_STANDALONE"
 
-# 8. 执行 pm2 run pm2.json
-echo "8. 执行 pm2 run pm2.json..."
+# 8. 复制 apps/web/.next/static 目录到 apps/web/.next/standalone/apps/web/.next 目录下
+echo "8. 复制 $WEB_NEXT_STATIC 目录到 $WEB_NEXT_STANDALONE_NEXT 目录下..."
+cp -r "$WEB_NEXT_STATIC" "$WEB_NEXT_STANDALONE_NEXT" || { echo "复制 STATIC 资源失败，请检查路径。"; exit 1; }
+echo "STATIC 资源已复制到 $WEB_NEXT_STANDALONE_NEXT。"
+
+# 9. 执行 pm2 start pm2.json
+echo "9. 执行 pm2 start pm2.json..."
 if command -v pm2 &> /dev/null; then
-  pm2 startOrRestart pm2.json || { echo "执行 pm2.json 失败，请检查 pm2 配置文件。"; exit 1; }
-  pm2 save
+  pm2 start pm2.json || { echo "执行 pm2.json 失败，请检查 pm2 配置文件。"; exit 1; }
+  # pm2 save
 else
   echo "警告: pm2 未安装，跳过执行 pm2.json 步骤。"
 fi
 echo "pm2 配置已应用。"
 
-# 9. 执行 nginx -s reload
-echo "9. 执行 $NGINX_RELOAD_COMMAND..."
+# 10. 执行 nginx -s reload
+echo "10. 执行 $NGINX_RELOAD_COMMAND..."
 eval "$NGINX_RELOAD_COMMAND" || { echo "重载 Nginx 配置失败，请检查 Nginx 服务状态和配置。"; exit 1; }
 echo "Nginx 配置已重载。"
 
