@@ -3,14 +3,20 @@
     {
       "name": "admin-api",
       "cwd": "./apps/admin-api",
-      "script": "pnpm",
-      "args": "run start"
+      "script": "node",
+      "args": "-r esbuild-register ./src/index.ts"
     },
     {
       "name": "api",
       "cwd": "./apps/api",
-      "script": "pnpm",
-      "args": "run start"
+      "script": "node",
+      "args": "-r esbuild-register ./src/index.ts"
+    },
+    {
+      "name": "web",
+      "cwd": "./apps/web/.next/standalone",
+      "script": "node",
+      "args": "apps/web/server.js"
     }
   ]
 }
