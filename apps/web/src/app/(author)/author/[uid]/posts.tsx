@@ -1,6 +1,3 @@
-import type {
-  Post,
-} from '@/types/post';
 import PostCard from '@/components/post/card';
 import SimplePagination from '@/components/pagination/simple';
 import Empty from '@/components/empty';
