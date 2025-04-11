@@ -2,6 +2,7 @@
 
 import React, {
   useContext,
+  unstable_ViewTransition as ViewTransition,
 } from 'react';
 import {
   BookOpenText as IconBookOpenText,
@@ -10,6 +11,7 @@ import {
 import {
   useRouter,
 } from 'next/navigation';
+import Image from 'next/image';
 import {
   useRequest,
 } from 'ahooks';
@@ -125,13 +127,21 @@ export default function PostDetail({
       <div
           data-cover={ !!coverUrl }
           className="
-              group relative bg-no-repeat bg-top bg-cover
-              data-[cover=true]:min-h-[300px]"
-          style={ {
-            backgroundImage: coverUrl
-              ? `url(${coverUrl})`
-              : '',
-          } }>
+              group relative bg-no-repeat bg-top bg-cover">
+        {
+          coverUrl && (
+            <div className="group-data-[cover=true]:min-h-[300px] relative">
+              <ViewTransition
+                  name={ `post-cover-${id}` }>
+                <Image
+                    className="object-cover"
+                    src={ coverUrl }
+                    fill
+                    alt="cover" />
+              </ViewTransition>
+            </div>
+          )
+        }
         <h3 className="
             text-2xl tracking-wider left-0 bottom-0 w-full
             group-data-[cover=true]:p-4
@@ -144,8 +154,11 @@ export default function PostDetail({
           max-sm:pb-8">
         {
           author && (
-            <AuthorCard
-                { ...author } />
+            <ViewTransition
+                name={ `post-author-${id}` }>
+              <AuthorCard
+                  { ...author } />
+            </ViewTransition>
           )
         }
         {
@@ -156,11 +169,14 @@ export default function PostDetail({
                     max-sm:left-0 max-sm:bottom-1 max-sm:top-auto max-sm:translate-0" />
           )
         }
-        <PostStats
-            id={ id }
-            views={ views }
-            bookmarks={ bookmarks }
-            bookmarked={ data?.bookmarked } />
+        <ViewTransition
+            name={ `post-stats-${id}` }>
+          <PostStats
+              id={ id }
+              views={ views }
+              bookmarks={ bookmarks }
+              bookmarked={ data?.bookmarked } />
+        </ViewTransition>
       </div>
       {
         intro && (

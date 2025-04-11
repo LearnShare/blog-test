@@ -30,6 +30,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    viewTransition: true,
+  },
   // https://github.com/replicate/replicate-javascript/issues/225#issuecomment-2065499818
   webpack: (config) => {
     config.externals.push({

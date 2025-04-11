@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+  unstable_ViewTransition as ViewTransition,
+} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -53,11 +55,14 @@ export default function PostCard({
               className="h-full w-[50%] max-w-[300px] overflow-hidden relative
                   max-md:h-[240px] max-md:w-full max-md:max-w-none  max-md:max-h-none"
               href={ `/${ status === 'public' ? 'post' : 'draft' }/${uid}` }>
-            <Image
-                className="object-cover hover:scale-110 ease-out duration-500"
-                src={ coverUrl }
-                fill
-                alt={ title } />
+            <ViewTransition
+                name={ `post-cover-${id}` }>
+              <Image
+                  className="object-cover hover:scale-110 ease-out duration-500"
+                  src={ coverUrl }
+                  fill
+                  alt={ title } />
+            </ViewTransition>
           </Link>
         )
       }
@@ -74,9 +79,12 @@ export default function PostCard({
         </Link>
         {
           author && (
-            <AuthorCard
-                className="mt-6 max-w-[300px]"
-                { ...author } />
+            <ViewTransition
+                name={ `post-author-${id}` }>
+              <AuthorCard
+                  className="mt-6 max-w-[300px]"
+                  { ...author } />
+            </ViewTransition>
           )
         }
         <div className="flex items-center justify-between">
@@ -87,11 +95,14 @@ export default function PostCard({
               </div>
             )
           }
-          <PostStats
-              id={ id }
-              views={ views }
-              bookmarks={ bookmarks }
-              bookmarked={ bookmarked } />
+          <ViewTransition
+              name={ `post-stats-${id}` }>
+            <PostStats
+                id={ id }
+                views={ views }
+                bookmarks={ bookmarks }
+                bookmarked={ bookmarked } />
+          </ViewTransition>
         </div>
         {
           message && (
