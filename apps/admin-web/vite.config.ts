@@ -18,6 +18,9 @@ export default defineConfig(({
       'process.env.NEXT_PUBLIC_API_URL': JSON.stringify(env.NEXT_PUBLIC_API_URL),
     },
     server: {
+      allowedHosts: [
+        env.WEB_HOST || '',
+      ],
       port: 3060,
     },
     plugins: [

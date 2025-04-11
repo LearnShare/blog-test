@@ -31,6 +31,7 @@ export default async function PageHome({
   } = await post.getPosts({
     page: Number(page),
     size,
+    sort: '-utime',
     account: 1,
   });
 

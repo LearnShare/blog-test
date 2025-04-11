@@ -48,6 +48,7 @@ function Posts() {
   } = useRequest(() => auth.getPosts({
     page,
     size: 10,
+    sort: '-ctime',
     ...filters,
   }), {
     refreshDeps: [

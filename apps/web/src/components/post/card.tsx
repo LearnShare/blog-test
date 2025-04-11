@@ -61,10 +61,10 @@ export default function PostCard({
           </Link>
         )
       }
-      <div className="flex-1 p-4 flex flex-col gap-2">
+      <div className="flex-1 min-h-[140px] p-4 flex flex-col gap-2 justify-between">
         <Link
             href={ `/${ status === 'public' ? 'post' : 'draft' }/${uid}` }
-            className="flex-1 group flex flex-col gap-2">
+            className="group flex flex-col gap-2">
           <h3 className="flex-1 group-hover:underline text-xl">{ title }</h3>
           {
             intro && (

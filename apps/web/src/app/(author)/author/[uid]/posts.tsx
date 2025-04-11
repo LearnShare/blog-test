@@ -1,78 +1,50 @@
-'use client';
-
-import React, {
-  useState,
-} from 'react';
-import {
-  useRequest,
-} from 'ahooks';
-
 import type {
   Post,
 } from '@/types/post';
 import PostCard from '@/components/post/card';
-import Pagination from '@/components/pagination';
-import Loading from '@/components/loading';
+import SimplePagination from '@/components/pagination/simple';
 import Empty from '@/components/empty';
 
-import {
-  post,
-} from '@packages/lib/sdk/web';
+import type {
+  Post,
+} from '@/types/post';
+
+interface PostsProps {
+  count?: number;
+  list?: Post[];
+  page?: number;
+  size?: number;
+}
 
 function Posts({
-  id,
-}: {
-  id: number;
-}) {
-  const [
-    page,
-    setPage,
-  ] = useState(1);
-
-  const {
-    data,
-    loading,
-  } = useRequest(() => post.getPosts({
-    author: id,
-    page,
-    size: 10,
-  }), {
-    refreshDeps: [
-      page,
-    ],
-  });
-
+  count = 0,
+  list = [],
+  page = 1,
+  size = 12
+}: PostsProps) {
   return (
     <section>
       <h2 className="text-xl my-4">最近更新</h2>
-      <div className="flex flex-col gap-6">
-        <Loading loading={ loading } />
+      <div className="flex flex-wrap gap-6
+          *:w-full">
         {
-          !loading && data && (
-            <>
-              <div className="flex flex-wrap gap-6 *:w-full">
-                {
-                  data.list.map((post: Post) => (
-                    <PostCard
-                        key={ post.id }
-                        { ...post } />
-                  ))
-                }
-              </div>
-              <Pagination
-                  className="mb-6"
-                  page={ page }
-                  total={ data.count }
-                  onPageChange={ (p: number) => setPage(p) } />
-              {
-                !data.count && (
-                  <Empty />
-                )
-              }
-            </>
-          )
+          list.map((post: Post) => (
+            <PostCard
+                key={ post.id }
+                { ...post } />
+          ))
         }
       </div>
+      <SimplePagination
+          className="mt-6"
+          page={ page }
+          size={ size }
+          total={ count } />
+      {
+        !count && (
+          <Empty />
+        )
+      }
     </section>
   );
 }

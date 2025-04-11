@@ -1,4 +1,9 @@
+'use client';
+
 import Link from 'next/link';
+import {
+  usePathname,
+} from 'next/navigation';
 import {
   ChevronLeft as IconChevronLeft,
   ChevronRight as IconChevronRight,
@@ -24,6 +29,8 @@ function SimplePagination({
   total = 0,
   className,
 }: SimplePaginationProps) {
+  const pathname = usePathname();
+
   if (!total) {
     return null;
   }
@@ -40,7 +47,7 @@ function SimplePagination({
       {
         hasPrev && (
           <Link
-              href={ `/?page=${page - 1}` }
+              href={ `${pathname}?page=${page - 1}` }
               className={ buttonVariants({
                 variant: 'outline',
               }) }>
@@ -52,7 +59,7 @@ function SimplePagination({
       {
         hasNext && (
           <Link
-              href={ `/?page=${page + 1}` }
+              href={ `${pathname}?page=${page + 1}` }
               className={ buttonVariants({
                 variant: 'outline',
               }) }>

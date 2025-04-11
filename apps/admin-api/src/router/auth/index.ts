@@ -9,6 +9,7 @@ import Validator from '@packages/lib/validator';
 import Hash from '@packages/lib/hash';
 import JWT from '@packages/lib/jwt';
 import DB from '@packages/database';
+import Redis from '@/lib/redis';
 import {
   getAccountInfo,
 } from '@/lib/account';
@@ -77,6 +78,8 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
     password: accountPassword,
     ...rest
   } = account;
+
+  await Redis.setAccountInfo(id, rest);
 
   const token = await JWT.encrypt({
     id,

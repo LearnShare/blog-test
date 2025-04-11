@@ -1,66 +1,39 @@
 'use client';
 
-import React, {
-  useState,
-} from 'react';
-import {
-  useRequest,
-} from 'ahooks';
+import React from 'react';
 import Link from 'next/link';
 import {
   MessageSquareText as IconMessageSquareText,
 } from 'lucide-react';
 
-import LoadMore from '@/components/load-more';
+import SimplePagination from '@/components/pagination/simple';
 import Divider from '@/components/divider';
 
-import {
-  author,
-} from '@packages/lib/sdk/web';
 import Empty from '@/components/empty';
 import AuthorCard from '@/components/author';
 import type {
   Account,
 } from '@/types/account';
 
-const size = 12;
+interface AuthorsProps {
+  count?: number;
+  list?: Account[];
+  page?: number;
+  size?: number;
+}
 
-function Authors() {
-  const [
-    authors,
-    setAuthors,
-  ] = useState<Account[]>([]);
-
-  const [
-    page,
-    setPage,
-  ] = useState(1);
-
-  const {
-    data,
-    loading,
-  } = useRequest(() => author.getAuthors({
-    posts: 1,
-    page,
-    size,
-  }), {
-    refreshDeps: [
-      page,
-    ],
-    onSuccess: (data) => {
-      setAuthors((oldList) => ([
-        ...oldList,
-        ...data.list,
-      ]));
-    },
-  });
-
+function Authors({
+  count = 0,
+  list = [],
+  page = 1,
+  size = 12
+}: AuthorsProps) {
   return (
     <div className="flex flex-col">
       <h2 className="text-xl my-4">推荐作者</h2>
       <div className="flex flex-wrap gap-6">
         {
-          authors.map((author) => (
+          list.map((author) => (
             <Link
                 key={ author.id }
                 className="group border rounded-lg border-gray-200 p-4
@@ -89,15 +62,13 @@ function Authors() {
           ))
         }
       </div>
-      <LoadMore
+      <SimplePagination
           className="mt-6"
           page={ page }
           size={ size }
-          total={ data?.count }
-          loading={ loading }
-          onPageChange={ (p: number) => setPage(p) } />
+          total={ count } />
       {
-        !loading && !data?.count && (
+        !count && (
           <Empty />
         )
       }

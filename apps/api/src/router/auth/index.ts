@@ -297,7 +297,8 @@ authRouter.put(
       const str = req.body[key] as string;
       const value = str.trim();
 
-      if (!value) {
+      if (key !== 'intro'
+          && !value) {
         throw new BlogError({
           status: 400,
           message: `Invalid data, ${key}: ${str}`,

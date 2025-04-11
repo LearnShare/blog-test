@@ -4,8 +4,10 @@ import {
   NextFunction,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import JWT from '@packages/lib/jwt';
 import DB from '@packages/database';
+import Redis from '@/lib/redis';
 
 interface FileData {
   originalname: string;
@@ -65,16 +67,25 @@ async function check(
 
   if (!authHeader
       || !token) {
-    res.status(401)
-        .json({
-          code: 401,
-          message: 'You should login first',
-        });
-    return;
+    throw new BlogError({
+      status: 401,
+      message: 'You should login first',
+    });
   }
 
   try {
-    const data = await JWT.decrypt(token);
+    const data = await JWT.decrypt(token) as {
+      id: number;
+    };
+
+    const account = await Redis.getAccountInfo(data.id);
+
+    if (account.role !== 'ADMIN') {
+      throw new BlogError({
+        status: 403,
+        message: 'Account not allowed',
+      });
+    }
 
     req.user = data;
 

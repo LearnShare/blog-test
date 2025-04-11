@@ -6,6 +6,13 @@ import React, {
 import AuthorInfo from './info';
 import AuthorPosts from './posts';
 
+import type {
+  Post,
+} from '@/types/post';
+import {
+  post,
+} from '@packages/lib/sdk/web';
+
 import {
   author,
 } from '@packages/lib/sdk/web';
@@ -41,25 +48,47 @@ export async function generateMetadata({
   };
 }
 
-export default async function PageAuthor({
-  params,
-}: {
+interface PageProps {
+  searchParams: Promise<Record<string, string>>;
   params: Promise<{
     uid: string;
   }>,
-}) {
+}
+
+const size = 12;
+
+export default async function PageAuthor({
+  searchParams,
+  params,
+}: PageProps) {
   const {
     uid,
   } = await params;
+  const {
+    page = '1',
+  } = await searchParams;
 
   const realUid = decodeURIComponent(uid).substring(1);
 
   const data = await getAuthor(realUid);
 
+  const postData: {
+    count: number;
+    list: Post[];
+  } = await post.getPosts({
+    page: Number(page),
+    size,
+    sort: '-utime',
+    author: data.id,
+  });
+
   return (
     <div>
       <AuthorInfo data={ data } />
-      <AuthorPosts id={ data?.id } />
+      <AuthorPosts
+          { ...postData }
+          page={ Number(page) }
+          size={ size } />
     </div>
   );
 }
