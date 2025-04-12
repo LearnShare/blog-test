@@ -97,9 +97,9 @@ async function getAccountByUid(uid: string) {
 async function getAccountsByIds(ids: number[]) {
   const accounts = await prisma.account.findMany({
     where: {
-      OR: ids.map((id) => ({
-        id,
-      })),
+      id: {
+        in: ids,
+      },
     },
     select: AccountPublicFields,
   });
@@ -240,59 +240,61 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
   } = authorsQuery;
 
   const query = {
-    role: 'AUTHOR',
+    role: {
+      in: ['ADMIN', 'AUTHOR'],
+    },
   };
 
-    const rawCount = await prisma.account.count({
-      where: query,
-    });
+  const rawCount = await prisma.account.count({
+    where: query,
+  });
 
-    const rawList = await prisma.account.findMany({
-      where: query,
-      orderBy: {
-        posts: {
-          _count: 'desc',
-        },
+  const rawList = await prisma.account.findMany({
+    where: query,
+    orderBy: {
+      posts: {
+        _count: 'desc',
       },
-      select: {
-        ...AccountPublicFields,
-        _count: { // count public post
-          select: {
-            posts: {
-              where: {
-                status: 'public',
-              },
+    },
+    select: {
+      ...AccountPublicFields,
+      _count: { // count public post
+        select: {
+          posts: {
+            where: {
+              status: 'public',
             },
           },
         },
       },
-      // skip: (page - 1) * size,
-      // take: size,
-    });
-    const listWithPost = rawList.filter((item) => item._count.posts > 0);
+    },
+    // skip: (page - 1) * size,
+    // take: size,
+  });
+  const listWithPost = rawList.filter((item) => item._count.posts > 0);
 
-    const count = listWithPost.length;
-    const list = listWithPost.slice((page - 1) * size, page * size);
+  const count = listWithPost.length;
+  const list = listWithPost.slice((page - 1) * size, page * size);
 
-    return {
-      data: {
-        count,
-        page,
-        size,
-        list: list.map((item) => {
-          const {
-            _count,
-            ...rest
-          } = item;
+  return {
+    data: {
+      count,
+      page,
+      size,
+      list: list.map((item) => {
+        const {
+          _count,
+          ...rest
+        } = item;
 
-          return {
-            ...rest,
-            postsCount: _count?.posts
-                || 0,
-          };
-        }),
-      },
-    };
+        return {
+          ...rest,
+          postsCount: _count?.posts
+              || 0,
+        };
+      }),
+    },
+  };
 }
 
 // update account

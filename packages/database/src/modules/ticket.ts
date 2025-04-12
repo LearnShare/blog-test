@@ -183,9 +183,9 @@ async function reviewPost(ticketId: number, reviewData: ReviewData) {
 async function getTicketsByIds(ids: number[]) {
   const tickets = await prisma.ticket.findMany({
     where: {
-      OR: ids.map((id) => ({
-        id,
-      })),
+      id: {
+        in: ids,
+      },
     },
   });
 

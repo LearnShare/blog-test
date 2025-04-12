@@ -386,9 +386,9 @@ async function getStats(id?: number) {
 async function getPostsByIds(ids: number[]) {
   const posts = await prisma.post.findMany({
     where: {
-      OR: ids.map((id) => ({
-        id,
-      })),
+      id: {
+        in: ids,
+      },
     },
   });
 
