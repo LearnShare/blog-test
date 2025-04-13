@@ -19,7 +19,7 @@ import Error from '@/components/error';
 
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 function EditView({
   uid,

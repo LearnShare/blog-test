@@ -23,10 +23,10 @@ import {
 
 import type {
   Post,
-} from '@/types/post';
+} from '@packages/database';
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 function Posts() {
   const [
@@ -94,6 +94,7 @@ function Posts() {
                       { ...post }
                       actions
                       message={ data?.tickets
+                          && post.ticket
                           && data?.tickets[post.ticket]?.message }
                       onActionDone={ () => onActionDone() } />
                 ))

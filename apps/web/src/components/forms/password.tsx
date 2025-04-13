@@ -23,7 +23,7 @@ import InputPassword from '@/components/form/controls/input-password';
 
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 interface FormData {
   old: string;

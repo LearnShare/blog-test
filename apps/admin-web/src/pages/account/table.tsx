@@ -13,18 +13,23 @@ import AccountActions from '@/pages/account/actions';
 
 import {
   Account
-} from '@/types';
+} from '@packages/database';
 import Time from '@packages/lib/time';
 import {
   roles,
 } from './data';
+
+interface AccountExtended
+    extends Account {
+  postsCount?: number;
+}
 
 interface TableProps {
   loading: boolean;
   refresh?: () => void;
   data?: {
     count: number;
-    list: Account[];
+    list: AccountExtended[];
   };
 }
 
@@ -56,7 +61,7 @@ export default function AccountsTable({
               </TableHeader>
               <TableBody>
                 {
-                  data?.list.map((account: Account) => (
+                  data?.list.map((account: AccountExtended) => (
                     <TableRow
                         key={ account.id }>
                       <TableCell>{ account.id }</TableCell>
@@ -70,7 +75,7 @@ export default function AccountsTable({
                       <TableCell>{ account.verified ? '已验证' : '-' }</TableCell>
                       <TableCell>{ account.postsCount || '-' }</TableCell>
                       <TableCell>{ Time.format(account.ctime) }</TableCell>
-                      <TableCell>{ Time.format(account.utime) }</TableCell>
+                      <TableCell>{ account.utime ? Time.format(account.utime) : '-' }</TableCell>
                       <TableCell
                           className="w-[60px] text-right">
                         <AccountActions

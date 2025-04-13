@@ -10,10 +10,10 @@ import {
 } from '@/lib/utils';
 import type {
   Account,
-} from '@/types';
+} from '@packages/database';
 
 interface AccountCardProps {
-  data: Account;
+  data?: Account;
   className?: string;
 }
 
@@ -25,6 +25,10 @@ function AccountCard({
     dialogOpen,
     setDialogOpen,
   ] = useState(false);
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <>

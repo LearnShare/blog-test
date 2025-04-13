@@ -22,25 +22,29 @@ function DataStats() {
     info,
   } = useContext(AccountContext);
 
+  if (!info) {
+    return null;
+  }
+
   const list = [
     {
       label: '邮箱',
-      value: info?.email,
+      value: info.email,
     },
     {
       label: '状态',
-      value: info?.verified
+      value: info.verified
           ? '已认证'
           : '未认证',
     },
     {
       label: '身份',
-      value: roles[info?.role]
-          || info?.role,
+      value: roles[info.role]
+          || info.role,
     },
     {
       label: '介绍',
-      value: info?.intro,
+      value: info.intro,
     },
   ];
 

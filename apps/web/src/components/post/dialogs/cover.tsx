@@ -26,7 +26,7 @@ import {
 
 import {
   file,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 import {
   cn,
 } from '@/lib/utils';

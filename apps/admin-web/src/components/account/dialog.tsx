@@ -14,7 +14,7 @@ import Avatar from '@/components/avatar';
 
 import type {
   Account,
-} from '@/types';
+} from '@packages/database';
 
 interface AccountDialogProps {
   open?: boolean;

@@ -1,6 +1,8 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../client"
+  provider            = "prisma-client"
+  output              = "../client"
+  moduleFormat        = "esm"
+  importFileExtension = ""
 }
 
 datasource db {
@@ -63,33 +65,33 @@ enum CodeType {
 }
 
 model Code {
-  id      Int      @id @default(autoincrement())
+  id      Int       @id @default(autoincrement())
   code    String
   type    CodeType
   account Int
-  used    Boolean  @default(false)
-  ctime   DateTime @default(now())
-  etime   DateTime
+  used    Boolean   @default(false)
+  ctime   DateTime  @default(now())
+  etime   DateTime?
 }
 
 model Bookmark {
-  time      DateTime @default(now())
   account   Account  @relation(fields: [accountId], references: [id])
   accountId Int
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
+  ctime     DateTime @default(now())
 
   @@id([accountId, postId])
 }
 
 model Ticket {
-  id      Int      @id @default(autoincrement())
+  id      Int       @id @default(autoincrement())
   type    String
   ref     String?
   from    Int?
   to      Int?
   status  String
   message String?
-  ctime   DateTime @default(now())
+  ctime   DateTime  @default(now())
   utime   DateTime?
 }

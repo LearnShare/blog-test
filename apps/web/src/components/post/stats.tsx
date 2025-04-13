@@ -8,7 +8,7 @@ import Bookmark from './actions/bookmark';
 interface PostStatsProps {
   id?: number;
   views: number;
-  bookmarks: number;
+  bookmarks?: number;
   bookmarked?: boolean;
 }
 

@@ -8,7 +8,7 @@ import PostDetail from '@/components/post/detail';
 
 import {
   post,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 const getPost = cache(async (uid: string) => await post.get(uid));
 

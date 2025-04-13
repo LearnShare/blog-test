@@ -37,13 +37,20 @@ import {
 import PostStats from './stats';
 import Time from '@/components/time';
 
-import {
+import type {
+  Account,
   Post,
-} from '@/types/post';
+} from '@packages/database';
 import AccountContext from '@/components/provider/account-context';
 import {
   bookmark,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
+
+interface PostWithAuthor
+    extends Post {
+  author: Account;
+  bookmarks: number;
+}
 
 export default function PostDetail({
   id,
@@ -58,7 +65,7 @@ export default function PostDetail({
   views,
   bookmarks,
   utime,
-}: Post) {
+}: PostWithAuthor) {
   const router = useRouter();
 
   const {

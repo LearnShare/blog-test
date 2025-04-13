@@ -26,10 +26,10 @@ import {
 } from '../../../posts/filter';
 import type {
   Post,
-} from '@/types/post';
+} from '@packages/database';
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 import time from '@packages/lib/time';
 
 function DataPosts() {
@@ -78,7 +78,7 @@ function DataPosts() {
                                 href={ `/${post.status === 'public' ? 'post' : 'draft'}/${post.uid}` }
                                 target="_blank">{ post.title }</Link>
                           </TableCell>
-                          <TableCell>{ time.formatRelative(post.utime) }</TableCell>
+                          <TableCell>{ post.utime ? time.formatRelative(post.utime) : '-' }</TableCell>
                           <TableCell>{ statusNames[post.status] }</TableCell>
                           <TableCell>{ post.views }</TableCell>
                         </TableRow>

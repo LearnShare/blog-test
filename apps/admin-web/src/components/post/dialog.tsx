@@ -28,13 +28,13 @@ import Actions from './actions';
 import type {
   Post,
   Ticket,
-} from '@/types';
+} from '@packages/database';
 import {
   cn,
 } from '@/lib/utils';
 import {
   ticket as ticketAPI,
-} from '@packages/lib/sdk/admin';
+} from '@packages/sdk/admin';
 
 interface PostDialogProps {
   open?: boolean;

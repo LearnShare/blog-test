@@ -31,7 +31,7 @@ import {
 
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 import {
   useCountdown,
 } from '@/hooks'

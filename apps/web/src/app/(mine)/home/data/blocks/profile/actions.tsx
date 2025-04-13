@@ -33,7 +33,7 @@ import PasswordDialog from './dialogs/password';
 import AccountContext from '@/components/provider/account-context';
 import {
   file,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 interface ProfileActionProps {
   // onActionDone?: (action: string) => void;

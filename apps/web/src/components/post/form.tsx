@@ -39,10 +39,10 @@ import Detail from '@/components/detail';
 import Validator from '@packages/lib/validator';
 import {
   post,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 import type {
   Post,
-} from '@/types/post';
+} from '@packages/database';
 import CoverDialog from '@/components/post/dialogs/cover';
 
 const KnownErrors: Record<string, string> = {

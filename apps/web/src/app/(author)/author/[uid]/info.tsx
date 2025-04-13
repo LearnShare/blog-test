@@ -2,11 +2,22 @@ import React from 'react';
 
 import AuthorCard from '@/components/author';
 import PostStats from '@/components/post/stats';
+import type {
+  Account,
+} from '@packages/database';
+
+interface AccountWithPostStats
+    extends Account {
+  postStats?: {
+    views?: number;
+    bookmarks?: number;
+  };
+}
 
 function AuthorInfo({
   data,
 }: {
-  data: any;
+  data: AccountWithPostStats;
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -18,8 +29,8 @@ function AuthorInfo({
           )
         }
         <PostStats
-            views={ data?.postStats?.views }
-            bookmarks={ data?.postStats?.bookmarks } />
+            views={ data?.postStats?.views || 0 }
+            bookmarks={ data?.postStats?.bookmarks || 0 } />
       </div>
       {
         data?.intro && (

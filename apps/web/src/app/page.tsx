@@ -3,13 +3,11 @@ import Posts from './posts';
 
 import {
   post,
-} from '@packages/lib/sdk/web';
-import type {
-  Post,
-} from '@/types/post';
+} from '@packages/sdk/web';
 import type {
   Account,
-} from '@/types/account';
+  Post,
+} from '@packages/database';
 
 interface PageProps {
   searchParams: Promise<Record<string, string>>;

@@ -11,7 +11,7 @@
     "seed": "tsx ../../seed/index.ts"
   },
   "devDependencies": {
-    "prisma": "6.4.1",
+    "prisma": "6.6.0",
     "tsx": "^4.19.3"
   },
   "dependencies": {

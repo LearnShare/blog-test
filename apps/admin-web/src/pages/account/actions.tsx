@@ -17,10 +17,10 @@ import {
 
 import {
   Account
-} from '@/types';
+} from '@packages/database';
 import {
   account,
-} from '@packages/lib/sdk/admin';
+} from '@packages/sdk/admin';
 
 interface AccountActionProps {
   data: Account;

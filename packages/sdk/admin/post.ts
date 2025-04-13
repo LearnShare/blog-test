@@ -1,4 +1,4 @@
-import HTTP from '../../http';
+import HTTP from '../http';
 
 export interface PostsQuery {
   search?: string;

@@ -26,7 +26,7 @@ import InputPassword from '@/components/form/controls/input-password';
 
 import {
   auth,
-} from '@packages/lib/sdk/admin';
+} from '@packages/sdk/admin';
 import Store from '@/lib/store';
 
 const KnownErrors: Record<string, string> = {

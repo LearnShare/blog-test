@@ -14,7 +14,6 @@ const purify = DOMPurify(jsdomWindow);
 
 import BlogError from '@packages/lib/error';
 import DB, {
-  type PostContentFormat,
   DB_PAGE,
   DB_SIZE,
   DB_SORT,
@@ -130,7 +129,7 @@ postRouter.post(
       cover,
       coverUrl,
       content: purify.sanitize(content),
-      format: format as PostContentFormat,
+      format: format as string,
       status: 'draft',
     };
 
@@ -298,7 +297,7 @@ postRouter.put(
       cover,
       coverUrl,
       content: purify.sanitize(content),
-      format: format as PostContentFormat,
+      format: format as string,
       status: 'draft',
       ticket: ticket.id,
     };

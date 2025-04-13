@@ -29,7 +29,7 @@ import AccountContext from '@/components/provider/account-context';
 
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 interface FormData {
   name: string;

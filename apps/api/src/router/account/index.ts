@@ -8,7 +8,6 @@ import DB, {
   DB_PAGE,
   DB_SIZE,
   DB_SORT,
-  type AccountRole,
 } from '@packages/database';
 import Hash from '@packages/lib/hash';
 import Auth from '@/lib/auth';
@@ -45,7 +44,7 @@ accountRouter.get(
       data,
     } = await DB.account.getAccounts({
       search: search as string,
-      role: role as AccountRole,
+      role: role as string,
       posts: posts
           ? Boolean(Number(posts))
           : null,

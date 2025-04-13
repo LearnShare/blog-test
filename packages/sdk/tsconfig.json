@@ -11,15 +11,13 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./*"]
     },
-    "outDir": "dist/"
   },
   "exclude": [
     "node_modules",
   ],
   "include": [
-    "src/**/*.ts",
-    "../../packages/sdk/types/"
+    "./**/*.ts"
   ]
 }

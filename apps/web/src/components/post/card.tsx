@@ -11,11 +11,15 @@ import Divider from '@/components/divider';
 import Time from '@/components/time';
 
 import type {
+  Account,
   Post,
-} from '@/types/post';
+} from '@packages/database';
 
 interface PostCardProps
     extends Post {
+  bookmarks?: number;
+  bookmarked?: boolean;
+  author?: Account;
   actions?: boolean;
   message?: string;
   onActionDone?: (action: string) => void;

@@ -7,17 +7,16 @@ import AuthorInfo from './info';
 import AuthorPosts from './posts';
 
 import type {
+  Account,
   Post,
-} from '@/types/post';
+} from '@packages/database';
 import {
   post,
-} from '@packages/lib/sdk/web';
-
-import {
   author,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
-const getAuthor = cache(async (uid: string) => await author.getAuthor(uid));
+const getAuthor: (uid: string) => Promise<Account>
+    = cache(async (uid: string) => await author.getAuthor(uid));
 
 export async function generateMetadata({
   params,
@@ -32,7 +31,7 @@ export async function generateMetadata({
 
   const realUid = decodeURIComponent(uid).substring(1);
 
-  const data = await getAuthor(realUid);
+  const data: Account = await getAuthor(realUid);
 
   return {
     title: data
@@ -70,7 +69,7 @@ export default async function PageAuthor({
 
   const realUid = decodeURIComponent(uid).substring(1);
 
-  const data = await getAuthor(realUid);
+  const data: Account = await getAuthor(realUid);
 
   const postData: {
     count: number;

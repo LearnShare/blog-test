@@ -1,4 +1,7 @@
-import HTTP from '../../http';
+import type {
+  Account,
+} from '@packages/database';
+import HTTP from '../http';
 
 interface AuthorsQuery {
  posts?: number;
@@ -12,7 +15,7 @@ function getAuthors(query: AuthorsQuery) {
   });
 }
 
-function getAuthor(uid: string) {
+function getAuthor(uid: string): Promise<Account> {
   return HTTP.get(`/author/${uid}`);
 }
 

@@ -3,10 +3,10 @@ import type { Metadata } from 'next';
 import Authors from './authors';
 import type {
   Account,
-} from '@/types/account';
+} from '@packages/database';
 import {
   author,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 export const metadata: Metadata = {
   title: '作者',

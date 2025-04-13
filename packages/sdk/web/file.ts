@@ -1,4 +1,4 @@
-import HTTP from '../../http';
+import HTTP from '../http';
 
 function uploadAvatar(file: File) {
   const data = new FormData();

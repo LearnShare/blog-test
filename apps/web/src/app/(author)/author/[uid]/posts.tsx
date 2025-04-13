@@ -4,7 +4,7 @@ import Empty from '@/components/empty';
 
 import type {
   Post,
-} from '@/types/post';
+} from '@packages/database';
 
 interface PostsProps {
   count?: number;

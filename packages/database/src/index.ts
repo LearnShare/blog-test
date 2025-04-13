@@ -6,6 +6,7 @@ import bookmark from './modules/bookmark';
 import ticket from './modules/ticket';
 
 export * from './config';
+export * from '../client';
 export * from './types';
 
 export default {

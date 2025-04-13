@@ -10,7 +10,7 @@
       "dependsOn": []
     },
     "build": {
-      "dependsOn": ["^generate"]
+      "dependsOn": ["^build"]
     },
     "start": {
       "dependsOn": ["^build"]

@@ -32,9 +32,12 @@ import InputPassword from '@/components/form/controls/input-password';
 
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 import Store from '@/lib/store';
 import AccountContext from '@/components/provider/account-context';
+import type {
+  Account,
+} from '@packages/database';
 
 const KnownErrors: Record<string, string> = {
   'Account or Password error': '账号或密码错误',
@@ -62,7 +65,10 @@ function SignInForm() {
       auth.signIn(data.email, data.password),
     {
       manual: true,
-      onSuccess: (res) => {
+      onSuccess: (res: {
+        token: string;
+        data: Account;
+      }) => {
         const {
           token,
           data,

@@ -1,12 +1,3 @@
-export * from '../client';
-
-export type AccountRole = 'ADMIN'
-    | 'AUTHOR'
-    | 'USER';
-
-export type PostContentFormat = 'TEXT'
-    | 'MARKDOWN';
-
 export interface PostData {
   id?: number;
   title?: string;

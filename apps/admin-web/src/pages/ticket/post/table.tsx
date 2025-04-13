@@ -11,19 +11,25 @@ import Empty from '@/components/empty';
 import PostCard from '@/components/post';
 
 import {
+  Post,
   Ticket,
-} from '@/types';
+} from '@packages/database';
 import {
   statusNames,
 } from './data';
 
 import Time from '@packages/lib/time';
 
+interface TicketWithPost
+    extends Ticket {
+  post?: Post;
+}
+
 interface TableProps {
   loading: boolean;
   data?: {
     count: number;
-    list: Ticket[];
+    list: TicketWithPost[];
   };
   refresh?: () => void;
 }
@@ -52,7 +58,7 @@ export default function TicketsTable({
               </TableHeader>
               <TableBody>
                 {
-                  data?.list.map((ticket: Ticket) => (
+                  data?.list.map((ticket: TicketWithPost) => (
                     <TableRow
                         key={ ticket.id }>
                       <TableCell>{ ticket.id }</TableCell>

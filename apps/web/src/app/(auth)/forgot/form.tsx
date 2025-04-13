@@ -24,7 +24,7 @@ import {
 
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 const KnownErrors: Record<string, string> = {
   'Account not found': '账号不存在',

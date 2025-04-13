@@ -28,7 +28,7 @@ import Alert from '@/components/dialog/alert';
 
 import {
   post,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 interface DetailActionProps {
   id: number;

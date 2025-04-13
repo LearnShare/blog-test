@@ -20,11 +20,11 @@ import {
 import AccountContext from '@/components/provider/account-context';
 import {
   bookmark,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 interface BookmarkProps {
   id?: number;
-  bookmarks: number;
+  bookmarks?: number;
   bookmarked?: boolean;
 }
 
@@ -40,9 +40,9 @@ function Bookmark({
   const [
     value,
     setValue,
-  ] = useState(bookmarks);
+  ] = useState(bookmarks || 0);
   useEffect(() => {
-    setValue(bookmarks);
+    setValue(bookmarks || 0);
   }, [
     bookmarks,
   ]);

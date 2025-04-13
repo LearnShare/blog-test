@@ -1,11 +1,6 @@
-import {
-  Prisma,
-  type Account,
-} from '../../client';
-
 import prisma from '../prisma';
 import accountModule, {
-  AccountPublicFields,
+  // AccountPublicFields,
 } from './account';
 import ticketModule from './ticket';
 import Bookmark from './bookmark';
@@ -15,6 +10,11 @@ import {
   PostCreateData,
   PostsQuery,
 } from '../types';
+import type {
+  Account,
+  Post,
+  Ticket,
+} from '@packages/database';
 
 // create post
 async function createPost(accountId: number, postData: PostCreateData) {
@@ -130,7 +130,14 @@ async function getPosts(postQuery: PostsQuery) {
     }
   }
 
-  const data: Record<string, any> = {
+  const data: {
+    count: number;
+    page: number;
+    size: number;
+    list: Post[];
+    accounts?: Record<number, Account>;
+    tickets?: Record<number, Ticket>;
+  } = {
     count,
     page,
     size,
@@ -220,7 +227,10 @@ async function getPostById(id: number) {
     },
     include: {
       author: {
-        select: AccountPublicFields,
+        // select: AccountPublicFields,
+        omit: {
+          password: true,
+        },
       },
     },
   });
@@ -238,7 +248,10 @@ async function getPostByUid(uid: string) {
     },
     include: {
       author: {
-        select: AccountPublicFields,
+        // select: AccountPublicFields,
+        omit: {
+          password: true,
+        },
       },
       _count: {
         select: {

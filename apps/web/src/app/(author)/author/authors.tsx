@@ -13,11 +13,16 @@ import Empty from '@/components/empty';
 import AuthorCard from '@/components/author';
 import type {
   Account,
-} from '@/types/account';
+} from '@packages/database';
+
+interface AuthorWithPostsCount
+    extends Account {
+  postsCount?: number;
+}
 
 interface AuthorsProps {
   count?: number;
-  list?: Account[];
+  list?: AuthorWithPostsCount[];
   page?: number;
   size?: number;
 }
@@ -33,7 +38,7 @@ function Authors({
       <h2 className="text-xl my-4">推荐作者</h2>
       <div className="flex flex-wrap gap-6">
         {
-          list.map((author) => (
+          list.map((author: AuthorWithPostsCount) => (
             <Link
                 key={ author.id }
                 className="group border rounded-lg border-gray-200 p-4

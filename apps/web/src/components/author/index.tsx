@@ -8,7 +8,7 @@ import {
 
 interface AuthorCardProps {
   uid: string;
-  avatarUrl?: string;
+  avatarUrl: string | null;
   name: string;
   link?: boolean;
   className?: string;

@@ -13,14 +13,12 @@ import SimplePagination from '@/components/pagination/simple';
 
 import AccountContext from '@/components/provider/account-context';
 import type {
-  Post,
-} from '@/types/post';
-import type {
   Account,
-} from '@/types/account';
+  Post,
+} from '@packages/database';
 import {
   bookmark,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 
 interface PostsProps {
   count?: number;
@@ -50,8 +48,8 @@ function Posts({
         ids: postIds,
       }),
     {
-      ready: info
-          && postIds.length,
+      ready: !!(info
+          && postIds.length),
     },
   );
 

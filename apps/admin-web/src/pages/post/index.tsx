@@ -17,11 +17,11 @@ import Pagination from '@/components/pagination';
 import {
   Account,
   Post,
-} from '@/types';
+} from '@packages/database';
 
 import {
   post,
-} from '@packages/lib/sdk/admin';
+} from '@packages/sdk/admin';
 
 const defaultFilters = {
   search: '',

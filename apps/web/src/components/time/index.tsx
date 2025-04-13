@@ -13,7 +13,7 @@ export default function Time({
   value,
   className,
 }: {
-  value?: string;
+  value?: string | Date;
   className?: string;
 }) {
   const [
@@ -42,7 +42,7 @@ export default function Time({
     <Suspense key={ mounted ? 'local' : 'server' }>
       <time
           suppressHydrationWarning
-          dateTime={ value }
+          dateTime={ value ? time.format(value) : '' }
           className={ cn(
             'text-sm text-gray-500',
             className,

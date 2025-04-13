@@ -10,7 +10,7 @@ import {
 import type {
   Post,
   Ticket,
-} from '@/types';
+} from '@packages/database';
 
 interface PostCardProps {
   data?: Post;

@@ -8,7 +8,7 @@ import {
 } from '@/lib/utils';
 
 interface AvatarProps {
-  url?: string;
+  url: string | undefined | null;
   name?: string;
   width?: number;
   height?: number;

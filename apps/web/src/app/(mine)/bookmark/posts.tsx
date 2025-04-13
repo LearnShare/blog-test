@@ -11,15 +11,19 @@ import PostCard from '@/components/post/card';
 import LoadMore from '@/components/load-more';
 
 import type {
-  Bookmark,
-} from '@/types/bookmark';
-import type {
   Account,
-} from '@/types/account';
+  Bookmark,
+  Post,
+} from '@packages/database';
 import {
   bookmark,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 import Empty from '@/components/empty';
+
+interface BookmarkWithPost
+    extends Bookmark {
+  post: Post;
+}
 
 const size = 12;
 
@@ -27,7 +31,7 @@ function Posts() {
   const [
     list,
     setList,
-  ] = useState<Bookmark[]>([]);
+  ] = useState<BookmarkWithPost[]>([]);
   const [
     authors,
     setAuthors,
@@ -48,7 +52,11 @@ function Posts() {
     refreshDeps: [
       page,
     ],
-    onSuccess: (data) => {
+    onSuccess: (data: {
+      count: number;
+      list: BookmarkWithPost[];
+      accounts: Record<number, Account>;
+    }) => {
       setList((oldList) => ([
         ...oldList,
         ...data.list,
@@ -66,18 +74,18 @@ function Posts() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-wrap gap-6 *:w-full">
           {
-            list.map((item) => (
+            list.map((item: BookmarkWithPost) => (
               <PostCard
                   key={ `${item.accountId}-${item.postId}` }
                   { ...item.post }
-                  author={ authors[item.post.authorId] } />
+                  author={ authors[item.post?.authorId] } />
             ))
           }
         </div>
         <LoadMore
             page={ page }
             size={ size }
-            total={ data?.count }
+            total={ data?.count || 0 }
             loading={ loading }
             onPageChange={ (p: number) => setPage(p) } />
         {

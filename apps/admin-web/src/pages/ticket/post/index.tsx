@@ -17,11 +17,11 @@ import Pagination from '@/components/pagination';
 import {
   Ticket,
   Post,
-} from '@/types';
+} from '@packages/database';
 
 import {
   ticket,
-} from '@packages/lib/sdk/admin';
+} from '@packages/sdk/admin';
 
 const defaultFilters = {
   status: 'pending',

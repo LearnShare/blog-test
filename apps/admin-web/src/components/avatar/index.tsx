@@ -3,7 +3,7 @@ import {
 } from '@/lib/utils';
 
 interface AvatarProps {
-  url?: string;
+  url: string | null;
   name?: string;
   width?: number;
   height?: number;

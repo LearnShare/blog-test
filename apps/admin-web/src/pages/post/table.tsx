@@ -12,19 +12,25 @@ import AccountCard from '@/components/account';
 import PostCard from '@/components/post';
 
 import {
+  Account,
   Post,
-} from '@/types';
+} from '@packages/database';
 import {
   statusNames,
 } from './data';
 
 import Time from '@packages/lib/time';
 
+interface PostWithAuthor
+    extends Post {
+  author?: Account;
+}
+
 interface TableProps {
   loading: boolean;
   data?: {
     count: number;
-    list: Post[];
+    list: PostWithAuthor[];
   };
 }
 
@@ -53,7 +59,7 @@ export default function PostsTable({
               </TableHeader>
               <TableBody>
                 {
-                  data?.list.map((post: Post) => (
+                  data?.list.map((post: PostWithAuthor) => (
                     <TableRow
                         key={ post.id }>
                       <TableCell>{ post.id }</TableCell>
@@ -68,7 +74,7 @@ export default function PostsTable({
                       <TableCell>{ post.format }</TableCell>
                       <TableCell>{ statusNames[post.status] }</TableCell>
                       <TableCell>{ Time.format(post.ctime) }</TableCell>
-                      <TableCell>{ Time.format(post.utime) }</TableCell>
+                      <TableCell>{ post.utime ? Time.format(post.utime) : '-' }</TableCell>
                       <TableCell
                           className="w-[60px] text-right">-</TableCell>
                     </TableRow>

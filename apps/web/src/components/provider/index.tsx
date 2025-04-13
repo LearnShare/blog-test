@@ -12,12 +12,17 @@ import {
   useRouter,
 } from 'next/navigation';
 
-import AccountContext from './account-context';
+import AccountContext, {
+  type AccountContextType,
+} from './account-context';
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 import Store from '@/lib/store';
 import AuthRequired from '@/components/error/auth-required';
+import type {
+  Account,
+} from '@packages/database';
 
 const welcomePath = '/welcome';
 const privatePaths = [
@@ -66,7 +71,7 @@ function Provider({
   const [
     info,
     setInfo,
-  ] = useState(null);
+  ] = useState<Account>();
   const [
     loaded,
     setLoaded,
@@ -76,7 +81,7 @@ function Provider({
     loading,
   } = useRequest(auth.accountInfo, {
     ready: !!token,
-    onSuccess: (res) => {
+    onSuccess: (res: Account) => {
       setInfo(res);
 
       // redirect if !verified
@@ -97,13 +102,13 @@ function Provider({
       || loading
       || endNotLogin;
 
-  const contextValue = {
+  const contextValue: AccountContextType = {
     endNotLogin,
     notLogin,
     loading,
     loaded,
     info,
-    setInfo: (data: any, tk?: string) => {
+    setInfo: (data: Account, tk?: string) => {
       if (tk) {
         setToken(tk);
       }

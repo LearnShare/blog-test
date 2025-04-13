@@ -1,7 +1,3 @@
-import {
-  AccountRole,
-} from '../types';
-
 import prisma from '../prisma';
 import Hash from '@packages/lib/hash';
 
@@ -15,6 +11,7 @@ export const AccountPublicFields = {
   verified: true,
   role: true,
   intro: true,
+  disabled: true,
   ctime: true,
   utime: true,
 };
@@ -22,7 +19,7 @@ export const AccountPublicFields = {
 interface AccountData {
   email: string;
   password: string;
-  role?: AccountRole;
+  role?: string;
   verified?: boolean;
 }
 
@@ -43,7 +40,10 @@ async function createAccount({
       verified,
       utime: new Date(),
     },
-    select: AccountPublicFields,
+    // select: AccountPublicFields,
+    omit: {
+      password: true,
+    },
   });
 
   return {
@@ -85,7 +85,10 @@ async function getAccountByUid(uid: string) {
     where: {
       uid,
     },
-    select: AccountPublicFields,
+    // select: AccountPublicFields,
+    omit: {
+      password: true,
+    },
   });
 
   return {
@@ -101,7 +104,10 @@ async function getAccountsByIds(ids: number[]) {
         in: ids,
       },
     },
-    select: AccountPublicFields,
+    // select: AccountPublicFields,
+    omit: {
+      password: true,
+    },
   });
 
   return {
@@ -111,7 +117,7 @@ async function getAccountsByIds(ids: number[]) {
 
 export interface AccountsQuery {
   search?: string;
-  role?: AccountRole;
+  role?: string;
   disabled?: boolean;
   posts?: boolean;
   sort: string;
@@ -234,7 +240,7 @@ export interface AuthorsQuery {
 // get authors
 async function getAuthors(authorsQuery: AuthorsQuery) {
   const {
-    posts,
+    // posts,
     page,
     size,
   } = authorsQuery;
@@ -245,9 +251,9 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
     },
   };
 
-  const rawCount = await prisma.account.count({
-    where: query,
-  });
+  // const rawCount = await prisma.account.count({
+  //   where: query,
+  // });
 
   const rawList = await prisma.account.findMany({
     where: query,
@@ -307,7 +313,10 @@ async function updateAccount(id: number, data: Record<string, any>) {
       ...data,
       utime: new Date(),
     },
-    select: AccountPublicFields,
+    // select: AccountPublicFields,
+    omit: {
+      password: true,
+    },
   });
 
   return {

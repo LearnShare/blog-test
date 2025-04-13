@@ -5,7 +5,6 @@ import {
 } from 'express';
 
 import DB, {
-  type PostContentFormat,
   DB_PAGE,
   DB_SIZE,
   DB_SORT,

@@ -21,7 +21,7 @@ import DataItem from './item';
 
 import {
   auth,
-} from '@packages/lib/sdk/web';
+} from '@packages/sdk/web';
 // import AccountContext from '@/components/provider/account-context';
 // import {
 //   AuthorRoles,

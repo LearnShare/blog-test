@@ -16,7 +16,7 @@ import Pagination from '@/components/pagination';
 
 import {
   account,
-} from '@packages/lib/sdk/admin';
+} from '@packages/sdk/admin';
 
 const defaultFilters = {
   search: '',
