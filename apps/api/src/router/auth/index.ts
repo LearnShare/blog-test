@@ -24,6 +24,7 @@ import {
 } from '@/lib/account';
 import Mail from '@/lib/mail';
 import Redis from '@/lib/redis';
+import type { PostStatus } from '@packages/types';
 
 const authRouter = Router();
 
@@ -515,7 +516,7 @@ authRouter.get(
       account: account
           ? Boolean(Number(account))
           : false,
-      status: status as string,
+      status: status as PostStatus,
       sort: (sort as string)
           || DB_SORT,
       page: page

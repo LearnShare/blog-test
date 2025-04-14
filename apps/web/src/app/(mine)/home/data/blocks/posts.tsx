@@ -22,11 +22,14 @@ import Loading from '@/components/loading';
 import Empty from '@/components/empty';
 
 import {
-  statusNames,
-} from '../../../posts/filter';
+  PostStatusNames,
+} from '@packages/types';
 import type {
   Post,
 } from '@packages/database';
+import {
+  PostStatusEnums,
+} from '@packages/types';
 import {
   auth,
 } from '@packages/sdk/web';
@@ -39,7 +42,7 @@ function DataPosts() {
   } = useRequest(() => auth.getPosts({
     page: 1,
     size: 6,
-    status: 'public',
+    status: PostStatusEnums.PUBLIC,
   }));
 
   return (
@@ -75,11 +78,11 @@ function DataPosts() {
                           <TableCell>
                             <Link
                                 className="hover:underline"
-                                href={ `/${post.status === 'public' ? 'post' : 'draft'}/${post.uid}` }
+                                href={ `/${post.status === PostStatusEnums.PUBLIC ? 'post' : 'draft'}/${post.uid}` }
                                 target="_blank">{ post.title }</Link>
                           </TableCell>
                           <TableCell>{ post.utime ? time.formatRelative(post.utime) : '-' }</TableCell>
-                          <TableCell>{ statusNames[post.status] }</TableCell>
+                          <TableCell>{ PostStatusNames[post.status] }</TableCell>
                           <TableCell>{ post.views }</TableCell>
                         </TableRow>
                       ))

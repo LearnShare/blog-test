@@ -34,12 +34,10 @@ authRouter.post('/sign-in', async (req: Request, res: Response) => {
   // 1. validate email
   const emailResult = Validator.validateEmail(email);
   if (!emailResult.success) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid email',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid email',
+    });
   }
 
   // 2. check is account exist

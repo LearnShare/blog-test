@@ -13,35 +13,15 @@ import {
   buttonVariants,
 } from '@/components/ui/button';
 
+import {
+  PostStatusOptions,
+} from '@packages/types';
+
 interface FilterProps {
   stats?: Record<string, number>;
   values: Record<string, any>;
   onChange: (data: Record<string, any>) => void;
 }
-
-const statusOptions = [
-  {
-    label: '已发布',
-    value: 'public',
-  },
-  {
-    label: '待审核',
-    value: 'draft',
-  },
-  {
-    label: '已拒绝',
-    value: 'rejected',
-  },
-];
-
-const statusNames: Record<string, string> = {};
-for (const option of statusOptions) {
-  statusNames[option.value] = option.label;
-}
-
-export {
-  statusNames,
-};
 
 function Filter({
   stats,
@@ -62,7 +42,7 @@ function Filter({
           onValueChange={ (value: string) => itemOnChange('status', value) }>
         <TabsList>
           {
-            statusOptions.map((option) => (
+            PostStatusOptions.map((option) => (
               <TabsTrigger
                   key={ option.value }
                   value={ option.value }>{ option.label } { stats?.[option.value] }</TabsTrigger>

@@ -15,6 +15,9 @@ import {
   getAccountInfo,
   updateAccount,
 } from '@/lib/account';
+import type {
+  AccountRole,
+} from '@packages/types';
 
 const accountRouter = Router();
 
@@ -43,7 +46,7 @@ accountRouter.get(
       data,
     } = await DB.account.getAccounts({
       search: search as string,
-      role: role as string,
+      role: role as AccountRole,
       posts: true,
       sort: (sort as string)
           || DB_SORT,

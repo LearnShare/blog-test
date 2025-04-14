@@ -1,5 +1,8 @@
 import prisma from '../prisma';
 import Hash from '@packages/lib/hash';
+import type {
+  AccountRole,
+} from '@packages/types';
 
 export const AccountPublicFields = {
   id: true,
@@ -19,7 +22,7 @@ export const AccountPublicFields = {
 interface AccountData {
   email: string;
   password: string;
-  role?: string;
+  role?: AccountRole;
   verified?: boolean;
 }
 
@@ -117,7 +120,7 @@ async function getAccountsByIds(ids: number[]) {
 
 export interface AccountsQuery {
   search?: string;
-  role?: string;
+  role?: AccountRole;
   disabled?: boolean;
   posts?: boolean;
   sort: string;

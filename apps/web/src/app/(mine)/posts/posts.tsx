@@ -27,13 +27,16 @@ import type {
 import {
   auth,
 } from '@packages/sdk/web';
+import {
+  PostStatusEnums,
+} from '@packages/types';
 
 function Posts() {
   const [
     filters,
     setFilters,
   ] = useState<Record<string, any>>({
-    status: 'public',
+    status: PostStatusEnums.PUBLIC,
   });
 
   const [

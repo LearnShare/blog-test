@@ -9,6 +9,11 @@ import DB, {
   DB_SIZE,
   DB_SORT,
 } from '@packages/database';
+import BlogError from '@packages/lib/error';
+import type {
+  TicketStatus,
+  TicketType,
+} from '@packages/types';
 import type {
   CustomRequest,
 } from '@/lib/auth';
@@ -36,8 +41,8 @@ ticketRouter.get('/', async (req: CustomRequest, res: Response) => {
   const {
     data,
   } = await DB.ticket.getTickets({
-    type: type as string,
-    status: status as string,
+    type: type as TicketType,
+    status: status as TicketStatus,
     sort: (sort as string)
         || DB_SORT,
     page: page
@@ -67,12 +72,10 @@ ticketRouter.put('/:id', async (req: CustomRequest, res: Response) => {
   } = req.body;
 
   if (type !== 'post-review') {
-    res.status(400)
-        .json({
-           status: 400,
-           message: 'Invalid action'
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid action'
+    });
   }
 
   await DB.ticket.reviewPost(Number(id), {

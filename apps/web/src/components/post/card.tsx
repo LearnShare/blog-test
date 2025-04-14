@@ -14,6 +14,9 @@ import type {
   Account,
   Post,
 } from '@packages/database';
+import {
+  PostStatusEnums,
+} from '@packages/types';
 
 interface PostCardProps
     extends Post {
@@ -58,7 +61,7 @@ export default function PostCard({
           <Link
               className="h-full w-[50%] max-w-[300px] overflow-hidden relative
                   max-md:h-[240px] max-md:w-full max-md:max-w-none  max-md:max-h-none"
-              href={ `/${ status === 'public' ? 'post' : 'draft' }/${uid}` }>
+              href={ `/${ status === PostStatusEnums.PUBLIC ? 'post' : 'draft' }/${uid}` }>
             <ViewTransition
                 name={ `post-cover-${id}` }>
               <Image
@@ -72,7 +75,7 @@ export default function PostCard({
       }
       <div className="flex-1 min-h-[140px] p-4 flex flex-col gap-2 justify-between">
         <Link
-            href={ `/${ status === 'public' ? 'post' : 'draft' }/${uid}` }
+            href={ `/${ status === PostStatusEnums.PUBLIC ? 'post' : 'draft' }/${uid}` }
             className="group flex flex-col gap-2">
           <h3 className="flex-1 group-hover:underline text-xl">{ title }</h3>
           {

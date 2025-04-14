@@ -30,6 +30,9 @@ import type {
   Ticket,
 } from '@packages/database';
 import {
+  PostContentFormatEnums as FormatEnums,
+} from '@packages/types';
+import {
   cn,
 } from '@/lib/utils';
 import {
@@ -115,7 +118,7 @@ function PostDialog({
           </Divider>
           <div>
             {
-              data.format === 'MARKDOWN' && (
+              data.format === FormatEnums.MARKDOWN && (
                 <MarkdownRender
                     content={ data.content } />
               )

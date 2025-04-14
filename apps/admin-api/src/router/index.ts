@@ -4,6 +4,7 @@ import {
   Response,
 } from 'express';
 
+import BlogError from '@packages/lib/error';
 import Auth, {
   type CustomRequest,
 } from '@/lib/auth';
@@ -24,11 +25,10 @@ router.use('/ticket', Auth.check, ticketRouter);
 
 // 404
 router.use((req: Request, res: Response) => {
-  res.status(404)
-    .json({
-      code: 404,
-      message: `${ req.path } not found`,
-    });
+  throw new BlogError({
+    status: 404,
+    message: `${ req.path } not found`,
+  });
 });
 
 export default router;

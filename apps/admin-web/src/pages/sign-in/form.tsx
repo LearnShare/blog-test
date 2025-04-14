@@ -28,6 +28,7 @@ import {
   auth,
 } from '@packages/sdk/admin';
 import Store from '@/lib/store';
+import type { Account } from '@packages/database';
 
 const KnownErrors: Record<string, string> = {
   'Account or Password error': '账号或密码错误',
@@ -53,7 +54,10 @@ function SignInForm() {
       auth.signIn(data.email, data.password),
     {
       manual: true,
-      onSuccess: (res) => {
+      onSuccess: (res: {
+        token: string;
+        data: Account;
+      }) => {
         const {
           token,
           data,

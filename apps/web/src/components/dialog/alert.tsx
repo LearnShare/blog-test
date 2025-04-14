@@ -64,10 +64,10 @@ function Alert({
             cancel && (
               <AlertDialogCancel
                   onClick={ () => cancelOnClick() }>{
-                typeof cancel === 'string'
-                    ? cancel
-                    : '取消'
-              }</AlertDialogCancel>
+                    typeof cancel === 'string'
+                        ? cancel
+                        : '取消'
+                  }</AlertDialogCancel>
             )
           }
           <AlertDialogAction

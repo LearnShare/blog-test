@@ -18,7 +18,9 @@ interface FileData {
 
 export interface CustomRequest
     extends Request {
-  user: any;
+  user: {
+    id: number;
+  };
   file: FileData;
 }
 
@@ -37,7 +39,9 @@ async function auto(
 
   if (token) {
     try {
-      const data = await JWT.decrypt(token);
+      const data = await JWT.decrypt(token) as {
+        id: number;
+      };
 
       req.user = data;
 
@@ -91,12 +95,10 @@ async function check(
 
     next();
   } catch (error) {
-    res.status(401)
-        .json({
-          code: 401,
-          message: 'Invalid authorization token',
-        });
-    return;
+    throw new BlogError({
+      status: 401,
+      message: 'Invalid authorization token',
+    });
   }
 }
 

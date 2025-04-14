@@ -57,7 +57,7 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
         : false,
     bookmarkBy: req.user && req.user.id,
     // only published visible
-    status: 'public',
+    status: 'PUBLIC',
     sort: (sort as string)
         || DB_SORT,
     page: page
@@ -130,7 +130,7 @@ postRouter.post(
       coverUrl,
       content: purify.sanitize(content),
       format: format as string,
-      status: 'draft',
+      status: 'DRAFT',
     };
 
     // 3. create post
@@ -142,10 +142,10 @@ postRouter.post(
     const {
       data: ticket,
     } = await DB.ticket.createTicket({
-      type: 'post',
+      type: 'POST',
       ref: String(post.id),
       from: id,
-      status: 'pending',
+      status: 'PENDING',
     });
 
     // 5. update post
@@ -172,7 +172,7 @@ postRouter.get('/uid/:uid', async (req: Request, res: Response) => {
   } = await DB.post.getPostByUid(uid);
 
   if (!post
-      || post.status !== 'public') {
+      || post.status !== 'PUBLIC') {
     throw new BlogError({
       status: 404,
       message: 'Post not found',
@@ -197,7 +197,7 @@ postRouter.get('/:id', async (req: Request, res: Response) => {
   } = await DB.post.getPostById(Number(id));
 
   if (!post
-      || post.status !== 'public') {
+      || post.status !== 'PUBLIC') {
     throw new BlogError({
       status: 404,
       message: 'Post not found',
@@ -282,10 +282,10 @@ postRouter.put(
     const {
       data: ticket,
     } = await DB.ticket.createTicket({
-      type: 'post',
+      type: 'POST',
       ref: String(post.id),
       from: userId,
-      status: 'pending',
+      status: 'PENDING',
     });
 
     const safeData = {
@@ -298,7 +298,7 @@ postRouter.put(
       coverUrl,
       content: purify.sanitize(content),
       format: format as string,
-      status: 'draft',
+      status: 'DRAFT',
       ticket: ticket.id,
     };
 

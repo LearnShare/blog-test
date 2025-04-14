@@ -45,6 +45,9 @@ import AccountContext from '@/components/provider/account-context';
 import {
   bookmark,
 } from '@packages/sdk/web';
+import {
+  PostStatusEnums,
+} from '@packages/types';
 
 interface PostWithAuthor
     extends Post {
@@ -95,7 +98,7 @@ export default function PostDetail({
     }
   };
 
-  if (status !== 'public'
+  if (status !== PostStatusEnums.PUBLIC
       && info?.id !== author.id) {
     return (
       <Error message="没有访问该页面的权限" />
@@ -122,7 +125,7 @@ export default function PostDetail({
             </Breadcrumb>
             <div className="flex items-center justify-between">
               <Badge
-                  variant="outline">{ status === 'public' ? '已发布' : '未发布' }</Badge>
+                  variant="outline">{ status === PostStatusEnums.PUBLIC ? '已发布' : '未发布' }</Badge>
               <DetailActions
                   id={ id }
                   uid={ uid }

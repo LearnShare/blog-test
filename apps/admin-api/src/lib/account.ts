@@ -10,12 +10,10 @@ import DB from '@packages/database';
 export async function getAccountInfo(id: number, res: Response) {
   // 1. check id
   if (!id) {
-    res.status(400)
-        .json({
-          status: 400,
-          message: 'Invalid user id',
-        });
-    return;
+    throw new BlogError({
+      status: 400,
+      message: 'Invalid user id',
+    });
   }
 
   const {

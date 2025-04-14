@@ -18,13 +18,17 @@ import {
   Ticket,
   Post,
 } from '@packages/database';
+import {
+  TicketStatusEnums as StatusEnums,
+  TicketTypeEnums as TypeEnums,
+} from '@packages/types';
 
 import {
   ticket,
 } from '@packages/sdk/admin';
 
 const defaultFilters = {
-  status: 'pending',
+  status: StatusEnums.PENDING,
 };
 
 const size = 20;
@@ -32,11 +36,6 @@ const size = 20;
 interface DataType {
   count: number;
   list: Ticket[];
-}
-
-interface ResType
-    extends DataType {
-  posts: Record<number, Post>;
 }
 
 export default function PageTicketPost() {
@@ -60,14 +59,18 @@ export default function PageTicketPost() {
   } = useRequest(() => ticket.getTickets({
     page,
     size,
-    type: 'post',
+    type: TypeEnums.POST,
     ...filters,
   }), {
     refreshDeps: [
       page,
       filters,
     ],
-    onSuccess: (res: ResType) => {
+    onSuccess: (res: {
+      posts: Record<number, Post>;
+      list: Ticket[];
+      count: number;
+    }) => {
       const {
         posts,
         list,

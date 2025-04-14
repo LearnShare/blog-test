@@ -27,6 +27,9 @@ importers:
       '@packages/lib':
         specifier: workspace:*
         version: link:../../packages/lib
+      '@packages/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@sentry/node':
         specifier: ^9.10.1
         version: 9.10.1
@@ -76,6 +79,9 @@ importers:
       '@packages/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+      '@packages/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@radix-ui/react-collapsible':
         specifier: ^1.1.3
         version: 1.1.3(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -182,6 +188,9 @@ importers:
       '@packages/lib':
         specifier: workspace:*
         version: link:../../packages/lib
+      '@packages/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@sentry/node':
         specifier: ^9.10.1
         version: 9.10.1
@@ -264,6 +273,9 @@ importers:
       '@packages/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+      '@packages/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -385,10 +397,13 @@ importers:
       '@packages/lib':
         specifier: workspace:*
         version: link:../lib
-      '@prisma/client':
-        specifier: 6.4.1
-        version: 6.4.1(prisma@6.6.0(typescript@5.8.2))(typescript@5.8.2)
+      '@packages/types':
+        specifier: workspace:*
+        version: link:../types
     devDependencies:
+      '@prisma/client':
+        specifier: 6.6.0
+        version: 6.6.0(prisma@6.6.0(typescript@5.8.2))(typescript@5.8.2)
       prisma:
         specifier: 6.6.0
         version: 6.6.0(typescript@5.8.2)
@@ -445,6 +460,8 @@ importers:
       '@types/markdown-it':
         specifier: ^14.1.2
         version: 14.1.2
+
+  packages/types: {}
 
 packages:
 
@@ -1294,8 +1311,8 @@ packages:
     resolution: {integrity: sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg==}
     engines: {node: '>= 10.0.0'}
 
-  '@prisma/client@6.4.1':
-    resolution: {integrity: sha512-A7Mwx44+GVZVexT5e2GF/WcKkEkNNKbgr059xpr5mn+oUm2ZW1svhe+0TRNBwCdzhfIZ+q23jEgsNPvKD9u+6g==}
+  '@prisma/client@6.6.0':
+    resolution: {integrity: sha512-vfp73YT/BHsWWOAuthKQ/1lBgESSqYqAWZEYyTdGXyFAHpmewwWL2Iz6ErIzkj4aHbuc6/cGSsE6ZY+pBO04Cg==}
     engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
@@ -6228,7 +6245,7 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.5.1
     optional: true
 
-  '@prisma/client@6.4.1(prisma@6.6.0(typescript@5.8.2))(typescript@5.8.2)':
+  '@prisma/client@6.6.0(prisma@6.6.0(typescript@5.8.2))(typescript@5.8.2)':
     optionalDependencies:
       prisma: 6.6.0(typescript@5.8.2)
       typescript: 5.8.2

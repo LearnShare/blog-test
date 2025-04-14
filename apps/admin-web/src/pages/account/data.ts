@@ -1,28 +1,20 @@
-const roleOptions = [
+import {
+  type Option,
+  AccountRoleOptions,
+  AccountRoleNames,
+} from '@packages/types';
+
+const roleOptions: Option<string>[] = [
   {
     label: '全部类型',
     value: '*',
   },
-  {
-    label: '管理员',
-    value: 'ADMIN',
-  },
-  {
-    label: '文章作者',
-    value: 'AUTHOR',
-  },
-  {
-    label: '普通用户',
-    value: 'USER',
-  },
+  ...AccountRoleOptions,
 ];
 
-const roles: Record<string, string> = {};
-for (const option of roleOptions) {
-  if (option.value !== '*') {
-    roles[option.value] = option.label;
-  }
-}
+const roles = {
+  ...AccountRoleNames,
+};
 
 const disabledOptions = [
   {

@@ -52,5 +52,5 @@ app.use(error);
 const port: number = Number(process.env.SERVER_PORT) || 3090;
 
 app.listen(port, () => {
-  console.log(`[API]: ready, port: ${ port }`, '\n');
+  console.log(`[ADMIN-API]: ready, port: ${ port }`, '\n');
 });

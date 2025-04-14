@@ -11,11 +11,9 @@ import ProfileActions from './actions';
 
 import AccountContext from '@/components/provider/account-context';
 
-const roles: Record<string, string> = {
-  ADMIN: '系统管理员',
-  AUTHOR: '文章作者',
-  USER: '普通用户',
-};
+import {
+  AccountRoleNames,
+} from '@packages/types';
 
 function DataStats() {
   const {
@@ -39,7 +37,7 @@ function DataStats() {
     },
     {
       label: '身份',
-      value: roles[info.role]
+      value: AccountRoleNames[info.role]
           || info.role,
     },
     {

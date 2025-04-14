@@ -13,6 +13,9 @@ import Auth, {
   type CustomRequest,
 } from '@/lib/auth';
 import Hash from '@packages/lib/hash';
+import type {
+  PostStatus,
+} from '@packages/types';
 
 const postRouter = Router();
 
@@ -45,7 +48,7 @@ postRouter.get('/', async (req: CustomRequest, res: Response) => {
         ? Number(author)
         : null,
     account: true,
-    status: status as string,
+    status: status as PostStatus,
     content: true,
     sort: (sort as string)
         || DB_SORT,

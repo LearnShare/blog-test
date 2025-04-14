@@ -10,6 +10,7 @@
   "dependencies": {
     "@packages/database": "workspace:*",
     "@packages/lib": "workspace:*",
+    "@packages/types": "workspace:*",
     "@sentry/node": "^9.10.1",
     "cors": "^2.8.5",
     "dompurify": "^3.2.5",

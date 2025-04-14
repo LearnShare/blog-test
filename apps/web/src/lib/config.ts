@@ -1,4 +1,8 @@
+import {
+  AccountRoleEnums,
+} from '@packages/types';
+
 export const AuthorRoles = [
-  'ADMIN',
-  'AUTHOR',
+  AccountRoleEnums.ADMIN,
+  AccountRoleEnums.AUTHOR,
 ];

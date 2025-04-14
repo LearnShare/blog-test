@@ -16,6 +16,9 @@ import {
   updateAccount,
   updatePassword,
 } from '@/lib/account';
+import type {
+  AccountRole,
+} from '@packages/types';
 
 const accountRouter = Router();
 
@@ -44,7 +47,7 @@ accountRouter.get(
       data,
     } = await DB.account.getAccounts({
       search: search as string,
-      role: role as string,
+      role: role as AccountRole,
       posts: posts
           ? Boolean(Number(posts))
           : null,
