@@ -1,4 +1,6 @@
-import type { Account } from '../../client';
+import type {
+  Account,
+} from '../../client';
 import prisma from '../prisma';
 import account from './account';
 

@@ -15,8 +15,8 @@ import {
   Ticket,
 } from '@packages/database';
 import {
-  statusNames,
-} from './data';
+  TicketStatusNames,
+} from '@packages/types';
 
 import Time from '@packages/lib/time';
 
@@ -68,7 +68,7 @@ export default function TicketsTable({
                             ticket={ ticket }
                             refresh={ refresh } />
                       </TableCell>
-                      <TableCell>{ statusNames[ticket.status] }</TableCell>
+                      <TableCell>{ TicketStatusNames[ticket.status] }</TableCell>
                       <TableCell>{ Time.format(ticket.ctime) }</TableCell>
                       <TableCell>{ ticket.utime ? Time.format(ticket.utime) : '-' }</TableCell>
                       <TableCell

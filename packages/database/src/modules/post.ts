@@ -1,6 +1,5 @@
 import prisma from '../prisma';
 import accountModule, {
-  // AccountPublicFields,
 } from './account';
 import ticketModule from './ticket';
 import Bookmark from './bookmark';
@@ -15,6 +14,7 @@ import type {
   Post,
   Ticket,
 } from '@packages/database';
+import { PostStatusEnums } from '@packages/types';
 
 // create post
 async function createPost(accountId: number, postData: PostCreateData) {
@@ -188,7 +188,7 @@ async function getPosts(postQuery: PostsQuery) {
   }
 
   // with tickets
-  if (status === 'rejected') {
+  if (status === PostStatusEnums.REJECTED) {
     const ids: Record<number, boolean> = {};
     for (const item of list) {
       if (item.ticket
@@ -342,26 +342,26 @@ async function getStats(id?: number) {
   const publics = await prisma.post.count({
     where: {
       ...authorQuery,
-      status: 'public',
+      status: PostStatusEnums.PUBLIC,
     },
   });
   const drafts = await prisma.post.count({
     where: {
       ...authorQuery,
-      status: 'draft',
+      status: PostStatusEnums.DRAFT,
     },
   });
   const rejecteds = await prisma.post.count({
     where: {
       ...authorQuery,
-      status: 'rejected',
+      status: PostStatusEnums.REJECTED,
     },
   });
 
   const viewsSum = await prisma.post.aggregate({
     where: {
       ...authorQuery,
-      status: 'public',
+      status: PostStatusEnums.PUBLIC,
     },
     _sum: {
       views: true,
@@ -386,9 +386,9 @@ async function getStats(id?: number) {
   return {
     data: {
       total,
-      public: publics,
-      draft: drafts,
-      rejected: rejecteds,
+      PUBLIC: publics,
+      DRAFT: drafts,
+      REJECTED: rejecteds,
       views,
       bookmarks,
     },

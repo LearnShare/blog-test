@@ -1,6 +1,8 @@
 import prisma from '../prisma';
 
-type FileType = 'UNKNOWN' | 'IMAGE' | 'VIDEO' | 'AUDIO';
+import {
+  type FileType,
+} from '@packages/types';
 
 export interface FilesQuery {
   creator?: number;

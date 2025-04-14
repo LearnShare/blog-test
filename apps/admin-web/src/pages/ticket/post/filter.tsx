@@ -14,11 +14,12 @@ import {
 } from '@/components/ui/button';
 
 import {
-  statusOptions,
-} from './data';
+  type TicketStatus,
+  TicketStatusOptions,
+} from '@packages/types';
 
 export interface FilterData {
-  status?: string;
+  status?: TicketStatus;
 };
 
 interface FilterProps {
@@ -67,7 +68,7 @@ export default function Filter({
           </SelectTrigger>
           <SelectContent>
             {
-              statusOptions.map((option) => (
+              TicketStatusOptions.map((option) => (
                 <SelectItem
                     key={ option.value }
                     value={ option.value }>{ option.label }</SelectItem>

@@ -1,6 +1,8 @@
 import prisma from '../prisma';
 
-type CodeType = 'ACCOUNT_VERIFICATION' | 'RESET_PASSWORD';
+import {
+  type CodeType,
+} from '@packages/types';
 
 interface CodeData {
   code: string;

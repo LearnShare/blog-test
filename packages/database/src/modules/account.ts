@@ -1,7 +1,9 @@
 import prisma from '../prisma';
 import Hash from '@packages/lib/hash';
-import type {
-  AccountRole,
+import {
+  type AccountRole,
+  AccountRoleEnums,
+  PostStatusEnums,
 } from '@packages/types';
 
 export const AccountPublicFields = {
@@ -30,7 +32,7 @@ interface AccountData {
 async function createAccount({
   email,
   password,
-  role = 'AUTHOR',
+  role = AccountRoleEnums.AUTHOR,
   verified = false,
 }: AccountData) {
   const account = await prisma.account.create({
@@ -250,7 +252,10 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
 
   const query = {
     role: {
-      in: ['ADMIN', 'AUTHOR'],
+      in: [
+        AccountRoleEnums.ADMIN,
+        AccountRoleEnums.AUTHOR,
+      ],
     },
   };
 
@@ -271,7 +276,7 @@ async function getAuthors(authorsQuery: AuthorsQuery) {
         select: {
           posts: {
             where: {
-              status: 'public',
+              status: PostStatusEnums.PUBLIC,
             },
           },
         },

@@ -1,12 +1,18 @@
 import prisma from '../prisma';
 import postModule from './post';
+import {
+  type TicketType,
+  type TicketStatus,
+  TicketStatusEnums,
+  PostStatusEnums,
+} from '@packages/types';
 
 interface TicketData {
-  type: string;
+  type: TicketType;
   ref?: string;
   from?: number;
   to?: number;
-  status: string;
+  status: TicketStatus;
 }
 
 // create ticket
@@ -36,8 +42,8 @@ async function createTicket(ticketData: TicketData) {
 }
 
 interface TicketsQuery {
-  type?: string;
-  status?: string;
+  type?: TicketType;
+  status?: TicketStatus;
   sort: string;
   page: number;
   size: number;
@@ -160,12 +166,12 @@ async function reviewPost(ticketId: number, reviewData: ReviewData) {
   } = reviewData;
 
   const ticketStatusList = {
-    approve: 'approved',
-    reject: 'rejected',
+    approve: TicketStatusEnums.APPROVED,
+    reject: TicketStatusEnums.REJECTED,
   };
   const postStatusList = {
-    approve: 'public',
-    reject: 'rejected',
+    approve: PostStatusEnums.PUBLIC,
+    reject: PostStatusEnums.REJECTED,
   };
 
   await updateTicket(ticketId, {
