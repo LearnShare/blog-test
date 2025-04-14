@@ -62,7 +62,7 @@ echo "依赖安装完成。"
 echo "4. 执行 pnpm run generate 编译 prisma/client..."
 pnpm run generate || { echo "项目编译失败，请检查错误。"; exit 1; }
 # 屏蔽相关文件的 tsc 错误提示
-echo '// @ts-nocheck\n' | cat - "$PRISMA_CLIENT_DIST" > temp && mv temp "$PRISMA_CLIENT_DIST"
+echo '// @ts-nocheck' | cat - "$PRISMA_CLIENT_DIST" > temp && mv temp "$PRISMA_CLIENT_DIST"
 echo "prisma/client 编译完成。"
 
 # 5. 执行 pnpm run build 编译项目
