@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_ENV=development tsx watch ./src/index.ts",
     "build": "tsc",
-    "start": "node -r esbuild-register ./src/index.ts"
+    "start": "tsx ./src/index.ts"
   },
   "dependencies": {
     "@packages/database": "workspace:*",
