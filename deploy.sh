@@ -5,6 +5,8 @@ set -e
 PROJECT_ROOT="."
 # 定义 pm2 应用名称 (请根据实际情况修改)
 PM2_APP_NAME="all"
+# 定义 prisma/client 的文件目录
+PRISMA_CLIENT_DIST="$PROJECT_ROOT/packages/database/client/client.ts"
 # 定义 admin-web 构建输出目录
 ADMIN_WEB_DIST="$PROJECT_ROOT/apps/admin-web/dist"
 # 定义 web 项目的 .next PUBLIC 资源目录
@@ -56,33 +58,40 @@ else
 fi
 echo "依赖安装完成。"
 
-# 4. 执行 pnpm run build 编译项目
-echo "4. 执行 pnpm run build 编译项目..."
+# 4. 执行 pnpm run generate 编译 prisma/client
+echo "4. 执行 pnpm run generate 编译 prisma/client..."
+pnpm run generate || { echo "项目编译失败，请检查错误。"; exit 1; }
+# 屏蔽相关文件的 tsc 错误提示
+echo '// @ts-nocheck\n' | cat - "$PRISMA_CLIENT_DIST" > temp && mv temp "$PRISMA_CLIENT_DIST"
+echo "prisma/client 编译完成。"
+
+# 5. 执行 pnpm run build 编译项目
+echo "5. 执行 pnpm run build 编译项目..."
 pnpm run build || { echo "项目编译失败，请检查错误。"; exit 1; }
 echo "项目编译完成。"
 
-# 5. 删除 /var/www/html 目录中的全部文件和子目录
-echo "5. 删除 $DEPLOYMENT_DIR 目录中的全部文件和子目录..."
+# 6. 删除 /var/www/html 目录中的全部文件和子目录
+echo "6. 删除 $DEPLOYMENT_DIR 目录中的全部文件和子目录..."
 sudo rm -rf "$DEPLOYMENT_DIR"/* || { echo "删除 $DEPLOYMENT_DIR 内容失败，请检查权限。"; exit 1; }
 echo "$DEPLOYMENT_DIR 内容已删除。"
 
-# 6. 将 apps/admin-web/dist/ 目录内的全部内容复制到 /var/www/html 目录中
-echo "6. 将 $ADMIN_WEB_DIST 目录内的全部内容复制到 $DEPLOYMENT_DIR 目录中..."
+# 7. 将 apps/admin-web/dist/ 目录内的全部内容复制到 /var/www/html 目录中
+echo "7. 将 $ADMIN_WEB_DIST 目录内的全部内容复制到 $DEPLOYMENT_DIR 目录中..."
 sudo cp -r "$ADMIN_WEB_DIST"/* "$DEPLOYMENT_DIR"/ || { echo "复制文件到 $DEPLOYMENT_DIR 失败，请检查路径和权限。"; exit 1; }
 echo "文件已复制到 $DEPLOYMENT_DIR。"
 
-# 7. 复制 apps/web/public 目录到 apps/web/.next/standalone/apps/web 目录下
-echo "7. 复制 $WEB_NEXT_PUBLIC 目录到 $WEB_NEXT_STANDALONE 目录下..."
+# 8. 复制 apps/web/public 目录到 apps/web/.next/standalone/apps/web 目录下
+echo "8. 复制 $WEB_NEXT_PUBLIC 目录到 $WEB_NEXT_STANDALONE 目录下..."
 cp -r "$WEB_NEXT_PUBLIC" "$WEB_NEXT_STANDALONE" || { echo "复制 PUBLIC 资源失败，请检查路径。"; exit 1; }
 echo "PUBLIC 资源已复制到 $WEB_NEXT_STANDALONE"
 
-# 8. 复制 apps/web/.next/static 目录到 apps/web/.next/standalone/apps/web/.next 目录下
-echo "8. 复制 $WEB_NEXT_STATIC 目录到 $WEB_NEXT_STANDALONE_NEXT 目录下..."
+# 9. 复制 apps/web/.next/static 目录到 apps/web/.next/standalone/apps/web/.next 目录下
+echo "9. 复制 $WEB_NEXT_STATIC 目录到 $WEB_NEXT_STANDALONE_NEXT 目录下..."
 cp -r "$WEB_NEXT_STATIC" "$WEB_NEXT_STANDALONE_NEXT" || { echo "复制 STATIC 资源失败，请检查路径。"; exit 1; }
 echo "STATIC 资源已复制到 $WEB_NEXT_STANDALONE_NEXT。"
 
-# 9. 执行 pm2 start pm2.json
-echo "9. 执行 pm2 start pm2.json..."
+# 10. 执行 pm2 start pm2.json
+echo "10. 执行 pm2 start pm2.json..."
 if command -v pm2 &> /dev/null; then
   pm2 start pm2.json || { echo "执行 pm2.json 失败，请检查 pm2 配置文件。"; exit 1; }
   # pm2 save
@@ -91,8 +100,8 @@ else
 fi
 echo "pm2 配置已应用。"
 
-# 10. 执行 nginx -s reload
-echo "10. 执行 $NGINX_RELOAD_COMMAND..."
+# 11. 执行 nginx -s reload
+echo "11. 执行 $NGINX_RELOAD_COMMAND..."
 eval "$NGINX_RELOAD_COMMAND" || { echo "重载 Nginx 配置失败，请检查 Nginx 服务状态和配置。"; exit 1; }
 echo "Nginx 配置已重载。"
 
