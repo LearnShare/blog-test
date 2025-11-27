@@ -19,7 +19,7 @@
     "express-rate-limit": "^7.5.0",
     "he": "^1.2.0",
     "jsdom": "^26.0.0",
-    "multer": "1.4.5-lts.1",
+    "multer": "2.0.2",
     "nodemailer": "^6.10.0",
     "redis": "^4.7.0",
     "resend": "^4.2.0"
